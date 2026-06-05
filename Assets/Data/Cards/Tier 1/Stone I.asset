@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89ad1c89bf1c94c41b7c1501699899d7, type: 3}
+  m_Name: Stone I
+  m_EditorClassIdentifier: Assembly-CSharp::CardData
+  <Description>k__BackingField: A rock with magical capabilities.
+  <Tier>k__BackingField: 1
+  <Sprite>k__BackingField: {fileID: 1482157411, guid: c3d55075e50c97940ae0a49c91c1c45d, type: 3}
+  <Type>k__BackingField: 2
