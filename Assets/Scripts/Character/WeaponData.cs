@@ -10,6 +10,7 @@ public class WeaponData : ScriptableObject
     public Sprite icon;
     public GameObject model;
     public GameObject projectile;
+    public Vector3 bulletOrigin;
     [Header("Stats")]
     public float damage;
     public float range;

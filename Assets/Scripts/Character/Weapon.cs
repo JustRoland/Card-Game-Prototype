@@ -14,6 +14,7 @@ public class Weapon : IEquatable<Weapon>
     public Sprite Icon => _data.icon;
     public GameObject Model => _data.model;
     public GameObject Projectile => _data.projectile;
+    public Vector3 BulletOrigin => _data.bulletOrigin;
     public float Damage => _data.damage;
     public float Range => _data.range;
     public float DamageDropOffRange => _data.damageDropOffRange;

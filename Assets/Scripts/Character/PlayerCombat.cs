@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerCombat : MonoBehaviour
 {
     [SerializeField] private WeaponData testWeapon;
+    [SerializeField] private Transform bulletOrigin;
 
     private Weapon _weapon;
     private PlayerController _playerController;
@@ -16,6 +17,7 @@ public class PlayerCombat : MonoBehaviour
         _lineRenderer = GetComponent<LineRenderer>();
         _weapon = testWeapon.GenerateWeapon();
         _weapon.FireEvent.AddListener(OnFire);
+        bulletOrigin.localPosition = _weapon.BulletOrigin;
     }
 
     public void UpdateInput(CharacterInput input)
@@ -31,6 +33,7 @@ public class PlayerCombat : MonoBehaviour
         _weapon.FireEvent.RemoveListener(OnFire);
         _weapon = testWeapon.GenerateWeapon();
         _weapon.FireEvent.AddListener(OnFire);
+        bulletOrigin.localPosition = _weapon.BulletOrigin;
     }
 
     private void Attack(bool pressedThisFrame)
@@ -61,11 +64,11 @@ public class PlayerCombat : MonoBehaviour
         if (raycast.hit.HasValue && raycast.hit.Value.transform.TryGetComponent(out Enemy enemy))
         {
             enemy.Damage((int)_weapon.Damage);
-            DisplayBullet(raycast.ray.origin, raycast.hit.Value.point, 0.05f, Color.red).Forget();
+            DisplayBullet(bulletOrigin.position, raycast.hit.Value.point, 0.05f, Color.red).Forget();
         }
         else
         {
-            DisplayBullet(raycast.ray.origin, raycast.ray.origin + raycast.ray.direction * _weapon.Range, 0.05f,
+            DisplayBullet(bulletOrigin.position, bulletOrigin.position + raycast.ray.direction * _weapon.Range, 0.05f,
                 Color.white).Forget();
         }
     }

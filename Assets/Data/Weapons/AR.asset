@@ -16,12 +16,15 @@ MonoBehaviour:
   icon: {fileID: 0}
   model: {fileID: 0}
   projectile: {fileID: 0}
+  bulletOrigin: {x: 0.37799996, y: -0.2079997, z: 1.6672}
   damage: 25
   range: 100
   damageDropOffRange: 30
   damageDropOffRate: 0
   fireType: 1
   fireRate: 600
+  burstFireRate: 0
+  burstSize: 0
   magazineSize: 30
   maxAmmo: 120
   reloadSpeed: 3
