@@ -13,6 +13,7 @@ public class WeaponData : ScriptableObject
     public Vector3 bulletOrigin;
     [Header("Stats")]
     public float damage;
+    public float knockBack;
     public float range;
     public float damageDropOffRange;
     public float damageDropOffRate;

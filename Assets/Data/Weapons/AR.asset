@@ -18,6 +18,7 @@ MonoBehaviour:
   projectile: {fileID: 0}
   bulletOrigin: {x: 0.37799996, y: -0.2079997, z: 1.6672}
   damage: 25
+  knockBack: 3
   range: 100
   damageDropOffRange: 30
   damageDropOffRate: 0

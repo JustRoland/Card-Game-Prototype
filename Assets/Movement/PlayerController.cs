@@ -1,4 +1,5 @@
 using System;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 
@@ -44,13 +45,12 @@ namespace Movement
     }
 
 
-    public class PlayerController : MonoBehaviour
+    public class PlayerController : CharacterBase
     {
         private InputSystem_Actions _inputAction;
         
         [SerializeField] private BaseStats baseStats;
-        public CharacterStats Stats { get; private set; }
-
+     
         [SerializeField] private PlayerMovement playerMovement;
         [SerializeField] private PlayerCombat playerCombat;
         [SerializeField] private PlayerCamera playerCamera;
@@ -63,12 +63,6 @@ namespace Movement
 
 
         private Camera _camera;
-
-        private void Awake()
-        {
-            Stats = new CharacterStats(new StatsMediator(), baseStats);
-        }
-
 
         private void Start()
         {
@@ -109,7 +103,7 @@ namespace Movement
                 //camera rotation
                 playerCamera.UpdateRotation(_inputAction.Player.Look.ReadValue<Vector2>());
 
-                InterpretRaycast(CenterScreenRaycast(raycastMaxDistance));
+                ToggleInteractVisualOverlay(CenterScreenRaycast(raycastMaxDistance));
 
                 //character input
                 var input = new CharacterInput
@@ -149,7 +143,7 @@ namespace Movement
         }
 
 
-        private void InterpretRaycast((RaycastHit? hit, Ray ray) raycast)
+        private void ToggleInteractVisualOverlay((RaycastHit? hit, Ray ray) raycast)
         {
             if (raycast.hit.HasValue && raycast.hit.Value.transform.TryGetComponent<IInteractable>(out var interactable))
             {
@@ -164,6 +158,16 @@ namespace Movement
 
 
             // For interacting with objects in the world.
+        }
+        
+        public override void Damage(int damage, float knockBack, Vector3 origin)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override UniTask OnDamageEffect(float duration, float knockBack, Vector3 origin)
+        {
+            throw new NotImplementedException();
         }
 
         public void EnableDash(bool value) => canDash = value;

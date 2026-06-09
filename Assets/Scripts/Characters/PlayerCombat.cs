@@ -61,9 +61,9 @@ public class PlayerCombat : MonoBehaviour
 
     private void InterpretRaycast((RaycastHit? hit, Ray ray) raycast)
     {
-        if (raycast.hit.HasValue && raycast.hit.Value.transform.TryGetComponent(out Enemy enemy))
+        if (raycast.hit.HasValue && raycast.hit.Value.transform.TryGetComponent(out BodyPart bodyPart))
         {
-            enemy.Damage((int)_weapon.Damage);
+            bodyPart.Damage((int)(_weapon.Damage * _playerController.Stats.DamageMultiplier), _weapon.KnockBack, transform.position);
             DisplayBullet(bulletOrigin.position, raycast.hit.Value.point, 0.05f, Color.red).Forget();
         }
         else

@@ -16,7 +16,9 @@ MonoBehaviour:
   icon: {fileID: 0}
   model: {fileID: 0}
   projectile: {fileID: 0}
+  bulletOrigin: {x: 0.37799996, y: -0.2079997, z: 1.6672}
   damage: 150
+  knockBack: 1
   range: 100
   damageDropOffRange: 0
   damageDropOffRate: 0

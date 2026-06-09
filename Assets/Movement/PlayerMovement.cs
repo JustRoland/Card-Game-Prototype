@@ -19,7 +19,7 @@ namespace Movement
         [Range(0f, 1f)]
         [SerializeField] private float standCameraTargetHeight = 0.9f;
         [Range(0f, 1f)]
-        [SerializeField] private float crouchCameraTargetHeight = 0.7f;
+        [SerializeField] private float crouchCameraTargetHeight = 0.9f;
         [SerializeField] private LayerMask slowedLayer;
 
         private CharacterState _state;

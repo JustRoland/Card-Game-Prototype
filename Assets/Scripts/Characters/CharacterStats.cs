@@ -11,7 +11,8 @@ public enum StatType
     DashForce,
     DashCooldown,
     DashAirDistance,
-    Damage,
+    Health,
+    DamageMultiplier,
     Defense
 }
 
@@ -128,11 +129,21 @@ public class CharacterStats
         }
     }
 
-public float Damage
+    public float Health
     {
         get
         {
-            var q = new Query(StatType.Damage, _baseStats.damage);
+            var q = new Query(StatType.Health, _baseStats.health);
+            _mediator.PerformQuery(this, q);
+            return q.Value;
+        }
+    }
+
+public float DamageMultiplier
+    {
+        get
+        {
+            var q = new Query(StatType.DamageMultiplier, _baseStats.damageMultiplier);
             _mediator.PerformQuery(this, q);
             return q.Value;
         }
