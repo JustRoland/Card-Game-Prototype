@@ -10,6 +10,7 @@ public class CardManager : MonoBehaviour
 
     [Header("References")] [SerializeField]
     private CardView cardPrefab;
+    [SerializeField] private GameObject cardDropPrefab;
 
     [SerializeField] private Transform cardSpawnLocation;
 
@@ -26,6 +27,7 @@ public class CardManager : MonoBehaviour
     private int _realDeckSize;
 
     private GenericFactory<CardView> _cardFactory;
+    private GenericFactory<GameObject> _cardGameObjectFactory;
 
     public CancellationTokenSource Source;
     private CancellationToken _token;
@@ -42,6 +44,8 @@ public class CardManager : MonoBehaviour
         _cardFactory = new GenericFactory<CardView>(cardPrefab, cardView => cardView.Active == false,
             factoryStartBuffer,
             factoryMaxItems);
+
+        if (cardDropPrefab != null) _cardGameObjectFactory = new GenericFactory<GameObject>(cardDropPrefab, cardDrop => !cardDrop.activeSelf, 0, 20);
 
         _realDeckSize = maxDeckSize;
     }
@@ -61,6 +65,13 @@ public class CardManager : MonoBehaviour
 
 
         _cardFactory.LoadedItems.ForEach(DeregisterCardViewEvents);
+    }
+
+    public void GetCardDrop(Vector3 position)
+    {
+        var drop = _cardGameObjectFactory.GetItem();
+        drop.transform.position = position;
+        drop.SetActive(true);
     }
 
 
@@ -120,6 +131,11 @@ public class CardManager : MonoBehaviour
 
     #region Adding & Removig Cards
 
+    public void AddCard()
+    {
+        hand.AddCard(GetCardView(), _token).Forget();
+    }
+    
     private void OnRequestNewCardView(Hand hnd)
     {
         var cardView = GetCardView();

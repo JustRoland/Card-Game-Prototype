@@ -8,27 +8,30 @@ public class Enemy : CharacterBase, IEntity
     
     public void SetSpawner(EntitySpawner spawner) => _spawner = spawner;
 
-    public override void Damage(int damage, float knockBack, Vector3 origin)
+    public override void Damage(BodyPart bodyPart, int damage, float knockBack, Vector3 origin)
     {
         Stats.Mediator.AddModifiers(new BasicModifier(StatType.Health, 0, v => v - damage));
 
         if (Stats.Health <= 0)
         {
             _spawner.UnloadEntity(gameObject);
+            CardManager.Instance.GetCardDrop(transform.position);
             return;
         }
 
-        OnDamageEffect(damageEffectDuration, knockBack, origin).Forget();
+        OnDamageEffect(bodyPart, damageEffectDuration, knockBack, origin).Forget();
     }
 
-    protected override async UniTask OnDamageEffect(float duration, float knockBack, Vector3 origin)
+    protected override async UniTask OnDamageEffect(BodyPart bodyPart, float duration, float knockBack, Vector3 origin)
     {
         var knockBackDirection = (RigidBody.position - origin).normalized;
         RigidBody.AddForce(knockBackDirection * knockBack, ForceMode.Impulse);
-        Material.color = damageEffectColor;
+        bodyPart.SetColor(damageEffectColor);
 
         await UniTask.WaitForSeconds(duration);
 
-        Material.color = OriginalColor;
+        bodyPart.ResetColor();
+        
+        await UniTask.Yield();
     }
 }

@@ -48,6 +48,7 @@ public class GenericFactory<T> where T : Object
     {
         if (_loadedItems.Count >= _maxItems) return null;
         var newObj = Object.Instantiate(_prefab);
+        newObj.name = $"{_prefab.name} {_loadedItems.Count}";
         _loadedItems.Add(newObj);
         return newObj;
     }

@@ -26,7 +26,7 @@ public abstract class CharacterBase : MonoBehaviour
             bodyPart.Initialize(this);
         }
     }
-    public abstract void Damage(int damage, float knockBack, Vector3 origin);
+    public abstract void Damage(BodyPart bodyPart, int damage, float knockBack, Vector3 origin);
 
-    protected abstract UniTask OnDamageEffect(float duration, float knockBack, Vector3 origin);
+    protected abstract UniTask OnDamageEffect(BodyPart bodyPart, float duration, float knockBack, Vector3 origin);
 }

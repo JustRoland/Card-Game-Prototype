@@ -160,12 +160,12 @@ namespace Movement
             // For interacting with objects in the world.
         }
         
-        public override void Damage(int damage, float knockBack, Vector3 origin)
+        public override void Damage(BodyPart bodyPart, int damage, float knockBack, Vector3 origin)
         {
             throw new NotImplementedException();
         }
 
-        protected override UniTask OnDamageEffect(float duration, float knockBack, Vector3 origin)
+        protected override UniTask OnDamageEffect(BodyPart bodyPart, float knockBack, float f, Vector3 origin)
         {
             throw new NotImplementedException();
         }
