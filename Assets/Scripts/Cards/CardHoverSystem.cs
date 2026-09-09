@@ -14,7 +14,7 @@ public class CardHoverSystem : MonoBehaviour
     
     public void Show(CardView card, Vector3 originalPosition)
     {
-        hoverCardView.Setup(card.Card, originalPosition + _offset).SelectCard(card.Selected);
+        hoverCardView.Setup(card.Card, originalPosition + _offset, transform.localScale).SelectCard(card.Selected);
         hoverCardView.gameObject.SetActive(true);
     }
 

@@ -164,6 +164,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 626273399919374747}
+  - {fileID: 5540081871208406023}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1064497169781271098
@@ -179,24 +180,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hand
   splineContainer: {fileID: 2598800310244090212}
-  cardSpacing: 0.2
+  cardSpacing: 0.4
   dynamicCardSpacing: 1
   cardPositionUpdateTime: 0.25
   dealSpeed: 0.15
   maxCards: 8
   startingHand: 5
   hoverCardPositionOffset: {x: 0, y: 2.5, z: 0}
-  hideHandYPosition: -10
-  hideHandMoveTime: 0.5
+  hideHandYPosition: -0.7
+  hideHandMoveTime: 0.35
   RequestCardView:
     m_PersistentCalls:
       m_Calls: []
   RequestRemoveCardView:
     m_PersistentCalls:
       m_Calls: []
-  inputAdd: {fileID: -2099379676528639254, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  inputRemove: {fileID: -7471211009204490832, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  inputHide: {fileID: 7040659881675835329, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  inputAdd: {fileID: 7476244043514120974, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  inputRemove: {fileID: 2411907206095950430, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  inputHide: {fileID: 1402783566546207916, guid: 052faaac586de48259a63d0c4782560b, type: 3}
 --- !u!114 &7778505357906439773
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -209,4 +210,77 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22d9bf14d99fab34aba521db23446b5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CardHoverSystem
-  hoverCardView: {fileID: 0}
+  hoverCardView: {fileID: 6077700752936752104}
+--- !u!1001 &7713508926975936376
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 4142463941310762532}
+    m_Modifications:
+    - target: {fileID: 2876024019969235839, guid: 784f4a1d4513ae142b300024c661046e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -62.596504
+      objectReference: {fileID: 0}
+    - target: {fileID: 2876024019969235839, guid: 784f4a1d4513ae142b300024c661046e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -8.190299
+      objectReference: {fileID: 0}
+    - target: {fileID: 2876024019969235839, guid: 784f4a1d4513ae142b300024c661046e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 57.734848
+      objectReference: {fileID: 0}
+    - target: {fileID: 2876024019969235839, guid: 784f4a1d4513ae142b300024c661046e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2876024019969235839, guid: 784f4a1d4513ae142b300024c661046e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2876024019969235839, guid: 784f4a1d4513ae142b300024c661046e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2876024019969235839, guid: 784f4a1d4513ae142b300024c661046e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2876024019969235839, guid: 784f4a1d4513ae142b300024c661046e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2876024019969235839, guid: 784f4a1d4513ae142b300024c661046e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2876024019969235839, guid: 784f4a1d4513ae142b300024c661046e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4753740482342897262, guid: 784f4a1d4513ae142b300024c661046e, type: 3}
+      propertyPath: m_Name
+      value: Card
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 784f4a1d4513ae142b300024c661046e, type: 3}
+--- !u!4 &5540081871208406023 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2876024019969235839, guid: 784f4a1d4513ae142b300024c661046e, type: 3}
+  m_PrefabInstance: {fileID: 7713508926975936376}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6077700752936752104 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4563192206023709840, guid: 784f4a1d4513ae142b300024c661046e, type: 3}
+  m_PrefabInstance: {fileID: 7713508926975936376}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 433657cbf7168ba4c894ad173d5fd483, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CardObject

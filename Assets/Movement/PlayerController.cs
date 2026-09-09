@@ -14,6 +14,7 @@ namespace Movement
         public bool DoubleJump;
         public bool Dash;
         public CrouchInput Crouch;
+        public bool ToggleCards;
 
         public bool Attack;
         public bool AttackButtonDown;
@@ -55,12 +56,12 @@ namespace Movement
         [SerializeField] private PlayerCombat playerCombat;
         [SerializeField] private PlayerCamera playerCamera;
         [SerializeField] private CameraSpring cameraSpring;
+        [SerializeField] private Hand playerHand;
 
         [Space] [SerializeField] private float raycastMaxDistance;
         [SerializeField] private GameObject interactVisual;
         [SerializeField] private bool canDash;
         [SerializeField] private bool canDoubleJump;
-
 
         private Camera _camera;
 
@@ -101,7 +102,8 @@ namespace Movement
             else
             {
                 //camera rotation
-                playerCamera.UpdateRotation(_inputAction.Player.Look.ReadValue<Vector2>());
+                playerCamera.UpdateRotation(playerHand.Hide
+                    ? _inputAction.Player.Look.ReadValue<Vector2>() : Vector2.zero);
 
                 ToggleInteractVisualOverlay(CenterScreenRaycast(raycastMaxDistance));
 
@@ -115,13 +117,15 @@ namespace Movement
                     DoubleJump = canDoubleJump,
                     Dash = _inputAction.Player.Dash.WasPressedThisFrame() && canDash,
                     Crouch = _inputAction.Player.Crouch.WasPressedThisFrame() ? CrouchInput.Toggle : CrouchInput.None,
-                    Attack = _inputAction.Player.Attack.IsPressed(),
-                    AttackButtonDown = _inputAction.Player.Attack.WasPressedThisFrame(),
-                    Reload = _inputAction.Player.Reload.WasPressedThisFrame()
+                    ToggleCards = _inputAction.Player.Cards.WasPressedThisFrame(),
+                    Attack = playerHand.Hide && _inputAction.Player.Attack.IsPressed(),
+                    AttackButtonDown = playerHand.Hide && _inputAction.Player.Attack.WasPressedThisFrame(),
+                    Reload = playerHand.Hide && _inputAction.Player.Reload.WasPressedThisFrame()
                 };
                 playerMovement.UpdateInput(input);
                 playerMovement.UpdateBody();
                 playerCombat.UpdateInput(input);
+                playerHand.UpdateInput(input);
             }
             
             Stats.Mediator.Update(Time.deltaTime);

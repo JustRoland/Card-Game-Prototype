@@ -64,7 +64,7 @@
                     "name": "Previous",
                     "type": "Button",
                     "id": "2776c80d-3c14-4091-8c56-d04ced07a2b0",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -109,6 +109,15 @@
                     "name": "Reload",
                     "type": "Button",
                     "id": "55d3ea1b-cd80-4735-9566-15f4ff6b80c5",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Cards",
+                    "type": "Button",
+                    "id": "568110c4-8564-4dbb-b38f-991bd552b14d",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -531,6 +540,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Reload",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4279dcf4-6503-423e-a844-937d3f2faad0",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Cards",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

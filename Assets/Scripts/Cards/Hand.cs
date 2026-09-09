@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Splines;
 using Cysharp.Threading.Tasks;
+using Movement;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
 
@@ -39,8 +40,8 @@ public class Hand : MonoBehaviour
     [SerializeField] private InputActionReference inputHide;
 
     private CancellationToken _token;
-    private bool _hide;
-    
+    public bool Hide { get; private set; }
+
     private void Awake()
     {
         HoverSystem = GetComponent<CardHoverSystem>();
@@ -50,7 +51,8 @@ public class Hand : MonoBehaviour
     private void Start()
     {
         _token = CardManager.Instance.Source.Token;
-        _normalHandYPosition = transform.position.y;
+        _normalHandYPosition = transform.localPosition.y;
+        ToggleHand();
         DealCards(startingHand, dealSpeed, _token, .5f).Forget();
     }
 
@@ -68,6 +70,12 @@ public class Hand : MonoBehaviour
         await UniTask.Yield(cancellationToken: cancellationToken);
     }
 
+
+    public void UpdateInput(CharacterInput input)
+    {
+        if (input.ToggleCards) ToggleHand();
+    }
+    
     //TEMPORARY
     private void Update()
     {
@@ -84,17 +92,14 @@ public class Hand : MonoBehaviour
             RemoveCard(new []{card}, _token).Forget();
             RequestRemoveCardView.Invoke(card);
         }
-
-        if (inputHide.action.WasPressedThisFrame())
-        {
-            HideHand();
-        }
     }
 
-    private void HideHand()
+    private void ToggleHand()
     {
-        transform.DOMoveY(_hide ? _normalHandYPosition : hideHandYPosition, hideHandMoveTime);
-        _hide = !_hide;
+        Hide = !Hide;
+        transform.DOLocalMoveY(Hide ? hideHandYPosition : _normalHandYPosition, hideHandMoveTime);
+        Cursor.lockState = Hide ? CursorLockMode.Locked : CursorLockMode.Confined;
+        Cursor.visible = !Hide;
     }
 
     public async UniTask AddCard(CardView cardView, CancellationToken cancellationToken)
@@ -134,13 +139,15 @@ public class Hand : MonoBehaviour
         Spline spline = splineContainer.Spline;
         for (int i = 0; i < _cards.Count; i++)
         {
+            var card = _cards[i];
             float p = firstCardPosition + i * spacing;
             Vector3 splinePos = spline.EvaluatePosition(p);
             Vector3 forward = spline.EvaluateTangent(p);
             Vector3 up = spline.EvaluateUpVector(p);
             Quaternion rotation = Quaternion.LookRotation(-up, Vector3.Cross(-up, forward).normalized);
-            _cards[i].transform.DOMove(splinePos + transform.position + 0.01f * i * Vector3.back, seconds);
-            _cards[i].transform.DORotate(rotation.eulerAngles, seconds);
+            card.transform.DOLocalMove(splinePos * transform.localScale.x + Vector3.back * (0.01f * i), seconds);
+            card.transform.DOLocalRotate(rotation.eulerAngles, seconds);
+            card.Order = i;
         }
 
         await UniTask.WaitForSeconds(seconds, cancellationToken: cancellationToken);

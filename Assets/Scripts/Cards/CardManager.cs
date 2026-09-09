@@ -133,12 +133,12 @@ public class CardManager : MonoBehaviour
 
     public void AddCard()
     {
-        hand.AddCard(GetCardView(), _token).Forget();
+        hand.AddCard(GetCardView(hand.transform.localScale), _token).Forget();
     }
     
     private void OnRequestNewCardView(Hand hnd)
     {
-        var cardView = GetCardView();
+        var cardView = GetCardView(hnd.transform.localScale);
         hnd.AddCard(cardView, _token).Forget();
     }
 
@@ -147,20 +147,20 @@ public class CardManager : MonoBehaviour
         UnloadExistingCardView(cardView);
     }
 
-    private CardView GetCardView()
+    private CardView GetCardView(Vector3 scale)
     {
         int rand = Random.Range(0, cardData.Length);
-        return GetCardView(cardData[rand].GenerateCard());
+        return GetCardView(cardData[rand].GenerateCard(), scale);
     }
 
-    private CardView GetCardView(Card card)
+    private CardView GetCardView(Card card, Vector3 scale)
     {
         if (_realDeckSize <= 0)
         {
             return null;
         }
 
-        var newCard = _cardFactory.GetItem().Setup(card, cardSpawnLocation.position, cardScaleUpTime);
+        var newCard = _cardFactory.GetItem().Setup(card, cardSpawnLocation.position, scale, cardScaleUpTime);
         RegisterCardViewEvents(newCard);
         _realDeckSize--;
         return newCard;
@@ -199,7 +199,7 @@ public class CardManager : MonoBehaviour
         if (outputCard == null) return false;
         UnloadExistingCardViews(cards);
         hand.RemoveCard(cards, Source.Token).Forget();
-        hand.AddCard(GetCardView(outputCard), _token).Forget();
+        hand.AddCard(GetCardView(outputCard, hand.transform.localScale), _token).Forget();
         return true;
     }
 

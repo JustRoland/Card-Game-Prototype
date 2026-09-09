@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5934150824340771051}
   - component: {fileID: 63103912357921418}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Card Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,7 +101,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5843057223390827826}
   - component: {fileID: 7205167842593392779}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Card Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -193,7 +193,7 @@ GameObject:
   - component: {fileID: 2022587436352325908}
   - component: {fileID: 8470804982214047479}
   - component: {fileID: 6313650213019213540}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Card Description
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -374,7 +374,7 @@ GameObject:
   - component: {fileID: 5665687298896606333}
   - component: {fileID: 3820496089609394687}
   - component: {fileID: 6053364044396496679}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Card Name
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -556,7 +556,7 @@ GameObject:
   - component: {fileID: 4563192206023709840}
   - component: {fileID: 1970570406812710255}
   - component: {fileID: 882632085235012471}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Card
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -597,6 +597,24 @@ MonoBehaviour:
   spriteRenderer: {fileID: 63103912357921418}
   container: {fileID: 6788119022949495917}
   silhouette: {fileID: 6478487012188632298}
+  StartDrag:
+    m_PersistentCalls:
+      m_Calls: []
+  Dragging:
+    m_PersistentCalls:
+      m_Calls: []
+  EndDrag:
+    m_PersistentCalls:
+      m_Calls: []
+  Click:
+    m_PersistentCalls:
+      m_Calls: []
+  HoverEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  HoverExit:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!210 &1970570406812710255
 SortingGroup:
   m_ObjectHideFlags: 0
@@ -605,8 +623,8 @@ SortingGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4753740482342897262}
   m_Enabled: 1
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1849622217
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_SortAtRoot: 0
   m_Sort3DAs2D: 0
@@ -641,7 +659,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8123840464754788494}
   - component: {fileID: 4754625774134388034}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Silhouette
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -731,7 +749,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4530118453600803388}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -770,7 +788,7 @@ GameObject:
   - component: {fileID: 6089963053466870315}
   - component: {fileID: 851384528764211016}
   - component: {fileID: 2242882828703260665}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Card Value
   m_TagString: Untagged
   m_Icon: {fileID: 0}

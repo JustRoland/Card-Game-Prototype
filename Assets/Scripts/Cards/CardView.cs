@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.Rendering;
 
 
 public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler,
@@ -18,10 +19,10 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     private Vector3 _offsetFromPointerPosition;
     private Vector3 _dragStartPosition;
     private Quaternion _dragStartRotation;
+    private SortingGroup _sortingGroup;
 
-    
-    [Header("Events")]
-    public UnityEvent<CardView, Vector3> StartDrag = new();
+
+    [Header("Events")] public UnityEvent<CardView, Vector3> StartDrag = new();
     public UnityEvent<CardView, Vector3> Dragging = new();
     public UnityEvent<CardView, Vector3> EndDrag = new();
     public UnityEvent<CardView, Vector3> Click = new();
@@ -33,15 +34,24 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public bool Active { get; private set; }
     public bool Selected { get; private set; }
 
-    public CardView Setup(Card card, Vector3 position, float scaleUpTime = 0)
+    public int Order
     {
-        transform.position = position;
+        get => _sortingGroup.sortingOrder;
+        set => _sortingGroup.sortingOrder = value;
+    }
+
+    public CardView Setup(Card card, Vector3 position, Vector3 scale, float scaleUpTime = 0)
+    {
+        if (!_sortingGroup) _sortingGroup = GetComponent<SortingGroup>();
+
+        transform.localPosition = position;
 
         if (scaleUpTime > 0)
         {
             transform.localScale = Vector3.zero;
-            transform.DOScale(Vector3.one, scaleUpTime);
+            transform.DOScale(scale, scaleUpTime);
         }
+        else transform.localScale = scale;
 
         Card = card;
         nameText.text = card.Name;
@@ -79,7 +89,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         if (CardManager.Instance.IsDragging) return;
         container.SetActive(false);
-        HoverEnter.Invoke(this, transform.position);
+        HoverEnter.Invoke(this, transform.localPosition);
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -126,7 +136,6 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         var pos = Camera.main.ScreenToWorldPoint(eventData.position);
         EndDrag.Invoke(this, pos);
-
     }
 
     public void ResetCard()

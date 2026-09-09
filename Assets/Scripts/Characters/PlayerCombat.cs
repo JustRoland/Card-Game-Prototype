@@ -38,7 +38,7 @@ public class PlayerCombat : MonoBehaviour
 
     private void Attack(bool pressedThisFrame)
     {
-        //TEMP FOR TESTING
+        //TEMP FOR TESTING -- checks and updates what weapon is assigned in Editor to allow hot-swapping. 
         ChangeWeapon();
         //END TEMP FOR TESTING
 

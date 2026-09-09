@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
         else Destroy(gameObject);
         
         Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     private void Start()
