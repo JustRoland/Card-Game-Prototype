@@ -370,6 +370,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 519848539}
     - target: {fileID: 3755707943395445908, guid: b73f9a6dbe94a9747861060f49154581, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 642425756}
+    - target: {fileID: 3755707943395445908, guid: b73f9a6dbe94a9747861060f49154581, type: 3}
       propertyPath: cardDropPrefab
       value: 
       objectReference: {fileID: 2732587822657521532, guid: 9550379f28d6a2e47871bfca9ce7c065, type: 3}
@@ -377,6 +381,14 @@ PrefabInstance:
       propertyPath: cardSpawnLocation
       value: 
       objectReference: {fileID: 519848540}
+    - target: {fileID: 3755707943395445908, guid: b73f9a6dbe94a9747861060f49154581, type: 3}
+      propertyPath: recipes.Array.size
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3755707943395445908, guid: b73f9a6dbe94a9747861060f49154581, type: 3}
+      propertyPath: 'recipes.Array.data[6]'
+      value: 
+      objectReference: {fileID: 11400000, guid: dc76198703fe6ba4a8159799ef320711, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -477,6 +489,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1668246416848073622, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
   m_PrefabInstance: {fileID: 1760196434}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &642425756 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7869319532000814766, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
+  m_PrefabInstance: {fileID: 1760196434}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5be0a6aa9cc9f24419e9230581517b23, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &646859827
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -805,6 +828,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 926726836190416279, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
+      propertyPath: field of view
+      value: 58.715508
+      objectReference: {fileID: 0}
+    - target: {fileID: 926726836190416279, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
+      propertyPath: m_FOVAxisMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 926726836190416279, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
+      propertyPath: far clip plane
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 926726836190416279, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
+      propertyPath: near clip plane
+      value: 0.16
+      objectReference: {fileID: 0}
+    - target: {fileID: 4007103104232760394, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 4558679506495862503, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.39251

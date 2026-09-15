@@ -159,7 +159,7 @@ Transform:
   m_GameObject: {fileID: 4138379290858772444}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -3.51, z: 0}
+  m_LocalPosition: {x: 0, y: -3.51, z: 0.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -186,7 +186,7 @@ MonoBehaviour:
   dealSpeed: 0.15
   maxCards: 8
   startingHand: 5
-  hoverCardPositionOffset: {x: 0, y: 2.5, z: 0}
+  hoverCardPositionOffset: {x: 0, y: 0.12, z: 0}
   hideHandYPosition: -0.7
   hideHandMoveTime: 0.35
   RequestCardView:
@@ -195,6 +195,7 @@ MonoBehaviour:
   RequestRemoveCardView:
     m_PersistentCalls:
       m_Calls: []
+  toggleHand: 1
   inputAdd: {fileID: 7476244043514120974, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   inputRemove: {fileID: 2411907206095950430, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   inputHide: {fileID: 1402783566546207916, guid: 052faaac586de48259a63d0c4782560b, type: 3}

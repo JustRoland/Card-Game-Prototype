@@ -26,7 +26,24 @@ public abstract class CharacterBase : MonoBehaviour
             bodyPart.Initialize(this);
         }
     }
-    public abstract void Damage(BodyPart bodyPart, int damage, float knockBack, Vector3 origin);
 
-    protected abstract UniTask OnDamageEffect(BodyPart bodyPart, float duration, float knockBack, Vector3 origin);
+    public virtual void Damage(BodyPart bodyPart, int damage, float knockBack, Vector3 origin)
+    {
+        Stats.Mediator.AddModifiers(new BasicModifier(StatType.Health, 0, v => v - damage));
+
+        OnDamageEffect(bodyPart, damageEffectDuration, knockBack, origin).Forget();
+    }
+
+    protected virtual async UniTask OnDamageEffect(BodyPart bodyPart, float duration, float knockBack, Vector3 origin)
+    {
+        var knockBackDirection = (RigidBody.position - origin).normalized;
+        RigidBody.AddForce(knockBackDirection * knockBack, ForceMode.Impulse);
+        bodyPart.SetColor(damageEffectColor);
+
+        await UniTask.WaitForSeconds(duration);
+
+        bodyPart.ResetColor();
+        
+        await UniTask.Yield();
+    }
 }

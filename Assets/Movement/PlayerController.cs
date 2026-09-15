@@ -163,16 +163,6 @@ namespace Movement
 
             // For interacting with objects in the world.
         }
-        
-        public override void Damage(BodyPart bodyPart, int damage, float knockBack, Vector3 origin)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override UniTask OnDamageEffect(BodyPart bodyPart, float knockBack, float f, Vector3 origin)
-        {
-            throw new NotImplementedException();
-        }
 
         public void EnableDash(bool value) => canDash = value;
         public void EnableDoubleJump(bool value) => canDoubleJump = value;

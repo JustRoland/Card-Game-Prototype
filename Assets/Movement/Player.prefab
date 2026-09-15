@@ -765,10 +765,6 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 1064497169781271098, guid: 1b2aa789012b8b846962e910c360d162, type: 3}
-      propertyPath: hoverCardPositionOffset.y
-      value: 0.2
-      objectReference: {fileID: 0}
     - target: {fileID: 3094903440217063702, guid: 1b2aa789012b8b846962e910c360d162, type: 3}
       propertyPath: m_Name
       value: HoverCard
@@ -800,10 +796,6 @@ PrefabInstance:
     - target: {fileID: 4142463941310762532, guid: 1b2aa789012b8b846962e910c360d162, type: 3}
       propertyPath: m_LocalPosition.y
       value: -0.28
-      objectReference: {fileID: 0}
-    - target: {fileID: 4142463941310762532, guid: 1b2aa789012b8b846962e910c360d162, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.7900001
       objectReference: {fileID: 0}
     - target: {fileID: 4142463941310762532, guid: 1b2aa789012b8b846962e910c360d162, type: 3}
       propertyPath: m_LocalRotation.w

@@ -34,7 +34,8 @@ public class Hand : MonoBehaviour
     public CardHoverSystem HoverSystem { get; private set; }
 
 
-    [Header("Temporary For Testing")] 
+    [Header("Temporary For Testing")] [SerializeField]
+    private bool toggleHand;
     [SerializeField] private InputActionReference inputAdd;
     [SerializeField] private InputActionReference inputRemove;
     [SerializeField] private InputActionReference inputHide;
@@ -52,7 +53,7 @@ public class Hand : MonoBehaviour
     {
         _token = CardManager.Instance.Source.Token;
         _normalHandYPosition = transform.localPosition.y;
-        ToggleHand();
+        if (toggleHand) ToggleHand();
         DealCards(startingHand, dealSpeed, _token, .5f).Forget();
     }
 
@@ -145,7 +146,7 @@ public class Hand : MonoBehaviour
             Vector3 forward = spline.EvaluateTangent(p);
             Vector3 up = spline.EvaluateUpVector(p);
             Quaternion rotation = Quaternion.LookRotation(-up, Vector3.Cross(-up, forward).normalized);
-            card.transform.DOLocalMove(splinePos * transform.localScale.x + Vector3.back * (0.01f * i), seconds);
+            card.transform.DOLocalMove(splinePos * transform.localScale.x, seconds);
             card.transform.DOLocalRotate(rotation.eulerAngles, seconds);
             card.Order = i;
         }

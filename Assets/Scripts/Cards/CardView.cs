@@ -16,7 +16,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     [SerializeField] private GameObject container;
     [SerializeField] private GameObject silhouette;
 
-    private Vector3 _offsetFromPointerPosition;
+    private Vector2 _offsetFromPointerPosition;
     private Vector3 _dragStartPosition;
     private Quaternion _dragStartRotation;
     private SortingGroup _sortingGroup;
@@ -96,27 +96,27 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         if (CardManager.Instance.IsDragging) return;
         container.SetActive(true);
-        HoverExit.Invoke(this, transform.position);
+        HoverExit.Invoke(this, transform.localPosition);
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
         if (CardManager.Instance.IsDragging) return;
         SelectAndAdd(!Selected);
-        Click.Invoke(this, transform.position);
+        Click.Invoke(this, transform.localPosition);
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        var pos = Camera.main.ScreenToWorldPoint(eventData.position);
+        var pos = Camera.main.ScreenToWorldPoint(new Vector3(eventData.position.x, eventData.position.y, transform.position.z - Camera.main.transform.position.z)); //Z value is distance of Hand to the Camera
         StartDrag.Invoke(this, pos);
     }
 
     public void SetDragStartParameters(Vector3 pos)
     {
-        _dragStartPosition = transform.position;
-        _dragStartRotation = transform.rotation;
-        _offsetFromPointerPosition = new Vector3(pos.x, pos.y, 0) - transform.position;
+        _dragStartPosition = transform.localPosition;
+        _dragStartRotation = transform.localRotation;
+        _offsetFromPointerPosition = new Vector3(pos.x, pos.y, 0) - transform.localPosition;
         container.SetActive(true);
     }
 
@@ -129,7 +129,8 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void DragCardView(Vector3 pos)
     {
-        transform.position = new Vector3(pos.x, pos.y, 0) - _offsetFromPointerPosition;
+        print($"Drag {name} to {pos}");
+        transform.localPosition = new Vector3(pos.x - _offsetFromPointerPosition.x, pos.y - _offsetFromPointerPosition.y, transform.position.z - Camera.main.transform.position.z);
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -140,7 +141,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void ResetCard()
     {
-        transform.position = _dragStartPosition;
-        transform.rotation = _dragStartRotation;
+        transform.localPosition = _dragStartPosition;
+        transform.localRotation = _dragStartRotation;
     }
 }

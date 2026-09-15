@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using Movement;
 
 public class CardManager : MonoBehaviour
 {
@@ -10,11 +11,13 @@ public class CardManager : MonoBehaviour
 
     [Header("References")] [SerializeField]
     private CardView cardPrefab;
+
     [SerializeField] private GameObject cardDropPrefab;
 
     [SerializeField] private Transform cardSpawnLocation;
 
     [SerializeField] private Hand hand;
+    [SerializeField] private PlayerController player;
     public readonly List<CardView> SelectedCards = new();
     public bool IsDragging { get; private set; }
 
@@ -45,7 +48,9 @@ public class CardManager : MonoBehaviour
             factoryStartBuffer,
             factoryMaxItems);
 
-        if (cardDropPrefab != null) _cardGameObjectFactory = new GenericFactory<GameObject>(cardDropPrefab, cardDrop => !cardDrop.activeSelf, 0, 20);
+        if (cardDropPrefab != null)
+            _cardGameObjectFactory =
+                new GenericFactory<GameObject>(cardDropPrefab, cardDrop => !cardDrop.activeSelf, 0, 20);
 
         _realDeckSize = maxDeckSize;
     }
@@ -135,7 +140,7 @@ public class CardManager : MonoBehaviour
     {
         hand.AddCard(GetCardView(hand.transform.localScale), _token).Forget();
     }
-    
+
     private void OnRequestNewCardView(Hand hnd)
     {
         var cardView = GetCardView(hnd.transform.localScale);
@@ -190,16 +195,40 @@ public class CardManager : MonoBehaviour
         Debug.Assert(cards is { Length: > 0 }, "Card list is empty");
         Debug.Assert(recipes is { Length: > 0 }, "Recipe list is empty");
 
-        var outputCard =
-            recipes
-                .Where(r => r.InputCards.SequenceEqual(cards.Select(c => c.Card)))
-                .Select(r => r.Output.GenerateCard())
-                .FirstOrDefault();
+        var recipe = recipes.FirstOrDefault(r => r.InputCards.SequenceEqual(cards.Select(c => c.Card)));
+        
+        if (!recipe) return false;
 
+        return CardUpgrade(recipe, cards) || CardEffect(recipe, cards);
+    }
+
+    private bool CardUpgrade(CardRecipe recipe, CardView[] cards)
+    {
+        var outputCard = recipe.Output?.GenerateCard();
+        
         if (outputCard == null) return false;
+
         UnloadExistingCardViews(cards);
         hand.RemoveCard(cards, Source.Token).Forget();
         hand.AddCard(GetCardView(outputCard, hand.transform.localScale), _token).Forget();
+        
+        return true;
+    }
+
+    private bool CardEffect(CardRecipe recipe, CardView[] cards)
+    {
+        var effects = recipe.Effects;
+
+        if (effects == null) return false;
+
+        foreach (var effect in effects)
+        {
+            var modifier = new BasicModifier(effect.statType, effect.duration, v => v + effect.value);
+            player.Stats.Mediator.AddModifiers(modifier);
+        }
+        
+        UnloadExistingCardViews(cards);
+        
         return true;
     }
 
