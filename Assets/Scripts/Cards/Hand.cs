@@ -146,7 +146,7 @@ public class Hand : MonoBehaviour
             Vector3 forward = spline.EvaluateTangent(p);
             Vector3 up = spline.EvaluateUpVector(p);
             Quaternion rotation = Quaternion.LookRotation(-up, Vector3.Cross(-up, forward).normalized);
-            card.transform.DOLocalMove(splinePos * transform.localScale.x, seconds);
+            card.transform.DOLocalMove(splinePos * transform.localScale.x + new Vector3(0,0,-0.1f * i), seconds);
             card.transform.DOLocalRotate(rotation.eulerAngles, seconds);
             card.Order = i;
         }

@@ -45,8 +45,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CardManager
   cardPrefab: {fileID: 4563192206023709840, guid: 784f4a1d4513ae142b300024c661046e, type: 3}
+  cardDropPrefab: {fileID: 0}
   cardSpawnLocation: {fileID: 0}
   hand: {fileID: 0}
+  handCamera: {fileID: 0}
+  player: {fileID: 0}
   cardData:
   - {fileID: 11400000, guid: 271d5059193ce044ea5019670291661e, type: 2}
   - {fileID: 11400000, guid: 22d0dfccf54e6aa4fb56f519342940a8, type: 2}
@@ -62,3 +65,4 @@ MonoBehaviour:
   factoryMaxItems: 20
   cardScaleUpTime: 0.15
   maxDeckSize: 20
+  minCardYDragToPlay: 3.3

@@ -169,7 +169,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 131517999248050783}
-  - component: {fileID: 5823238867454498133}
   - component: {fileID: 9132467092322605591}
   m_Layer: 9
   m_Name: Dummy
@@ -195,24 +194,6 @@ Transform:
   - {fileID: 7456116062916223544}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5823238867454498133
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6152184304388536287}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c14c882566d3bf4ea2c56d8c35e7ebc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Enemy
-  stats: {fileID: 11400000, guid: fe37cedd88cfeb94581651ebb4f8befb, type: 2}
-  bodyParts:
-  - {fileID: 697446810327204837}
-  - {fileID: 4068692998094132781}
-  damageEffectColor: {r: 0.6830188, g: 0.24614452, b: 0.24614452, a: 1}
-  damageEffectDuration: 0.035
 --- !u!54 &9132467092322605591
 Rigidbody:
   m_ObjectHideFlags: 0

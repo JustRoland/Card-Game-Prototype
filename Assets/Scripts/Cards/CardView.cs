@@ -20,6 +20,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     private Vector3 _dragStartPosition;
     private Quaternion _dragStartRotation;
     private SortingGroup _sortingGroup;
+    private Camera _camera;
 
 
     [Header("Events")] public UnityEvent<CardView, Vector3> StartDrag = new();
@@ -40,8 +41,9 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         set => _sortingGroup.sortingOrder = value;
     }
 
-    public CardView Setup(Card card, Vector3 position, Vector3 scale, float scaleUpTime = 0)
+    public CardView Setup(Card card, Vector3 position, Vector3 scale, float scaleUpTime = 0, Camera cam = null)
     {
+        _camera = cam;
         if (!_sortingGroup) _sortingGroup = GetComponent<SortingGroup>();
 
         transform.localPosition = position;
@@ -108,7 +110,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        var pos = Camera.main.ScreenToWorldPoint(new Vector3(eventData.position.x, eventData.position.y, transform.position.z - Camera.main.transform.position.z)); //Z value is distance of Hand to the Camera
+        var pos = _camera.ScreenToWorldPoint(new Vector3(eventData.position.x, eventData.position.y, 0.6f)); //Z value is distance of Hand to the Camera
         StartDrag.Invoke(this, pos);
     }
 
@@ -123,19 +125,19 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnDrag(PointerEventData eventData)
     {
-        var pos = Camera.main.ScreenToWorldPoint(eventData.position);
+        var pos = _camera.ScreenToWorldPoint(new Vector3(eventData.position.x, eventData.position.y, 0.6f));
         Dragging.Invoke(this, pos);
+        
     }
 
     public void DragCardView(Vector3 pos)
     {
-        print($"Drag {name} to {pos}");
-        transform.localPosition = new Vector3(pos.x - _offsetFromPointerPosition.x, pos.y - _offsetFromPointerPosition.y, transform.position.z - Camera.main.transform.position.z);
+        transform.localPosition = new Vector3(pos.x - _offsetFromPointerPosition.x, pos.y - _offsetFromPointerPosition.y, pos.z);
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        var pos = Camera.main.ScreenToWorldPoint(eventData.position);
+        var pos = _camera.ScreenToWorldPoint(new Vector3(eventData.position.x, eventData.position.y, 0.6f));
         EndDrag.Invoke(this, pos);
     }
 

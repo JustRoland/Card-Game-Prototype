@@ -4,65 +4,72 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public interface IEntity
+namespace Game
 {
-    public void SetSpawner(EntitySpawner spawner);
-}
-
-public class EntitySpawner : MonoBehaviour
-{
-    [SerializeField] private GameObject prefab;
-    [SerializeField] private int spawnAmount;
-    [SerializeField] private int maxAmount;
-    [SerializeField] private float spawnRadius;
-    [SerializeField] private float spawnFrequency;
-    [SerializeField] private float totalDuration;
-
-    private readonly CancellationTokenSource _source = new();
-    private CancellationToken _token;
-
-    private GenericFactory<GameObject> _factory;
-    private int _counter;
-
-    private void Start()
+    public interface IEntity
     {
-        _factory = new GenericFactory<GameObject>(prefab, enemy => !enemy.activeSelf, 0, maxAmount + 1);
-        _token = _source.Token;
-        Spawn(spawnRadius, spawnFrequency, totalDuration, spawnAmount, _token).Forget();
+        public void SetSpawner(EntitySpawner spawner);
     }
 
-    private void OnDisable()
+    public class EntitySpawner : MonoBehaviour
     {
-        _source.Cancel();
-    }
+        [SerializeField] private GameObject prefab;
+        [SerializeField] private int spawnAmount;
+        [SerializeField] private int maxAmount;
+        [SerializeField] private float spawnRadius;
+        [SerializeField] private float spawnDelay;
+        [SerializeField] private float totalDuration;
+        [SerializeField] bool spawnOnStart;
 
-    private async UniTask Spawn(float radius, float frequency, float duration, int amount, CancellationToken token)
-    {
-        var startTime = Time.time;
-        while (!token.IsCancellationRequested && Time.time < startTime + duration)
+        private readonly CancellationTokenSource _source = new();
+        private CancellationToken _token;
+
+        private GenericFactory<GameObject> _factory;
+        private int _counter;
+
+        private void Start()
         {
-            await UniTask.WaitUntil(() => _counter < maxAmount, cancellationToken: token);
-            var fixedAmount = Math.Min(amount, maxAmount - _counter);
-            for (int i = 0; i < fixedAmount; i++)
-            {
-                var newEnt = _factory.GetItem();
-                newEnt.transform.position = new Vector3(transform.position.x + Random.Range(-radius, radius),
-                    transform.position.y,
-                    transform.position.z + Random.Range(-radius, radius));
-                newEnt.GetComponent<IEntity>().SetSpawner(this);
-                newEnt.SetActive(true);
-                _counter++;
-            }
-
-            await UniTask.WaitForSeconds(frequency, cancellationToken: token);
+            _factory = new GenericFactory<GameObject>(prefab, enemy => !enemy.activeSelf, 0, maxAmount + 1);
+            _token = _source.Token;
+            if (spawnOnStart) Spawn(spawnAmount, spawnRadius, spawnDelay, totalDuration,  _token).Forget();
         }
 
-        await UniTask.Yield();
-    }
+        private void OnDisable()
+        {
+            _source.Cancel();
+        }
 
-    public void UnloadEntity(GameObject entity)
-    {
-        entity.SetActive(false);
-        _counter--;
+        public void SpawnEntity(int amount, float frequency, float duration) =>
+            Spawn(amount, spawnRadius, frequency, duration, _token).Forget();
+
+        private async UniTask Spawn(int amount, float radius, float delay, float duration, CancellationToken token)
+        {
+            var startTime = Time.time;
+            while (!token.IsCancellationRequested && Time.time < startTime + duration)
+            {
+                await UniTask.WaitUntil(() => _counter < maxAmount, cancellationToken: token);
+                var fixedAmount = Math.Min(amount, maxAmount - _counter);
+                for (int i = 0; i < fixedAmount; i++)
+                {
+                    var newEnt = _factory.GetItem();
+                    newEnt.transform.position = new Vector3(transform.position.x + Random.Range(-radius, radius),
+                        transform.position.y,
+                        transform.position.z + Random.Range(-radius, radius));
+                    newEnt.GetComponent<IEntity>()?.SetSpawner(this);
+                    newEnt.SetActive(true);
+                    _counter++;
+                }
+
+                await UniTask.WaitForSeconds(delay, cancellationToken: token);
+            }
+
+            await UniTask.Yield();
+        }
+
+        public void UnloadEntity(GameObject entity)
+        {
+            entity.SetActive(false);
+            _counter--;
+        }
     }
 }

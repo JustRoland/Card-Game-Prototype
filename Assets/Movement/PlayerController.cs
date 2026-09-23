@@ -1,4 +1,5 @@
 using System;
+using Characters;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 

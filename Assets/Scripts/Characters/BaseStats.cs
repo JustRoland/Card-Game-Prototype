@@ -15,6 +15,7 @@ public class BaseStats : ScriptableObject
     public float dashForce = 40;
     public float dashAirDistance = 3;
     public float dashCooldown = 2;
+    public float turnSpeed = 180;
     
     [Header("Combat")]
     public float health = 100f;

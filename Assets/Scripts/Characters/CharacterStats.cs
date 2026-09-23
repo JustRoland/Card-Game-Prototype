@@ -13,7 +13,8 @@ public enum StatType
     DashAirDistance,
     Health,
     DamageMultiplier,
-    Defense
+    Defense,
+    TurnSpeed,
 }
 
 public class CharacterStats
@@ -154,6 +155,16 @@ public float DamageMultiplier
         get
         {
             var q = new Query(StatType.Defense, _baseStats.defense);
+            _mediator.PerformQuery(this, q);
+            return q.Value;
+        }
+    }
+
+    public float TurnSpeed
+    {
+        get
+        {
+            var q = new Query(StatType.TurnSpeed, _baseStats.turnSpeed);
             _mediator.PerformQuery(this, q);
             return q.Value;
         }

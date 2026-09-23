@@ -2,16 +2,16 @@ using UnityEngine;
 
 public class CardHoverSystem : MonoBehaviour
 {
-
     [SerializeField] private CardView hoverCardView;
 
     private Vector3 _offset;
-    
+    private Camera _camera;
+
     public void Initialize(Vector3 positionOffset)
     {
         _offset = positionOffset;
     }
-    
+
     public void Show(CardView card, Vector3 originalPosition)
     {
         hoverCardView.Setup(card.Card, originalPosition + _offset, transform.localScale).SelectCard(card.Selected);

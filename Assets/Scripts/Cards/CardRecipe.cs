@@ -6,7 +6,7 @@ using UnityEngine;
 public class Effect
 {
     public StatType statType;
-    public int value;
+    public float value;
     public float duration;
 }
 

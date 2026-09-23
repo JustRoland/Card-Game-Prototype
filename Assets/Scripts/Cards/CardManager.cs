@@ -17,6 +17,7 @@ public class CardManager : MonoBehaviour
     [SerializeField] private Transform cardSpawnLocation;
 
     [SerializeField] private Hand hand;
+    [SerializeField] private Camera handCamera;
     [SerializeField] private PlayerController player;
     public readonly List<CardView> SelectedCards = new();
     public bool IsDragging { get; private set; }
@@ -27,6 +28,8 @@ public class CardManager : MonoBehaviour
     [SerializeField] private int factoryMaxItems;
     [SerializeField] private float cardScaleUpTime = 0.15f;
     [SerializeField] private int maxDeckSize = 10;
+    [SerializeField] private float minCardYDragToPlay = 2f;
+    private Vector3 _startDragPosition;
     private int _realDeckSize;
 
     private GenericFactory<CardView> _cardFactory;
@@ -92,7 +95,8 @@ public class CardManager : MonoBehaviour
     {
         IsDragging = true;
         hand.HoverSystem.Hide();
-
+        _startDragPosition = position;
+        
         if (cardView.Selected) SelectedCards.ForEach(c => c.SetDragStartParameters(position));
         else cardView.SetDragStartParameters(position);
     }
@@ -106,7 +110,7 @@ public class CardManager : MonoBehaviour
     private void OnEndDrag(CardView cardView, Vector3 position)
     {
         IsDragging = false;
-        if (PlayCards(cardView.Selected ? SelectedCards.ToArray() : new[] { cardView })) return;
+        if (PlayCards(cardView.Selected ? SelectedCards.ToArray() : new[] { cardView }, position)) return;
         if (cardView.Selected) SelectedCards.ForEach(c => c.ResetCard());
         else cardView.ResetCard();
     }
@@ -165,7 +169,7 @@ public class CardManager : MonoBehaviour
             return null;
         }
 
-        var newCard = _cardFactory.GetItem().Setup(card, cardSpawnLocation.position, scale, cardScaleUpTime);
+        var newCard = _cardFactory.GetItem().Setup(card, cardSpawnLocation.position, scale, cardScaleUpTime, handCamera);
         RegisterCardViewEvents(newCard);
         _realDeckSize--;
         return newCard;
@@ -179,7 +183,6 @@ public class CardManager : MonoBehaviour
         {
             cardView.SetActive(false);
             cardView.SelectCard(false);
-            print($"Unloaded card view {cardView.Card.Name}");
         });
         if (SelectedCards.Contains(cardView)) SelectedCards.Remove(cardView);
         DeregisterCardViewEvents(cardView);
@@ -190,10 +193,12 @@ public class CardManager : MonoBehaviour
 
     #region Card Playing Logic
 
-    private bool PlayCards(CardView[] cards)
+    private bool PlayCards(CardView[] cards, Vector3 dropPos)
     {
         Debug.Assert(cards is { Length: > 0 }, "Card list is empty");
         Debug.Assert(recipes is { Length: > 0 }, "Recipe list is empty");
+        
+        if (Mathf.Abs(dropPos.y - _startDragPosition.y) < minCardYDragToPlay) return false;
 
         var recipe = recipes.FirstOrDefault(r => r.InputCards.SequenceEqual(cards.Select(c => c.Card)));
         

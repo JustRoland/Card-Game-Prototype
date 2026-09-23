@@ -186,8 +186,8 @@ MonoBehaviour:
   dealSpeed: 0.15
   maxCards: 8
   startingHand: 5
-  hoverCardPositionOffset: {x: 0, y: 0.12, z: 0}
-  hideHandYPosition: -0.7
+  hoverCardPositionOffset: {x: 0, y: 1, z: 0}
+  hideHandYPosition: -10
   hideHandMoveTime: 0.35
   RequestCardView:
     m_PersistentCalls:
@@ -220,6 +220,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4142463941310762532}
     m_Modifications:
+    - target: {fileID: 882632085235012471, guid: 784f4a1d4513ae142b300024c661046e, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1970570406812710255, guid: 784f4a1d4513ae142b300024c661046e, type: 3}
+      propertyPath: m_SortingOrder
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 2876024019969235839, guid: 784f4a1d4513ae142b300024c661046e, type: 3}
       propertyPath: m_LocalPosition.x
       value: -62.596504
