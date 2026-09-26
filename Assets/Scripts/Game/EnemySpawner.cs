@@ -1,0 +1,64 @@
+using System;
+using System.Threading;
+using Characters.Enemies;
+using Cysharp.Threading.Tasks;
+using UnityEngine;
+using Random = UnityEngine.Random;
+
+namespace Game
+{
+    public interface IEntity
+    {
+        public void SetSpawner(EnemySpawner spawner);
+    }
+
+    public class EnemySpawner : MonoBehaviour
+    {
+        [SerializeField] private Enemy prefab;
+        [SerializeField] private int spawnAmount;
+        [SerializeField] private int maxAmount;
+        [SerializeField] private float spawnRadius;
+        [SerializeField] bool spawnOnStart;
+
+
+        private GenericFactory<Enemy> _factory;
+        private int _counter;
+
+        private void Start()
+        {
+            _factory = new GenericFactory<Enemy>(prefab, enemy => !enemy.gameObject.activeSelf, 0, maxAmount + 1);
+            
+            if (spawnOnStart) Spawn(spawnAmount, spawnRadius);
+        }
+        
+
+        public Enemy[] Spawn(int amount, float radius = 0)
+        {
+            var rad = radius > 0 ? radius : spawnRadius;
+            var fixedAmount = Math.Min(amount, maxAmount - _counter);
+            
+            if (fixedAmount <= 0) return null;
+            
+            Enemy[] spawnedEnemies = new Enemy[fixedAmount];
+            for (int i = 0; i < fixedAmount; i++)
+            {
+                var newEnemy = _factory.GetItem();
+                newEnemy.transform.position = new Vector3(transform.position.x + Random.Range(-rad, rad),
+                    transform.position.y,
+                    transform.position.z + Random.Range(-rad, rad));
+                newEnemy.GetComponent<IEntity>()?.SetSpawner(this);
+                newEnemy.gameObject.SetActive(true);
+                spawnedEnemies[i] = newEnemy;
+                _counter++;
+            }
+            
+            return spawnedEnemies;
+        }
+
+        public void UnloadEntity(GameObject entity)
+        {
+            entity.SetActive(false);
+            _counter--;
+        }
+    }
+}

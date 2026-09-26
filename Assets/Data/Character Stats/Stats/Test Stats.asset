@@ -12,5 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5b3bb8305c64c088d7c6d68fb304b65, type: 3}
   m_Name: Test Stats
   m_EditorClassIdentifier: Assembly-CSharp::BaseStats
-  attack: 10
+  acceleration: 135
+  walkSpeed: 4.5
+  crouchSpeed: 3
+  sprintSpeed: 10
+  slowedSpeed: 2
+  jumpForce: 8
+  airAcceleration: 2
+  dashForce: 40
+  dashAirDistance: 3
+  dashCooldown: 2
+  turnSpeed: 320
+  health: 100
+  damageMultiplier: 1
   defense: 20

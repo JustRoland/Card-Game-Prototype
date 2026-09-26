@@ -7,7 +7,8 @@ namespace Characters.State_Machine
     {
         public override void Enter()
         {
-            Enemy.SetDestination(PickRandomLocation(15f));
+            Enemy.SetDestination(PickRandomLocation(15f), false);
+            Enemy.SetSpeed(Enemy.Stats.WalkSpeed);
         }
 
         public override void Update(float deltaTime)

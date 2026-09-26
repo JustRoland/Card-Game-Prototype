@@ -8,13 +8,15 @@ namespace Characters.State_Machine
     {
 
         private float _locationUpdateTimer;
-        private float _locationUpdateInterval = 2f;
+        private readonly float _locationUpdateInterval = 2f;
         
         public override void Enter()
         {
             Enemy.SetTarget(Enemy.CurrentTarget, Enemy.followDistance, new Vector3(0, 4, 0));
+            Enemy.SetSpeed(Enemy.Stats.WalkSpeed);
             _locationUpdateTimer = _locationUpdateInterval;
-            EnemyManager.Instance.CallReinforcements(Enemy.transform.position);
+            EnemyManager.Instance.CallReinforcements(Enemy.transform.position, Enemy);
+            Enemy.targetLocationUpdate.Invoke(Enemy.CurrentTarget.transform.position);
 
         }
 
@@ -27,7 +29,7 @@ namespace Characters.State_Machine
             if (_locationUpdateTimer <= 0)
             {
                 _locationUpdateTimer = _locationUpdateInterval;
-                EnemyManager.Instance.UpdateLocationForReinforcements(Enemy.transform.position);
+                Enemy.targetLocationUpdate.Invoke(Enemy.CurrentTarget.transform.position);
             }
         }
 

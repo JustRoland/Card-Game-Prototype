@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using Characters.Enemies;
 using UnityEngine;
 
 namespace Game
@@ -7,7 +9,7 @@ namespace Game
     {
         public static EnemyManager Instance;
         
-        private EntitySpawner[] _spawners;
+        private EnemySpawner[] _spawners;
         [SerializeField] private float reinforcementsCooldown = 10f;
         
         private bool _reinforcementsCalled;
@@ -19,7 +21,7 @@ namespace Game
             if (Instance == null) Instance = this;
             else Destroy(gameObject);
             
-            _spawners = FindObjectsByType<EntitySpawner>(FindObjectsSortMode.None);
+            _spawners = FindObjectsByType<EnemySpawner>(FindObjectsSortMode.None);
         }
 
         private void Update()
@@ -29,28 +31,21 @@ namespace Game
             if (_reinforcementsCooldownTimer <= 0f) _reinforcementsCalled = false;
         }
 
-        public void CallReinforcements(Vector3 toLocation)
+        public void CallReinforcements(Vector3 toLocation, Enemy caller)
         {
             if (_reinforcementsCalled) return;
             _reinforcementsCalled = true;
             print($"Reinforcements called to {toLocation}");
             _reinforcementsCooldownTimer = Mathf.Min(reinforcementsCooldown, _reinforcementsCooldownTimer);
-            GetNearestSpawner(toLocation).SpawnEntity(3, 1, 1);
-        }
-
-        public void UpdateLocationForReinforcements(Vector3 newLocation)
-        {
-            print($"Updating location for reinforcements to {newLocation}");
-            
-            // TODO: Update location for reinforcements
+            GetNearestSpawner(toLocation).Spawn(3).ToList().ForEach(e => caller.targetLocationUpdate.AddListener(destination => e.SetDestination(destination, true)));
         }
         
-        private EntitySpawner GetNearestSpawner(Vector3 location)
+        private EnemySpawner GetNearestSpawner(Vector3 location)
         {
             if (_spawners.Length == 0) return null;
 
             float minDistance = float.MaxValue;
-            EntitySpawner nearestSpawner = null;
+            EnemySpawner nearestSpawner = null;
             
             foreach (var t in _spawners)
             {

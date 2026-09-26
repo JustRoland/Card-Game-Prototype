@@ -1,10 +1,16 @@
 using Characters.State_Machine;
+using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Characters.Enemies
 {
     public class Drone : Enemy
-    {
+    {        
+        [Header("State")]
+        private StateMachine<Drone> stateMachine;
+        [ShowInInspector] private string CurrentState => stateMachine != null ? stateMachine.CurrentState.Name:"No state";
+        
         [SerializeField] private float arrivalRadius = 3f;
         [SerializeField] private float stoppingDistance = 0.5f;
         [SerializeField] private float maxBankAngle = 25f;
@@ -19,10 +25,10 @@ namespace Characters.Enemies
         [SerializeField] private float avoidanceLookahead = 4f;
         [SerializeField] private float avoidanceRadius = 0.75f;
         [Range(0f, 1f)] [SerializeField] private float avoidanceWeight = 0.8f;
+
         
 
         public Vector3 Velocity => _rb.linearVelocity;
-        private StateMachine<Drone> stateMachine;
         
 
         private Rigidbody _rb;
@@ -67,6 +73,13 @@ namespace Characters.Enemies
 
         protected override void OnTargetLost(Transform target)
         {
+        }
+        
+        public override void SetDestination(Vector3 destination, bool investigate)
+        {
+            base.SetDestination(destination, investigate);
+            if (!investigate) return;
+            if (stateMachine.CurrentState is DroneIdle or DronePatrol) stateMachine.ChangeState<DroneInvestigate>();
         }
 
         private void FixedUpdate()
@@ -162,11 +175,12 @@ namespace Characters.Enemies
             if (groundMask.value == 0) return;
 
             if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit,
-                    hoverHeight * 3f, groundMask))
+                    hoverHeight * 100, groundMask))
             {
                 float currentHeight = hit.distance;
                 float heightError = hoverHeight - currentHeight;
 
+                //TODO: Fix this math
                 float verticalCorrection = Mathf.Clamp(
                     heightError * altitudeCorrectionSpeed * Time.fixedDeltaTime, -1f, 1f);
                 direction += Vector3.up * verticalCorrection;
@@ -196,18 +210,12 @@ namespace Characters.Enemies
             
             if (Stats.Health > 0)
             {
-                // TODO: Add Investigate state?
-                stateMachine.ChangeState<DroneChase>();
-                SetDestination(origin);
+                SetDestination(origin, true);
             }
             else
             {
                 stateMachine.ChangeState<DroneDestroy>();
             }
-            
-            
-
-
         }
 
 
