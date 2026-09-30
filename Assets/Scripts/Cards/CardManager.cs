@@ -234,6 +234,7 @@ namespace Cards
             {
                 var modifier = new BasicModifier(effect.statType, effect.duration, v => v + effect.value);
                 player.Stats.Mediator.AddModifiers(modifier);
+                player.AddEffectColor(recipe.EffectColor);
             }
         
             UnloadExistingCardViews(cards);

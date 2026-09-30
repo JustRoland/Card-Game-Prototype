@@ -1,7 +1,7 @@
 namespace Utility
 {
-    public interface IInteractable
+    public interface IInteractable<T>
     {
-        public void Interact();
+        public void Interact(T caller);
     }
 }

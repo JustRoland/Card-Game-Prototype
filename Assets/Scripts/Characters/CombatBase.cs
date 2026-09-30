@@ -18,6 +18,7 @@ namespace Characters
 
         private Weapon _weapon;
         private LineRenderer _lineRenderer;
+        private Color _color;
 
 
         public void Initialize(ControllerBase controller)
@@ -80,6 +81,8 @@ namespace Characters
         {
             InterpretRaycast(_controller.GetRaycast(_weapon.MaxRange));
         }
+        
+        public void SetColor(Color color) => _color = color;
 
         private void InterpretRaycast((RaycastHit? hit, Ray ray) raycast)
         {
@@ -87,13 +90,13 @@ namespace Characters
             {
                 bodyPart.Damage((int)(_weapon.Damage * _character.Stats.DamageMultiplier), _weapon.KnockBack,
                     transform.position);
-                DisplayBullet(bulletOrigin.position, raycast.hit.Value.point, 0.05f, Color.red).Forget();
+                DisplayBullet(bulletOrigin.position, raycast.hit.Value.point, 0.05f, _color).Forget();
             }
             else
             {
                 DisplayBullet(bulletOrigin.position, bulletOrigin.position + raycast.ray.direction * _weapon.Range,
                     0.05f,
-                    Color.white).Forget();
+                    _color).Forget();
             }
         }
 

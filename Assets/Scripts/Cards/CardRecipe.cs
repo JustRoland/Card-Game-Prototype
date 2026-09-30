@@ -16,6 +16,8 @@ namespace Cards
     [CreateAssetMenu(fileName = "Card Recipe", menuName = "Cards/Card Recipe")]
     public class CardRecipe : ScriptableObject
     {
+        [field: SerializeField] public string Description { get; private set; }
+        [field: SerializeField] public Color EffectColor { get; private set; }
         [field: SerializeField] public CardData[] Input { get; private set; }
         [field: SerializeField] public CardData Output { get; private set; }
     

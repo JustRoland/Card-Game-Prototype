@@ -143,11 +143,11 @@ namespace Characters.Player
 
         private void ToggleInteractVisualOverlay((RaycastHit? hit, Ray ray) raycast)
         {
-            if (raycast.hit.HasValue && raycast.hit.Value.transform.TryGetComponent<IInteractable>(out var interactable))
+            if (raycast.hit.HasValue && raycast.hit.Value.transform.TryGetComponent<IInteractable<PlayerCharacter>>(out var interactable))
             {
                 if (interactVisual) interactVisual.SetActive(true);
                 if (!_inputAction.Player.Interact.WasPressedThisFrame()) return;
-                interactable.Interact();
+                interactable.Interact(GetComponent<PlayerCharacter>());
             }
             else
             {
