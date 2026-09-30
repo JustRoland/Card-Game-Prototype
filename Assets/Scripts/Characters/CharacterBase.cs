@@ -5,8 +5,8 @@ namespace Characters
 {
     public abstract class CharacterBase : MonoBehaviour
     {
-        [SerializeField] private BaseStats stats;
-        [SerializeField] private BodyPart[] bodyParts;
+        [SerializeField] protected BaseStats stats;
+        [SerializeField] protected BodyPart[] bodyParts;
         [SerializeField] protected Color damageEffectColor;
         [SerializeField] protected float damageEffectDuration = 0.035f;
     
@@ -27,6 +27,11 @@ namespace Characters
             {
                 bodyPart.Initialize(this);
             }
+        }
+        
+        private void Update()
+        {
+            Stats.Mediator.Update(Time.deltaTime);
         }
 
         public virtual void Damage(BodyPart bodyPart, int damage, float knockBack, Vector3 origin)

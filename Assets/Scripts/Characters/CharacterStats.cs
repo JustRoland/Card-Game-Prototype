@@ -1,172 +1,185 @@
-
-public enum StatType
+namespace Characters
 {
-    Acceleration,
-    WalkSpeed,
-    CrouchSpeed,
-    SprintSpeed,
-    SlowedSpeed,
-    JumpForce,
-    AirAcceleration,
-    DashForce,
-    DashCooldown,
-    DashAirDistance,
-    Health,
-    DamageMultiplier,
-    Defense,
-    TurnSpeed,
-}
-
-public class CharacterStats
-{
-    private readonly BaseStats _baseStats;
-    private readonly StatsMediator _mediator;
-
-    public StatsMediator Mediator => _mediator;
-
-    public CharacterStats(StatsMediator mediator, BaseStats baseStats)
+    public enum StatType
     {
-        _mediator = mediator;
-        _baseStats = baseStats;
+        Acceleration,
+        WalkSpeed,
+        CrouchSpeed,
+        SprintSpeed,
+        SlowedSpeed,
+        JumpForce,
+        AirAcceleration,
+        DashForce,
+        DashCooldown,
+        DashAirDistance,
+        Health,
+        DamageMultiplier,
+        Defense,
+        TurnSpeed,
+        MaxRange,
     }
 
-    public float Acceleration
+    public class CharacterStats
     {
-        get
+        private readonly BaseStats _baseStats;
+        private readonly StatsMediator _mediator;
+
+        public StatsMediator Mediator => _mediator;
+
+        public CharacterStats(StatsMediator mediator, BaseStats baseStats)
         {
-            var q = new Query(StatType.Acceleration, _baseStats.acceleration);
-            _mediator.PerformQuery(this, q);
-            return q.Value;
+            _mediator = mediator;
+            _baseStats = baseStats;
         }
-    }
 
-    public float WalkSpeed
-    {
-        get
+        public float Acceleration
         {
-            var q = new Query(StatType.WalkSpeed, _baseStats.walkSpeed);
-            _mediator.PerformQuery(this, q);
-            return q.Value;
+            get
+            {
+                var q = new Query(StatType.Acceleration, _baseStats.acceleration);
+                _mediator.PerformQuery(this, q);
+                return q.Value;
+            }
         }
-    }
 
-    public float CrouchSpeed
-    {
-        get
+        public float WalkSpeed
         {
-            var q = new Query(StatType.CrouchSpeed, _baseStats.crouchSpeed);
-            _mediator.PerformQuery(this, q);
-            return q.Value;
+            get
+            {
+                var q = new Query(StatType.WalkSpeed, _baseStats.walkSpeed);
+                _mediator.PerformQuery(this, q);
+                return q.Value;
+            }
         }
-    }
 
-    public float SprintSpeed
-    {
-        get
+        public float CrouchSpeed
         {
-            var q = new Query(StatType.SprintSpeed, _baseStats.sprintSpeed);
-            _mediator.PerformQuery(this, q);
-            return q.Value;
+            get
+            {
+                var q = new Query(StatType.CrouchSpeed, _baseStats.crouchSpeed);
+                _mediator.PerformQuery(this, q);
+                return q.Value;
+            }
         }
-    }
 
-    public float SlowedSpeed
-    {
-        get
+        public float SprintSpeed
         {
-            var q = new Query(StatType.SlowedSpeed, _baseStats.slowedSpeed);
-            _mediator.PerformQuery(this, q);
-            return q.Value;
+            get
+            {
+                var q = new Query(StatType.SprintSpeed, _baseStats.sprintSpeed);
+                _mediator.PerformQuery(this, q);
+                return q.Value;
+            }
         }
-    }
 
-    public float JumpForce
-    {
-        get
+        public float SlowedSpeed
         {
-            var q = new Query(StatType.JumpForce, _baseStats.jumpForce);
-            _mediator.PerformQuery(this, q);
-            return q.Value;
+            get
+            {
+                var q = new Query(StatType.SlowedSpeed, _baseStats.slowedSpeed);
+                _mediator.PerformQuery(this, q);
+                return q.Value;
+            }
         }
-    }
 
-    public float AirAcceleration
-    {
-        get
+        public float JumpForce
         {
-            var q = new Query(StatType.AirAcceleration, _baseStats.airAcceleration);
-            _mediator.PerformQuery(this, q);
-            return q.Value;
+            get
+            {
+                var q = new Query(StatType.JumpForce, _baseStats.jumpForce);
+                _mediator.PerformQuery(this, q);
+                return q.Value;
+            }
         }
-    }
 
-    public float DashForce
-    {
-        get
+        public float AirAcceleration
         {
-            var q = new Query(StatType.DashForce, _baseStats.dashForce);
-            _mediator.PerformQuery(this, q);
-            return q.Value;
+            get
+            {
+                var q = new Query(StatType.AirAcceleration, _baseStats.airAcceleration);
+                _mediator.PerformQuery(this, q);
+                return q.Value;
+            }
         }
-    }
 
-    public float DashCooldown
-    {
-        get
+        public float DashForce
         {
-            var q = new Query(StatType.DashCooldown, _baseStats.dashCooldown);
-            _mediator.PerformQuery(this, q);
-            return q.Value;
+            get
+            {
+                var q = new Query(StatType.DashForce, _baseStats.dashForce);
+                _mediator.PerformQuery(this, q);
+                return q.Value;
+            }
         }
-    }
 
-    public float DashAirDistance
-    {
-        get
+        public float DashCooldown
         {
-            var q = new Query(StatType.DashAirDistance, _baseStats.dashAirDistance);
-            _mediator.PerformQuery(this, q);
-            return q.Value;
+            get
+            {
+                var q = new Query(StatType.DashCooldown, _baseStats.dashCooldown);
+                _mediator.PerformQuery(this, q);
+                return q.Value;
+            }
         }
-    }
 
-    public float Health
-    {
-        get
+        public float DashAirDistance
         {
-            var q = new Query(StatType.Health, _baseStats.health);
-            _mediator.PerformQuery(this, q);
-            return q.Value;
+            get
+            {
+                var q = new Query(StatType.DashAirDistance, _baseStats.dashAirDistance);
+                _mediator.PerformQuery(this, q);
+                return q.Value;
+            }
         }
-    }
 
-public float DamageMultiplier
-    {
-        get
+        public float Health
         {
-            var q = new Query(StatType.DamageMultiplier, _baseStats.damageMultiplier);
-            _mediator.PerformQuery(this, q);
-            return q.Value;
+            get
+            {
+                var q = new Query(StatType.Health, _baseStats.health);
+                _mediator.PerformQuery(this, q);
+                return q.Value;
+            }
         }
-    }
 
-    public float Defense
-    {
-        get
+        public float DamageMultiplier
         {
-            var q = new Query(StatType.Defense, _baseStats.defense);
-            _mediator.PerformQuery(this, q);
-            return q.Value;
+            get
+            {
+                var q = new Query(StatType.DamageMultiplier, _baseStats.damageMultiplier);
+                _mediator.PerformQuery(this, q);
+                return q.Value;
+            }
         }
-    }
 
-    public float TurnSpeed
-    {
-        get
+        public float Defense
         {
-            var q = new Query(StatType.TurnSpeed, _baseStats.turnSpeed);
-            _mediator.PerformQuery(this, q);
-            return q.Value;
+            get
+            {
+                var q = new Query(StatType.Defense, _baseStats.defense);
+                _mediator.PerformQuery(this, q);
+                return q.Value;
+            }
+        }
+
+        public float TurnSpeed
+        {
+            get
+            {
+                var q = new Query(StatType.TurnSpeed, _baseStats.turnSpeed);
+                _mediator.PerformQuery(this, q);
+                return q.Value;
+            }
+        }
+
+        public float MaxRange
+        {
+            get
+            {
+                var q = new Query(StatType.MaxRange, _baseStats.maxRange);
+                _mediator.PerformQuery(this, q);
+                return q.Value;
+            }
         }
     }
 }

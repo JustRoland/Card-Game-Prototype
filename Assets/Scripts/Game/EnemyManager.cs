@@ -31,7 +31,7 @@ namespace Game
             if (_reinforcementsCooldownTimer <= 0f) _reinforcementsCalled = false;
         }
 
-        public void CallReinforcements(Vector3 toLocation, Enemy caller)
+        public void CallReinforcements(Vector3 toLocation, EnemyCharacter caller)
         {
             if (_reinforcementsCalled) return;
             _reinforcementsCalled = true;

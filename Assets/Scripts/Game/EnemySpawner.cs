@@ -14,32 +14,32 @@ namespace Game
 
     public class EnemySpawner : MonoBehaviour
     {
-        [SerializeField] private Enemy prefab;
+        [SerializeField] private EnemyCharacter prefab;
         [SerializeField] private int spawnAmount;
         [SerializeField] private int maxAmount;
         [SerializeField] private float spawnRadius;
         [SerializeField] bool spawnOnStart;
 
 
-        private GenericFactory<Enemy> _factory;
+        private GenericFactory<EnemyCharacter> _factory;
         private int _counter;
 
         private void Start()
         {
-            _factory = new GenericFactory<Enemy>(prefab, enemy => !enemy.gameObject.activeSelf, 0, maxAmount + 1);
+            _factory = new GenericFactory<EnemyCharacter>(prefab, enemy => !enemy.gameObject.activeSelf, 0, maxAmount + 1);
             
             if (spawnOnStart) Spawn(spawnAmount, spawnRadius);
         }
         
 
-        public Enemy[] Spawn(int amount, float radius = 0)
+        public EnemyCharacter[] Spawn(int amount, float radius = 0)
         {
             var rad = radius > 0 ? radius : spawnRadius;
             var fixedAmount = Math.Min(amount, maxAmount - _counter);
             
             if (fixedAmount <= 0) return null;
             
-            Enemy[] spawnedEnemies = new Enemy[fixedAmount];
+            EnemyCharacter[] spawnedEnemies = new EnemyCharacter[fixedAmount];
             for (int i = 0; i < fixedAmount; i++)
             {
                 var newEnemy = _factory.GetItem();

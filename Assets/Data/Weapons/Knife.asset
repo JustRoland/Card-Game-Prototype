@@ -10,23 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e835aa1da820eb347aa360a1340a6157, type: 3}
-  m_Name: Pistol
+  m_Name: Knife
   m_EditorClassIdentifier: Assembly-CSharp::WeaponData
   description: 
   icon: {fileID: 0}
   model: {fileID: 0}
   projectile: {fileID: 0}
-  bulletOrigin: {x: 0.37799996, y: -0.2079997, z: 1.6672}
-  damage: 15
-  knockBack: 0.4
-  range: 25
-  maxRange: 25
-  damageDropOffRange: 20
+  bulletOrigin: {x: 0, y: 0, z: 0}
+  damage: 35
+  knockBack: 0
+  range: 5
+  maxRange: 5
+  damageDropOffRange: 0
   damageDropOffRate: 0
   fireType: 0
-  fireRate: 300
+  fireRate: 100
   burstFireRate: 0
   burstSize: 0
-  magazineSize: 8
-  maxAmmo: 32
-  reloadSpeed: 3
+  magazineSize: -1
+  maxAmmo: 0
+  reloadSpeed: 0

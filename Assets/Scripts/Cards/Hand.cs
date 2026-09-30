@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Cards;
+using Characters.Player;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Splines;
 using Cysharp.Threading.Tasks;
-using Movement;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
 

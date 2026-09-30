@@ -1,10 +1,6 @@
-using System;
-using Characters;
-using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-
-namespace Movement
+namespace Characters.Player
 {
     public struct CharacterInput
     {
@@ -47,12 +43,10 @@ namespace Movement
     }
 
 
-    public class PlayerController : CharacterBase
+    public class PlayerController : ControllerBase
     {
         private InputSystem_Actions _inputAction;
         
-        [SerializeField] private BaseStats baseStats;
-     
         [SerializeField] private PlayerMovement playerMovement;
         [SerializeField] private PlayerCombat playerCombat;
         [SerializeField] private PlayerCamera playerCamera;
@@ -106,7 +100,7 @@ namespace Movement
                 playerCamera.UpdateRotation(playerHand.Hide
                     ? _inputAction.Player.Look.ReadValue<Vector2>() : Vector2.zero);
 
-                ToggleInteractVisualOverlay(CenterScreenRaycast(raycastMaxDistance));
+                ToggleInteractVisualOverlay(GetRaycast(raycastMaxDistance));
 
                 //character input
                 var input = new CharacterInput
@@ -128,9 +122,6 @@ namespace Movement
                 playerCombat.UpdateInput(input);
                 playerHand.UpdateInput(input);
             }
-            
-            Stats.Mediator.Update(Time.deltaTime);
-            // print($"Attack: {Stats.Damage}, Defense: {Stats.Defense}");
         }
 
         private void LateUpdate()
@@ -140,7 +131,7 @@ namespace Movement
             playerCamera.UpdatePosition(cameraTarget);
         }
 
-        public (RaycastHit?, Ray) CenterScreenRaycast(float distance)
+        public override (RaycastHit?, Ray) GetRaycast(float distance)
         {
             var ray = _camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
 
@@ -160,9 +151,6 @@ namespace Movement
             {
                 if (interactVisual) interactVisual.SetActive(false);
             }
-
-
-            // For interacting with objects in the world.
         }
 
         public void EnableDash(bool value) => canDash = value;

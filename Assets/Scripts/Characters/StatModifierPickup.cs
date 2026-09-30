@@ -1,17 +1,19 @@
-using System;
-using Movement;
+using Characters.Player;
 using UnityEngine;
 
-public class StatModifierPickup : MonoBehaviour
+namespace Characters
 {
-    [SerializeField] private StatType statType;
-    [SerializeField] private int value;
-    [SerializeField] private float duration;
-
-    private void OnTriggerEnter(Collider other)
+    public class StatModifierPickup : MonoBehaviour
     {
-        if (!other.TryGetComponent(out PlayerController controller)) return;
-        var modifier = new BasicModifier(statType, duration, v => v + value);
-        controller.Stats.Mediator.AddModifiers(modifier);
+        [SerializeField] private StatType statType;
+        [SerializeField] private int value;
+        [SerializeField] private float duration;
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (!other.TryGetComponent(out PlayerCharacter character)) return;
+            var modifier = new BasicModifier(statType, duration, v => v + value);
+            character.Stats.Mediator.AddModifiers(modifier);
+        }
     }
 }

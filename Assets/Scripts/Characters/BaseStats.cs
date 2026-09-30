@@ -21,5 +21,6 @@ public class BaseStats : ScriptableObject
     public float health = 100f;
     public float damageMultiplier = 1f;
     public float defense = 10f;
+    public float maxRange = 100f;
 
 }

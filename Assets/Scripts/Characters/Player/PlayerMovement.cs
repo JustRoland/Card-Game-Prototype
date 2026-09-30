@@ -1,10 +1,8 @@
 using System;
 using KinematicCharacterController;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 
-namespace Movement
+namespace Characters.Player
 {
     public class PlayerMovement : MonoBehaviour, ICharacterController
     {
@@ -27,6 +25,7 @@ namespace Movement
 
         private KinematicCharacterMotor _motor;
         private PlayerController _player;
+        private PlayerCharacter _character;
         private Collider[] _overlapColliders;
 
         private Quaternion _requestedRotation;
@@ -52,6 +51,7 @@ namespace Movement
             _motor = GetComponent<KinematicCharacterMotor>();
             _motor.CharacterController = this;
             _player = GetComponent<PlayerController>();
+            _character = GetComponent<PlayerCharacter>();
             _stance = Stance.Stand;
             _overlapColliders = new Collider[8];
 
@@ -128,13 +128,13 @@ namespace Movement
 
 
                 // lazy override
-                 var speed = _requestedSprint ? _player.Stats.SprintSpeed : _player.Stats.WalkSpeed;
-                 speed = _requestedCrouch ? _player.Stats.CrouchSpeed : speed;
-                 speed = _state is CharacterState.Slowed ? _player.Stats.SlowedSpeed : speed;
+                 var speed = _requestedSprint ? _character.Stats.SprintSpeed : _character.Stats.WalkSpeed;
+                 speed = _requestedCrouch ? _character.Stats.CrouchSpeed : speed;
+                 speed = _state is CharacterState.Slowed ? _character.Stats.SlowedSpeed : speed;
 
                 var targetVelocity = projectedMovement * speed;
                 currentVelocity = Vector3.Lerp(currentVelocity, targetVelocity,
-                    1f - Mathf.Exp(-_player.Stats.Acceleration / speed * deltaTime));
+                    1f - Mathf.Exp(-_character.Stats.Acceleration / speed * deltaTime));
             }
             //or in the air...
             else
@@ -147,13 +147,13 @@ namespace Movement
                     _requestedMovement.magnitude;
 
                 var horizontalSpeed = horizontalInAirVelocity.magnitude;
-                var speed = Mathf.Max(horizontalSpeed, _player.Stats.WalkSpeed);
+                var speed = Mathf.Max(horizontalSpeed, _character.Stats.WalkSpeed);
                 var targetHorizontalVelocity = projectedMovement * speed;
 
                 var targetVelocity = targetHorizontalVelocity + new Vector3(0, currentVelocity.y, 0);
 
                 currentVelocity = Vector3.Lerp(currentVelocity, targetVelocity,
-                    1f - Mathf.Exp(-_player.Stats.AirAcceleration * deltaTime));
+                    1f - Mathf.Exp(-_character.Stats.AirAcceleration * deltaTime));
 
 
                 //gravity
@@ -172,12 +172,12 @@ namespace Movement
                 {
                     _motor.ForceUnground(0f);
 
-                    currentVelocity.y = Mathf.Max(currentVelocity.y, _player.Stats.JumpForce);
+                    currentVelocity.y = Mathf.Max(currentVelocity.y, _character.Stats.JumpForce);
                 }
                 else if (_doubleJumpAvailable && _canDoubleJump)
                 {
                     _doubleJumpAvailable = false;
-                    currentVelocity.y = Mathf.Max(currentVelocity.y, _player.Stats.JumpForce);
+                    currentVelocity.y = Mathf.Max(currentVelocity.y, _character.Stats.JumpForce);
                 }
             }
 
@@ -192,7 +192,7 @@ namespace Movement
                 _dashing = true;
                 _dashAvailable = false;
 
-                _dashCooldownEndTime = GameManager.Instance.CurrentTime + new TimerTime(0, 0, seconds: _player.Stats.DashCooldown);
+                _dashCooldownEndTime = GameManager.Instance.CurrentTime + new TimerTime(0, 0, seconds: _character.Stats.DashCooldown);
 
                 var projectedMovement =
                     _motor.GetDirectionTangentToSurface(_requestedMovement, _motor.GroundingStatus.GroundNormal) *
@@ -201,8 +201,8 @@ namespace Movement
                 _dashStartPosition = _motor.TransientPosition;
 
                 _appliedDashVelocity = projectedMovement.magnitude != 0
-                    ? projectedMovement * _player.Stats.DashForce
-                    : _motor.CharacterForward * _player.Stats.DashForce;
+                    ? projectedMovement * _character.Stats.DashForce
+                    : _motor.CharacterForward * _character.Stats.DashForce;
 
                 currentVelocity += _appliedDashVelocity;
             }
@@ -216,13 +216,13 @@ namespace Movement
                 if (_motor.GroundingStatus.IsStableOnGround)
                 {
                     //wait until distance is reached and ...
-                    if (distance < _player.Stats.DashAirDistance / 1.5f) return;
+                    if (distance < _character.Stats.DashAirDistance / 1.5f) return;
                 }
                 //else in the air
                 else
                 {
                     //wait until distance is reached, then subtract initial dash velocity and...
-                    if (distance < _player.Stats.DashAirDistance) return;
+                    if (distance < _character.Stats.DashAirDistance) return;
                     currentVelocity -= _appliedDashVelocity * .9f;
                 }
 

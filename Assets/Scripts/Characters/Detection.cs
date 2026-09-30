@@ -16,7 +16,7 @@ namespace Characters
         [SerializeField] private float scanInterval = 0.2f;
         [SerializeField] private int maxCandidates = 6;
 
-        public bool HasTarget { get; private set; }
+        public bool HasTarget => CurrentTarget;
         public Transform CurrentTarget { get; private set; }
 
         public IReadOnlyList<Transform> VisibleTargets => _visibleTargets;
@@ -94,13 +94,11 @@ namespace Characters
             if (candidate)
             {
                 CurrentTarget = candidate;
-                HasTarget = true;
                 if (previous != candidate) targetAcquired?.Invoke(candidate);
             }
             else
             {
                 CurrentTarget = null;
-                HasTarget = false;
                 if (previous) targetLost?.Invoke(previous);
             }
         }

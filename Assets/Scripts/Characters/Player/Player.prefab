@@ -212,6 +212,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4558679506495862503}
+  - component: {fileID: 8906799147051182683}
   - component: {fileID: 7869319532000814766}
   - component: {fileID: 5497454162118663694}
   - component: {fileID: 8276705700602300862}
@@ -219,6 +220,7 @@ GameObject:
   - component: {fileID: 7343201626559671235}
   - component: {fileID: 466777386827212089}
   - component: {fileID: 4727764690938882748}
+  - component: {fileID: 2712657625894280004}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -244,6 +246,22 @@ Transform:
   - {fileID: 5573509546476856089}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8906799147051182683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5585234062658578643}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6232b3203b9e9b445a60f0542a4e261f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Characters.Player.PlayerCharacter
+  stats: {fileID: 11400000, guid: fe37cedd88cfeb94581651ebb4f8befb, type: 2}
+  bodyParts: []
+  damageEffectColor: {r: 0, g: 0, b: 0, a: 0}
+  damageEffectDuration: 0.035
 --- !u!114 &7869319532000814766
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -256,11 +274,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5be0a6aa9cc9f24419e9230581517b23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stats: {fileID: 11400000, guid: fe37cedd88cfeb94581651ebb4f8befb, type: 2}
-  bodyParts: []
-  damageEffectColor: {r: 0, g: 0, b: 0, a: 0}
-  damageEffectDuration: 0
-  baseStats: {fileID: 11400000, guid: fe37cedd88cfeb94581651ebb4f8befb, type: 2}
   playerMovement: {fileID: 8276705700602300862}
   playerCombat: {fileID: 5497454162118663694}
   playerCamera: {fileID: 2882246367711227111}
@@ -507,6 +520,19 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!114 &2712657625894280004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5585234062658578643}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b678870dbae5d524c984b73168e6c4a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BodyPart
+  data: {fileID: 11400000, guid: 34b9a9a56fe4463439c4151c781b1aec, type: 2}
 --- !u!1 &6101723804867126223
 GameObject:
   m_ObjectHideFlags: 0

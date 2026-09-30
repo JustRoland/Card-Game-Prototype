@@ -1,4 +1,5 @@
 using System;
+using Characters;
 
 
 public class BasicModifier : StatModifier

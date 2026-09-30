@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Characters.State_Machine
 {
-    public class StateMachine<TEnemy> where TEnemy : Enemy
+    public class StateMachine<TEnemy> where TEnemy : EnemyCharacter
     {
         public State<TEnemy> CurrentState { get; private set; }
         public TEnemy Enemy { get; }

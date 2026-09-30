@@ -12,7 +12,7 @@ namespace Characters.State_Machine
         
         public override void Enter()
         {
-            Enemy.SetTarget(Enemy.CurrentTarget, Enemy.followDistance, new Vector3(0, 4, 0));
+            Enemy.SetTarget(Enemy.CurrentTarget);
             Enemy.SetSpeed(Enemy.Stats.WalkSpeed);
             _locationUpdateTimer = _locationUpdateInterval;
             EnemyManager.Instance.CallReinforcements(Enemy.transform.position, Enemy);

@@ -20,6 +20,7 @@ MonoBehaviour:
   damage: 25
   knockBack: 1
   range: 100
+  maxRange: 100
   damageDropOffRange: 30
   damageDropOffRate: 0
   fireType: 1

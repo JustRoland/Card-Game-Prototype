@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Characters.State_Machine
 {
-    public abstract class State<T> where T : Enemy
+    public abstract class State<T> where T : EnemyCharacter
     {
         protected StateMachine<T> StateMachine;
         protected T Enemy;

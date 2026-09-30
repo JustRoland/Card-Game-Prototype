@@ -1,3 +1,4 @@
+using Cards;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
