@@ -1,6 +1,7 @@
-using UnityEngine;
-
-public interface IInteractable
+namespace Utility
 {
-    public void Interact();
+    public interface IInteractable
+    {
+        public void Interact();
+    }
 }

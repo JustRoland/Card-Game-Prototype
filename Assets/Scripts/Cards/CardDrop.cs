@@ -1,14 +1,16 @@
-using System;
-using Cards;
 using UnityEngine;
+using Utility;
 
-public class CardDrop : MonoBehaviour, IInteractable
+namespace Cards
 {
-
-    public void Interact()
+    public class CardDrop : MonoBehaviour, IInteractable
     {
-        CardManager.Instance.AddCard();
-        gameObject.SetActive(false);
-    }
+
+        public void Interact()
+        {
+            CardManager.Instance.AddCard();
+            gameObject.SetActive(false);
+        }
     
+    }
 }

@@ -1,22 +1,25 @@
 using UnityEngine;
 
-public class CardHoverSystem : MonoBehaviour
+namespace Cards
 {
-    [SerializeField] private CardView hoverCardView;
-
-    private Vector3 _offset;
-    private Camera _camera;
-
-    public void Initialize(Vector3 positionOffset)
+    public class CardHoverSystem : MonoBehaviour
     {
-        _offset = positionOffset;
-    }
+        [SerializeField] private CardView hoverCardView;
 
-    public void Show(CardView card, Vector3 originalPosition)
-    {
-        hoverCardView.Setup(card.Card, originalPosition + _offset, transform.localScale).SelectCard(card.Selected);
-        hoverCardView.gameObject.SetActive(true);
-    }
+        private Vector3 _offset;
+        private Camera _camera;
 
-    public void Hide() => hoverCardView.gameObject.SetActive(false);
+        public void Initialize(Vector3 positionOffset)
+        {
+            _offset = positionOffset;
+        }
+
+        public void Show(CardView card, Vector3 originalPosition)
+        {
+            hoverCardView.Setup(card.Card, originalPosition + _offset, transform.localScale).SelectCard(card.Selected);
+            hoverCardView.gameObject.SetActive(true);
+        }
+
+        public void Hide() => hoverCardView.gameObject.SetActive(false);
+    }
 }

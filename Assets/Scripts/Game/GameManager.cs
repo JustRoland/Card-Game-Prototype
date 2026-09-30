@@ -1,27 +1,29 @@
-using System;
-using System.Timers;
 using UnityEngine;
+using Utility;
 
-public class GameManager : MonoBehaviour
+namespace Game
 {
-    public static GameManager Instance;
-
-    private SimpleTimer _timer;
-
-    public TimerTime CurrentTime => _timer.ReadTime();
-
-    private void Awake()
+    public class GameManager : MonoBehaviour
     {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
+        public static GameManager Instance;
+
+        private SimpleTimer _timer;
+
+        public TimerTime CurrentTime => _timer.ReadTime();
+
+        private void Awake()
+        {
+            if (Instance == null) Instance = this;
+            else Destroy(gameObject);
         
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-    }
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
 
-    private void Start()
-    {
-        _timer = new SimpleTimer(TimerType.Stopwatch);
-        _timer.StartTimer();
+        private void Start()
+        {
+            _timer = new SimpleTimer(TimerType.Stopwatch);
+            _timer.StartTimer();
+        }
     }
 }

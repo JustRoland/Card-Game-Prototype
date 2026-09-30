@@ -1,4 +1,3 @@
-using Cards;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -6,145 +5,147 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
 
-
-public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler,
-    IBeginDragHandler, IDragHandler, IEndDragHandler
+namespace Cards
 {
-    [SerializeField] private TMP_Text nameText;
-    [SerializeField] private TMP_Text descriptionText;
-    [SerializeField] private TMP_Text valueText;
-    [SerializeField] private SpriteRenderer spriteRenderer;
-    [SerializeField] private GameObject container;
-    [SerializeField] private GameObject silhouette;
-
-    private Vector2 _offsetFromPointerPosition;
-    private Vector3 _dragStartPosition;
-    private Quaternion _dragStartRotation;
-    private SortingGroup _sortingGroup;
-    private Camera _camera;
-
-
-    [Header("Events")] public UnityEvent<CardView, Vector3> StartDrag = new();
-    public UnityEvent<CardView, Vector3> Dragging = new();
-    public UnityEvent<CardView, Vector3> EndDrag = new();
-    public UnityEvent<CardView, Vector3> Click = new();
-    public UnityEvent<CardView, Vector3> HoverEnter = new();
-    public UnityEvent<CardView, Vector3> HoverExit = new();
-
-
-    public Card Card { get; private set; }
-    public bool Active { get; private set; }
-    public bool Selected { get; private set; }
-
-    public int Order
+    public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler,
+        IBeginDragHandler, IDragHandler, IEndDragHandler
     {
-        get => _sortingGroup.sortingOrder;
-        set => _sortingGroup.sortingOrder = value;
-    }
+        [SerializeField] private TMP_Text nameText;
+        [SerializeField] private TMP_Text descriptionText;
+        [SerializeField] private TMP_Text valueText;
+        [SerializeField] private SpriteRenderer spriteRenderer;
+        [SerializeField] private GameObject container;
+        [SerializeField] private GameObject silhouette;
 
-    public CardView Setup(Card card, Vector3 position, Vector3 scale, float scaleUpTime = 0, Camera cam = null)
-    {
-        _camera = cam;
-        if (!_sortingGroup) _sortingGroup = GetComponent<SortingGroup>();
+        private Vector2 _offsetFromPointerPosition;
+        private Vector3 _dragStartPosition;
+        private Quaternion _dragStartRotation;
+        private SortingGroup _sortingGroup;
+        private Camera _camera;
 
-        transform.localPosition = position;
 
-        if (scaleUpTime > 0)
+        [Header("Events")] public UnityEvent<CardView, Vector3> StartDrag = new();
+        public UnityEvent<CardView, Vector3> Dragging = new();
+        public UnityEvent<CardView, Vector3> EndDrag = new();
+        public UnityEvent<CardView, Vector3> Click = new();
+        public UnityEvent<CardView, Vector3> HoverEnter = new();
+        public UnityEvent<CardView, Vector3> HoverExit = new();
+
+
+        public Card Card { get; private set; }
+        public bool Active { get; private set; }
+        public bool Selected { get; private set; }
+
+        public int Order
         {
-            transform.localScale = Vector3.zero;
-            transform.DOScale(scale, scaleUpTime);
+            get => _sortingGroup.sortingOrder;
+            set => _sortingGroup.sortingOrder = value;
         }
-        else transform.localScale = scale;
 
-        Card = card;
-        nameText.text = card.Name;
-        descriptionText.text = card.Description;
-        valueText.text = card.Rarity.ToString();
-        spriteRenderer.sprite = card.Sprite;
+        public CardView Setup(Card card, Vector3 position, Vector3 scale, float scaleUpTime = 0, Camera cam = null)
+        {
+            _camera = cam;
+            if (!_sortingGroup) _sortingGroup = GetComponent<SortingGroup>();
 
-        SetActive(true);
-        SelectCard(false);
+            transform.localPosition = position;
 
-        return this;
-    }
+            if (scaleUpTime > 0)
+            {
+                transform.localScale = Vector3.zero;
+                transform.DOScale(scale, scaleUpTime);
+            }
+            else transform.localScale = scale;
 
+            Card = card;
+            nameText.text = card.Name;
+            descriptionText.text = card.Description;
+            valueText.text = card.Rarity.ToString();
+            spriteRenderer.sprite = card.Sprite;
 
-    public void SetActive(bool active)
-    {
-        Active = active;
-        gameObject.SetActive(active);
-    }
+            SetActive(true);
+            SelectCard(false);
 
-    public void SelectCard(bool selected)
-    {
-        Selected = selected;
-        silhouette.SetActive(selected);
-    }
-
-    private void SelectAndAdd(bool selected)
-    {
-        SelectCard(selected);
-        if (selected) CardManager.Instance.SelectedCards.Add(this);
-        else CardManager.Instance.SelectedCards.Remove(this);
-    }
-
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        if (CardManager.Instance.IsDragging) return;
-        container.SetActive(false);
-        HoverEnter.Invoke(this, transform.localPosition);
-    }
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        if (CardManager.Instance.IsDragging) return;
-        container.SetActive(true);
-        HoverExit.Invoke(this, transform.localPosition);
-    }
-
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        if (CardManager.Instance.IsDragging) return;
-        SelectAndAdd(!Selected);
-        Click.Invoke(this, transform.localPosition);
-    }
-
-    public void OnBeginDrag(PointerEventData eventData)
-    {
-        var pos = _camera.ScreenToWorldPoint(new Vector3(eventData.position.x, eventData.position.y, 0.6f)); //Z value is distance of Hand to the Camera
-        StartDrag.Invoke(this, pos);
-    }
-
-    public void SetDragStartParameters(Vector3 pos)
-    {
-        _dragStartPosition = transform.localPosition;
-        _dragStartRotation = transform.localRotation;
-        _offsetFromPointerPosition = new Vector3(pos.x, pos.y, 0) - transform.localPosition;
-        container.SetActive(true);
-    }
+            return this;
+        }
 
 
-    public void OnDrag(PointerEventData eventData)
-    {
-        var pos = _camera.ScreenToWorldPoint(new Vector3(eventData.position.x, eventData.position.y, 0.6f));
-        Dragging.Invoke(this, pos);
+        public void SetActive(bool active)
+        {
+            Active = active;
+            gameObject.SetActive(active);
+        }
+
+        public void SelectCard(bool selected)
+        {
+            Selected = selected;
+            silhouette.SetActive(selected);
+        }
+
+        private void SelectAndAdd(bool selected)
+        {
+            SelectCard(selected);
+            if (selected) CardManager.Instance.SelectedCards.Add(this);
+            else CardManager.Instance.SelectedCards.Remove(this);
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            if (CardManager.Instance.IsDragging) return;
+            container.SetActive(false);
+            HoverEnter.Invoke(this, transform.localPosition);
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            if (CardManager.Instance.IsDragging) return;
+            container.SetActive(true);
+            HoverExit.Invoke(this, transform.localPosition);
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            if (CardManager.Instance.IsDragging) return;
+            SelectAndAdd(!Selected);
+            Click.Invoke(this, transform.localPosition);
+        }
+
+        public void OnBeginDrag(PointerEventData eventData)
+        {
+            var pos = _camera.ScreenToWorldPoint(new Vector3(eventData.position.x, eventData.position.y, 0.6f)); //Z value is distance of Hand to the Camera
+            StartDrag.Invoke(this, pos);
+        }
+
+        public void SetDragStartParameters(Vector3 pos)
+        {
+            _dragStartPosition = transform.localPosition;
+            _dragStartRotation = transform.localRotation;
+            _offsetFromPointerPosition = new Vector3(pos.x, pos.y, 0) - transform.localPosition;
+            container.SetActive(true);
+        }
+
+
+        public void OnDrag(PointerEventData eventData)
+        {
+            var pos = _camera.ScreenToWorldPoint(new Vector3(eventData.position.x, eventData.position.y, 0.6f));
+            Dragging.Invoke(this, pos);
         
-    }
+        }
 
-    public void DragCardView(Vector3 pos)
-    {
-        transform.localPosition = new Vector3(pos.x - _offsetFromPointerPosition.x, pos.y - _offsetFromPointerPosition.y, pos.z);
-    }
+        public void DragCardView(Vector3 pos)
+        {
+            transform.localPosition = new Vector3(pos.x - _offsetFromPointerPosition.x, pos.y - _offsetFromPointerPosition.y, pos.z);
+        }
 
-    public void OnEndDrag(PointerEventData eventData)
-    {
-        var pos = _camera.ScreenToWorldPoint(new Vector3(eventData.position.x, eventData.position.y, 0.6f));
-        EndDrag.Invoke(this, pos);
-    }
+        public void OnEndDrag(PointerEventData eventData)
+        {
+            var pos = _camera.ScreenToWorldPoint(new Vector3(eventData.position.x, eventData.position.y, 0.6f));
+            EndDrag.Invoke(this, pos);
+        }
 
-    public void ResetCard()
-    {
-        transform.localPosition = _dragStartPosition;
-        transform.localRotation = _dragStartRotation;
+        public void ResetCard()
+        {
+            transform.localPosition = _dragStartPosition;
+            transform.localRotation = _dragStartRotation;
+        }
     }
 }

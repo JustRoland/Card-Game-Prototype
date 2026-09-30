@@ -3,6 +3,7 @@ using System.Threading;
 using Characters.Enemies;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using Utility;
 using Random = UnityEngine.Random;
 
 namespace Game

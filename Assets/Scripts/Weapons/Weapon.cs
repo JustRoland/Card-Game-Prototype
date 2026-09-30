@@ -1,9 +1,10 @@
 using System;
+using Characters;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Characters
+namespace Weapons
 {
     public class Weapon : IEquatable<Weapon>
     {
