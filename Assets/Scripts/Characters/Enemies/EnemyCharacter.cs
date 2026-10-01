@@ -20,6 +20,7 @@ namespace Characters.Enemies
         public float MaxRange => combat.MaxRange;
 
         public UnityEvent<Vector3> targetLocationUpdate = new();
+        private EnemyCharacter _reinforcementCaller;
 
         protected override void OnEnable()
         {
@@ -29,8 +30,35 @@ namespace Characters.Enemies
             controller?.Initialize(this);
             combat?.Initialize(controller);
         }
+        protected virtual void OnDisable()
+        {
+            UnbindFromCaller();
+        }
         
+        public void BindToCaller(EnemyCharacter caller)
+        {
+            // Unbind any previous caller first
+            UnbindFromCaller();
 
+            _reinforcementCaller = caller;
+            if (_reinforcementCaller)
+            {
+                _reinforcementCaller.targetLocationUpdate.AddListener(OnCallerTargetLocationUpdate);
+            }
+        }
+
+        private void OnCallerTargetLocationUpdate(Vector3 destination)
+        {
+            SetDestination(destination, true);
+        }
+
+        private void UnbindFromCaller()
+        {
+            if (!_reinforcementCaller) return;
+            _reinforcementCaller.targetLocationUpdate.RemoveListener(OnCallerTargetLocationUpdate);
+            _reinforcementCaller = null;
+        }
+        
         public void SetSpawner(EnemySpawner spawner) => this.Spawner = spawner;
 
         public override void Damage(BodyPart bodyPart, int damage, float knockBack, Vector3 origin)

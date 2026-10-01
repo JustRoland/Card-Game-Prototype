@@ -33,6 +33,7 @@ namespace Characters
     }
 
 
+    //TODO: Effect color will likely be added to the query.
     public class Query
     {
         public readonly StatType StatType;

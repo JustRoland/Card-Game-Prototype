@@ -1,5 +1,5 @@
-using Cards;
 using Characters.Enemies;
+using Game;
 using UnityEngine;
 
 namespace Characters.State_Machine
@@ -8,10 +8,10 @@ namespace Characters.State_Machine
     {
         public override void Enter()
         {
-            if (Enemy.Spawner) Enemy.Spawner.UnloadEntity(Enemy.gameObject);
+            if (Enemy.Spawner) Enemy.Spawner.UnloadEntity(Enemy);
             else Object.Destroy(Enemy.gameObject);
             
-            CardManager.Instance.GetCardDrop(Enemy.transform.position);
+            DropManager.Instance.GetDrop().transform.position = Enemy.transform.position;
         }
 
         public override void Update(float deltaTime)

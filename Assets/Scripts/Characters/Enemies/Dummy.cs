@@ -24,8 +24,9 @@ namespace Characters.Enemies
             GetComponent<DummyController>()?.Initialize(this);
         }
 
-        protected void OnDisable()
+        protected override void OnDisable()
         {
+            base.OnDisable();
             stateMachine.OnStateChanged -= StateChangeDebugMessage;
         }
 

@@ -12,8 +12,8 @@ namespace Characters.State_Machine
         
         public override void Enter()
         {
-            Enemy.SetTarget(Enemy.CurrentTarget);
             Enemy.SetSpeed(Enemy.Stats.WalkSpeed);
+            Enemy.SetTarget(Enemy.CurrentTarget);
             _locationUpdateTimer = _locationUpdateInterval;
             EnemyManager.Instance.CallReinforcements(Enemy.transform.position, Enemy);
             Enemy.targetLocationUpdate.Invoke(Enemy.CurrentTarget.transform.position);

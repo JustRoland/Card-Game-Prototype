@@ -1,7 +1,6 @@
 using System;
-using System.Threading;
+using System.Collections.Generic;
 using Characters.Enemies;
-using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Utility;
 using Random = UnityEngine.Random;
@@ -56,10 +55,12 @@ namespace Game
             return spawnedEnemies;
         }
 
-        public void UnloadEntity(GameObject entity)
+        public void UnloadEntity(EnemyCharacter entity)
         {
-            entity.SetActive(false);
+            entity.gameObject.SetActive(false);
             _counter--;
         }
+
+        public List<EnemyCharacter> GetActiveEntities() => _factory.ActiveItems;
     }
 }

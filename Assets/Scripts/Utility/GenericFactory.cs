@@ -13,6 +13,7 @@ namespace Utility
         private readonly Func<T, bool> _filterPredicate;
         private readonly List<T> _loadedItems = new ();
         public List<T> LoadedItems => _loadedItems;
+        public List<T> ActiveItems => _loadedItems.Where(item => !_filterPredicate(item)).ToList();
     
         public GenericFactory(T prefab, Func<T, bool> filterPredicate, int startBuffer = 0, int maxItems = 0 )
         {
@@ -30,7 +31,7 @@ namespace Utility
         {
             var loaded = _loadedItems.FirstOrDefault(_filterPredicate);
     
-            return loaded ? loaded : CreateNew();
+            return loaded ?? CreateNew();
         }
     
         public void UnloadItem(T item, Action action)

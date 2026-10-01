@@ -10,8 +10,8 @@ namespace Characters.State_Machine
 
         public override void Enter()
         {
-            Enemy.SetTarget(Enemy.CurrentTarget);
             Enemy.SetSpeed(Enemy.Stats.SprintSpeed);
+            Enemy.SetTarget(Enemy.CurrentTarget);
             _attackTimer = Enemy.attackCooldown;
         }
 

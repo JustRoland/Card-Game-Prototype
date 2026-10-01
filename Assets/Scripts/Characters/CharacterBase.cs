@@ -43,9 +43,12 @@ namespace Characters
 
         protected virtual async UniTask OnDamageEffect(BodyPart bodyPart, float duration, float knockBack, Vector3 origin)
         {
-            var knockBackDirection = (RigidBody.position - origin).normalized;
-            RigidBody.AddForce(knockBackDirection * knockBack, ForceMode.Impulse);
-            bodyPart.SetColor(damageEffectColor);
+            if (RigidBody)
+            {
+                var knockBackDirection = (RigidBody.position - origin).normalized;
+                RigidBody.AddForce(knockBackDirection * knockBack, ForceMode.Impulse);
+                bodyPart.SetColor(damageEffectColor);
+            }
 
             await UniTask.WaitForSeconds(duration);
 

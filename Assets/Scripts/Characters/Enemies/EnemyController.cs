@@ -16,6 +16,7 @@ namespace Characters.Enemies
         public Transform followTarget;
         public Vector3 followOffset = Vector3.zero;
         public float followDistance = 0f;
+        [Tooltip("This speed is controlled by the current State of the Character.")]
         public float currentSpeed;
         
         [Header("Obstacle Avoidance")] [SerializeField]
@@ -25,7 +26,6 @@ namespace Characters.Enemies
         [Range(0f, 1f)] [SerializeField] protected float avoidanceWeight = 0.8f;
         
         protected EnemyCharacter character;
-        protected Rigidbody rb;
         protected Vector3 currentVelocity;
         protected Quaternion headingRotation;
         
@@ -33,12 +33,11 @@ namespace Characters.Enemies
         {
             character = enemy;
             detection = GetComponent<Detection>();
-            rb = GetComponent<Rigidbody>();
         }
 
 
         
-        public void SetDestination(Vector3 destination)
+        public virtual void SetDestination(Vector3 destination)
         {
             followTarget = null;
             Destination = destination;

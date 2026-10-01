@@ -37,7 +37,10 @@ namespace Game
             _reinforcementsCalled = true;
             print($"Reinforcements called to {toLocation}");
             _reinforcementsCooldownTimer = Mathf.Min(reinforcementsCooldown, _reinforcementsCooldownTimer);
-            GetNearestSpawner(toLocation).Spawn(3).ToList().ForEach(e => caller.targetLocationUpdate.AddListener(destination => e.SetDestination(destination, true)));
+            GetNearestSpawner(toLocation).Spawn(3);
+            
+            //Grab all spawners and bind all active entities to the caller. Caller can then update their target location.
+            _spawners.ToList().ForEach(sp => sp.GetActiveEntities().ForEach(e => e.BindToCaller(caller)));
         }
         
         private EnemySpawner GetNearestSpawner(Vector3 location)

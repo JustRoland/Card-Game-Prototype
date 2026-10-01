@@ -16,10 +16,12 @@ namespace Characters.Enemies
         [SerializeField] private float altitudeCorrectionSpeed = 6f;
 
         private float _currentBank;
+        private Rigidbody _rb;
 
         public override void Initialize(EnemyCharacter enemy)
         {
             base.Initialize(enemy);
+            _rb = GetComponent<Rigidbody>();
             
             Vector3 initialFlatForward = new Vector3(transform.forward.x, 0f, transform.forward.z);
             if (initialFlatForward.sqrMagnitude < 0.001f) initialFlatForward = Vector3.forward;
@@ -49,8 +51,8 @@ namespace Characters.Enemies
 
                     // Ease speed down inside the arrival radius
                     desiredSpeed = distance < arrivalRadius
-                        ? character.Stats.WalkSpeed * (distance / arrivalRadius)
-                        : character.Stats.WalkSpeed;
+                        ? currentSpeed * (distance / arrivalRadius)
+                        : currentSpeed;
                 }
             }
 
@@ -95,7 +97,7 @@ namespace Characters.Enemies
             if (Mathf.Abs(heightError) < 0.05f) heightError = 0f;
             float desiredVertical = heightError * altitudeCorrectionSpeed;
 
-            desiredVertical -= rb.linearVelocity.y * altitudeDamping;
+            desiredVertical -= _rb.linearVelocity.y * altitudeDamping;
 
             return Mathf.Clamp(desiredVertical, -maxVerticalSpeed, maxVerticalSpeed);
         }
@@ -103,8 +105,8 @@ namespace Characters.Enemies
         private void MoveTowards(Vector3 targetVelocity)
         {
             currentVelocity = Vector3.MoveTowards(
-                rb.linearVelocity, targetVelocity, character.Stats.Acceleration * Time.fixedDeltaTime);
-            rb.linearVelocity = currentVelocity;
+                _rb.linearVelocity, targetVelocity, character.Stats.Acceleration * Time.fixedDeltaTime);
+            _rb.linearVelocity = currentVelocity;
         }
 
         private void RotateAndBank(Vector3 moveDirection)
@@ -126,7 +128,7 @@ namespace Characters.Enemies
                 _currentBank = Mathf.Lerp(_currentBank, 0f, bankSmoothing * Time.fixedDeltaTime);
             }
 
-            rb.MoveRotation(headingRotation * Quaternion.Euler(0f, 0f, _currentBank));
+            _rb.MoveRotation(headingRotation * Quaternion.Euler(0f, 0f, _currentBank));
             
             return;
 
