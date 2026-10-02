@@ -18,7 +18,6 @@ namespace Characters
 
         private Weapon _weapon;
         private LineRenderer _lineRenderer;
-        private Color _color;
 
 
         public void Initialize(ControllerBase controller)
@@ -82,7 +81,6 @@ namespace Characters
             InterpretRaycast(_controller.GetRaycast(_weapon.MaxRange));
         }
         
-        public void SetColor(Color color) => _color = color;
 
         private void InterpretRaycast((RaycastHit? hit, Ray ray) raycast)
         {
@@ -90,22 +88,21 @@ namespace Characters
             {
                 bodyPart.Damage((int)(_weapon.Damage * _character.Stats.DamageMultiplier), _weapon.KnockBack,
                     transform.position);
-                DisplayBullet(bulletOrigin.position, raycast.hit.Value.point, 0.05f, _color).Forget();
+                DisplayBullet(bulletOrigin.position, raycast.hit.Value.point, 0.05f).Forget();
             }
             else
             {
                 DisplayBullet(bulletOrigin.position, bulletOrigin.position + raycast.ray.direction * _weapon.Range,
-                    0.05f,
-                    _color).Forget();
+                    0.05f).Forget();
             }
         }
 
 
-        private async UniTask DisplayBullet(Vector3 origin, Vector3 target, float delay, Color color)
+        private async UniTask DisplayBullet(Vector3 origin, Vector3 target, float delay)
         {
             _lineRenderer.SetPositions(new[] { origin, target });
-            _lineRenderer.startColor = color;
-            _lineRenderer.endColor = color;
+            _lineRenderer.startColor = _character.Stats.Damage;
+            _lineRenderer.endColor = _character.Stats.Damage;
             _lineRenderer.enabled = true;
             await UniTask.WaitForSeconds(delay);
             _lineRenderer.enabled = false;

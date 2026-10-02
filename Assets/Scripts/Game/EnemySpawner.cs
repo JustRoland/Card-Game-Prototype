@@ -23,6 +23,7 @@ namespace Game
 
         private GenericFactory<EnemyCharacter> _factory;
         private int _counter;
+        public bool IsFull => _counter >= maxAmount;
 
         private void Start()
         {

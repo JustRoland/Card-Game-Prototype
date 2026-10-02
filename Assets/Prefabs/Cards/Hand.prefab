@@ -182,13 +182,13 @@ MonoBehaviour:
   splineContainer: {fileID: 2598800310244090212}
   cardSpacing: 0.4
   dynamicCardSpacing: 1
-  cardPositionUpdateTime: 0.25
-  dealSpeed: 0.15
+  cardPositionUpdateTime: 0.05
+  dealSpeed: 0.03
   maxCards: 8
   startingHand: 5
   hoverCardPositionOffset: {x: 0, y: 1, z: 0}
   hideHandYPosition: -10
-  hideHandMoveTime: 0.35
+  hideHandMoveTime: 0.07
   RequestCardView:
     m_PersistentCalls:
       m_Calls: []

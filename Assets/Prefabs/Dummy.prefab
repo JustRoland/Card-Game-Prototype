@@ -212,6 +212,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Characters.Enemies.Dummy
   stats: {fileID: 11400000, guid: fe37cedd88cfeb94581651ebb4f8befb, type: 2}
+  baseTraits: {fileID: 11400000, guid: 3cc1236aaa41cbf4698bc6889391b84a, type: 2}
   bodyParts:
   - {fileID: 4068692998094132781}
   - {fileID: 697446810327204837}
@@ -220,6 +221,7 @@ MonoBehaviour:
   targetLocationUpdate:
     m_PersistentCalls:
       m_Calls: []
+  debugMode: 0
   attackCooldown: 4
 --- !u!114 &6470082371861446251
 MonoBehaviour:
@@ -319,7 +321,7 @@ NavMeshAgent:
   m_AutoRepath: 1
   m_Height: 2
   m_BaseOffset: 0.71
-  m_WalkableMask: 4294967295
+  m_WalkableMask: 5
   m_ObstacleAvoidanceType: 3
 --- !u!1 &6357361598914669055
 GameObject:

@@ -16,7 +16,6 @@ namespace Characters.Player
             _combat = GetComponent<PlayerCombat>();
         }
 
-        public void AddEffectColor(Color color) =>  _combat.SetColor(color);
         public void SetInDialogue(bool locked) => _inDialogue = locked;
 
     }

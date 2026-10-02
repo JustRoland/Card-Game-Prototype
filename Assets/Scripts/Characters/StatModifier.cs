@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 using Utility;
 
 namespace Characters
@@ -19,6 +20,26 @@ namespace Characters
             if (query.StatType == _type)
             {
                 query.Value = _operation(query.Value);
+            }
+        }
+    }
+
+    public class ColorModifier : StatModifier
+    {
+        private readonly Category _type;
+        private readonly Color _effectColor;
+        
+        public ColorModifier(Category type, Color effectColor, float duration) : base(duration)
+        {
+            _type = type;
+            _effectColor = effectColor;
+        }
+
+        public override void Handle(object sender, Query query)
+        {
+            if (query.Category == _type)
+            {
+                query.Color = _effectColor;
             }
         }
     }

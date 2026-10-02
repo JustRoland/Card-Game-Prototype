@@ -202,6 +202,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Characters.Enemies.Drone
   stats: {fileID: 11400000, guid: cd316eb78168d354da5589c1a0ead40f, type: 2}
+  baseTraits: {fileID: 11400000, guid: 3cc1236aaa41cbf4698bc6889391b84a, type: 2}
   bodyParts:
   - {fileID: 3610849727792978468}
   damageEffectColor: {r: 1, g: 1, b: 1, a: 1}
@@ -237,7 +238,7 @@ MonoBehaviour:
   maxVerticalSpeed: 4
   maxBankAngle: 25
   bankSmoothing: 4
-  hoverHeight: 5
+  hoverHeight: 3.5
   groundMask:
     serializedVersion: 2
     m_Bits: 8

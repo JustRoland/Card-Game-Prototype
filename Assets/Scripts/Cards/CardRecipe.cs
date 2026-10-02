@@ -1,14 +1,22 @@
 using System;
 using Characters;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Cards
 {
     [Serializable]
     public class Effect
     {
+        [Header("Stat Changes")]
         public StatType statType;
         public float value;
+        [FormerlySerializedAs("effectType")] [Header("Effect Color")]
+        public Category category;
+        public Color color;
+        [Header("Trait Unlocks")]
+        public TraitType trait;
+        [Header("Duration")]
         public float duration;
     }
 
@@ -17,7 +25,6 @@ namespace Cards
     public class CardRecipe : ScriptableObject
     {
         [field: SerializeField] public string Description { get; private set; }
-        [field: SerializeField] public Color EffectColor { get; private set; }
         [field: SerializeField] public CardData[] Input { get; private set; }
         [field: SerializeField] public CardData Output { get; private set; }
     

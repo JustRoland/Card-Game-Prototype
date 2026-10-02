@@ -5,6 +5,7 @@ using System.Threading;
 using Characters.Player;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using Game;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -102,6 +103,7 @@ namespace Cards
             transform.DOLocalMoveY(Hide ? hideHandYPosition : _normalHandYPosition, hideHandMoveTime);
             Cursor.lockState = Hide ? CursorLockMode.Locked : CursorLockMode.Confined;
             Cursor.visible = !Hide;
+            GameManager.Instance.SlowTime(Hide ? Speed.Normal : Speed.Slow);
         }
 
         public async UniTask AddCard(CardView cardView, CancellationToken cancellationToken)

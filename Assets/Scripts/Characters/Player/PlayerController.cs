@@ -49,6 +49,7 @@ namespace Characters.Player
     {
         private InputSystem_Actions _inputAction;
         
+        [SerializeField] private PlayerCharacter playerCharacter;
         [SerializeField] private PlayerMovement playerMovement;
         [SerializeField] private PlayerCombat playerCombat;
         [SerializeField] private PlayerCamera playerCamera;
@@ -111,8 +112,8 @@ namespace Characters.Player
                     Move = _inputAction.Player.Move.ReadValue<Vector2>(),
                     Sprint = _inputAction.Player.Sprint.IsPressed(),
                     Jump = _inputAction.Player.Jump.WasPressedThisFrame(),
-                    DoubleJump = canDoubleJump,
-                    Dash = _inputAction.Player.Dash.WasPressedThisFrame() && canDash,
+                    DoubleJump = playerCharacter.Stats.Trait(TraitType.DoubleJump),
+                    Dash = _inputAction.Player.Dash.WasPressedThisFrame() && playerCharacter.Stats.Trait(TraitType.Dash),
                     Crouch = _inputAction.Player.Crouch.WasPressedThisFrame() ? CrouchInput.Toggle : CrouchInput.None,
                     ToggleCards = _inputAction.Player.Cards.WasPressedThisFrame(),
                     Attack = playerHand.Hide && _inputAction.Player.Attack.IsPressed(),

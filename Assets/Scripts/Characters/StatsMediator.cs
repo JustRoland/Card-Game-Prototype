@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Cards;
+using UnityEngine;
 
 namespace Characters
 {
@@ -37,12 +39,19 @@ namespace Characters
     public class Query
     {
         public readonly StatType StatType;
+        public readonly Category Category;
+        public Color Color;
         public float Value;
 
         public Query(StatType statType, float value)
         {
             StatType = statType;
             Value = value;
+        }
+        public Query(Category category, Color color)
+        {
+            Category = category;
+            Color = color;
         }
     }
 }

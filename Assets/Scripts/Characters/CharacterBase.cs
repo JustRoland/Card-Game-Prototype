@@ -6,10 +6,11 @@ namespace Characters
     public abstract class CharacterBase : MonoBehaviour
     {
         [SerializeField] protected BaseStats stats;
+        [SerializeField] protected BaseTraits baseTraits;
         [SerializeField] protected BodyPart[] bodyParts;
         [SerializeField] protected Color damageEffectColor;
         [SerializeField] protected float damageEffectDuration = 0.035f;
-    
+
 
         protected Material Material;
         protected Rigidbody RigidBody;
@@ -18,7 +19,7 @@ namespace Characters
 
         protected virtual void OnEnable()
         {
-            Stats = new CharacterStats(new StatsMediator(), stats);
+            Stats = new CharacterStats(new StatsMediator(), stats, baseTraits, Color.white);
             Material = GetComponentInChildren<MeshRenderer>().material;
             RigidBody = GetComponent<Rigidbody>();
             OriginalColor = Material.color;
@@ -28,7 +29,7 @@ namespace Characters
                 bodyPart.Initialize(this);
             }
         }
-        
+
         private void Update()
         {
             Stats.Mediator.Update(Time.deltaTime);
@@ -41,19 +42,21 @@ namespace Characters
             OnDamageEffect(bodyPart, damageEffectDuration, knockBack, origin).Forget();
         }
 
-        protected virtual async UniTask OnDamageEffect(BodyPart bodyPart, float duration, float knockBack, Vector3 origin)
+        protected virtual async UniTask OnDamageEffect(BodyPart bodyPart, float duration, float knockBack,
+            Vector3 origin)
         {
             if (RigidBody)
             {
                 var knockBackDirection = (RigidBody.position - origin).normalized;
                 RigidBody.AddForce(knockBackDirection * knockBack, ForceMode.Impulse);
-                bodyPart.SetColor(damageEffectColor);
             }
+
+            bodyPart.SetColor(damageEffectColor);
 
             await UniTask.WaitForSeconds(duration);
 
             bodyPart.ResetColor();
-        
+
             await UniTask.Yield();
         }
     }

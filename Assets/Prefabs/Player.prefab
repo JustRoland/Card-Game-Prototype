@@ -259,6 +259,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Characters.Player.PlayerCharacter
   stats: {fileID: 11400000, guid: fe37cedd88cfeb94581651ebb4f8befb, type: 2}
+  baseTraits: {fileID: 11400000, guid: 3cc1236aaa41cbf4698bc6889391b84a, type: 2}
   bodyParts: []
   damageEffectColor: {r: 0, g: 0, b: 0, a: 0}
   damageEffectDuration: 0.035
@@ -274,6 +275,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5be0a6aa9cc9f24419e9230581517b23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerCharacter: {fileID: 8906799147051182683}
   playerMovement: {fileID: 8276705700602300862}
   playerCombat: {fileID: 5497454162118663694}
   playerCamera: {fileID: 2882246367711227111}
