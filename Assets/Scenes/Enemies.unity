@@ -2703,6 +2703,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Card Hand
       objectReference: {fileID: 0}
+    - target: {fileID: 4648881761536732298, guid: cd3fc06882c3f224aab8b6d4c1cad70b, type: 3}
+      propertyPath: character
+      value: 
+      objectReference: {fileID: 489033215}
     - target: {fileID: 7480900625459121532, guid: cd3fc06882c3f224aab8b6d4c1cad70b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

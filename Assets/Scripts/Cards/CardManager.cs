@@ -146,7 +146,8 @@ namespace Cards
 
         public void AddCard()
         {
-            hand.AddCard(GetCardView(hand.transform.localScale), _token).Forget();
+            var cardView = GetCardView(hand.transform.localScale);
+            hand.AddCard(cardView, _token).Forget();
         }
 
         private void OnRequestNewCardView(Hand hnd)

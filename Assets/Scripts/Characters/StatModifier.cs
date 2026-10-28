@@ -46,6 +46,8 @@ namespace Characters
 
     public abstract class StatModifier : IDisposable
     {
+        private static int _id;
+        public int ID = _id++;
         public bool MarkedForRemoval { get; private set;}
         public Action<StatModifier> OnDispose = delegate { };
 

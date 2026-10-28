@@ -1,25 +1,7 @@
-using System;
-using Characters;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Cards
 {
-    [Serializable]
-    public class Effect
-    {
-        [Header("Stat Changes")]
-        public StatType statType;
-        public float value;
-        [FormerlySerializedAs("effectType")] [Header("Effect Color")]
-        public Category category;
-        public Color color;
-        [Header("Trait Unlocks")]
-        public TraitType trait;
-        [Header("Duration")]
-        public float duration;
-    }
-
 
     [CreateAssetMenu(fileName = "Card Recipe", menuName = "Cards/Card Recipe")]
     public class CardRecipe : ScriptableObject

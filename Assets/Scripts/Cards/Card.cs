@@ -10,15 +10,17 @@ namespace Cards
         public string Name => _data.name;
         public string Description => _data.Description;
         public Sprite Sprite => _data.Sprite;
-        public int Rarity { get; }
-        public CardType Type { get; }
+        public int Rarity => _data.Tier;
+        public CardType Type => _data.Type;
+        public Effect[] ActiveEffect => _data.ActiveEffects;
+        public Effect[] PassiveEffects => _data.PassiveEffects;
+        public readonly int[] modifiersID;
 
 
         public Card(CardData data)
         {
             _data = data;
-            Rarity = data.Tier;
-            Type = data.Type;
+            modifiersID = new int[data.PassiveEffects.Length];
         }
     
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Characters;
 using Characters.Player;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
@@ -15,6 +16,9 @@ namespace Cards
 {
     public class Hand : MonoBehaviour
     {
+        [Header("References")]
+        [SerializeField] private PlayerCharacter character;
+        
         [Header("Variables")] [SerializeField] private SplineContainer splineContainer;
         [SerializeField] private float cardSpacing = 0.1f;
         [SerializeField] private bool dynamicCardSpacing;
@@ -113,6 +117,19 @@ namespace Cards
 
             cardView.transform.parent = transform;
             _cards.Add(cardView);
+            
+            //Handle effects
+            for (var i = 0; i < cardView.Card.PassiveEffects.Length; i++)
+            {
+                var effect = cardView.Card.PassiveEffects[i];
+                var modifier = new BasicModifier(effect.statType, effect.duration, v => v + effect.value);
+                character.Stats.Mediator.AddModifiers(modifier);
+                cardView.Card.modifiersID[i] = modifier.ID;
+                var colorModifier = new ColorModifier(effect.category, effect.color, effect.duration);
+                character.Stats.Mediator.AddModifiers(colorModifier);
+                character.Stats.UnlockTrait(effect.trait);
+            }
+
             await UpdateCardPositions(cardPositionUpdateTime, cancellationToken);
 
             await UniTask.Yield(cancellationToken: cancellationToken);
@@ -127,6 +144,10 @@ namespace Cards
             {
                 if (!_cards.Contains(cardView)) continue;
                 _cards.Remove(cardView);
+                foreach (var id in cardView.Card.modifiersID)
+                {
+                    character.Stats.Mediator.RemoveModifier(id);
+                }
             }
 
             await UpdateCardPositions(cardPositionUpdateTime, cancellationToken);

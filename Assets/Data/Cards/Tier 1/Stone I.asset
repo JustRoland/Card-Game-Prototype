@@ -16,3 +16,11 @@ MonoBehaviour:
   <Tier>k__BackingField: 1
   <Sprite>k__BackingField: {fileID: 1482157411, guid: c3d55075e50c97940ae0a49c91c1c45d, type: 3}
   <Type>k__BackingField: 2
+  <ActiveEffects>k__BackingField: []
+  <PassiveEffects>k__BackingField:
+  - statType: 12
+    value: 1.1
+    category: 0
+    color: {r: 0.7433963, g: 0.31565267, b: 0.09958705, a: 0}
+    trait: 0
+    duration: -1

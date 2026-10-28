@@ -23,6 +23,8 @@ namespace Characters
                 Queries -= modifier.Handle;
             };
         }
+        
+        public void RemoveModifier(int id) => _modifiers.Find(m => m.ID == id)?.Dispose();
 
         public void Update(float deltaTime)
         {
@@ -35,7 +37,6 @@ namespace Characters
     }
 
 
-    //TODO: Effect color will likely be added to the query.
     public class Query
     {
         public readonly StatType StatType;
