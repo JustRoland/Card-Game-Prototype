@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Characters
@@ -6,10 +7,11 @@ namespace Characters
     public abstract class CharacterBase : MonoBehaviour
     {
         [SerializeField] protected BaseStats stats;
-        [SerializeField] protected BaseTraits baseTraits;
-        [SerializeField] protected BodyPart[] bodyParts;
-        [SerializeField] protected Color damageEffectColor;
-        [SerializeField] protected float damageEffectDuration = 0.035f;
+        [SerializeField, PropertySpace(SpaceBefore = 0, SpaceAfter = 20)] protected BaseTraits baseTraits;
+        
+        [FoldoutGroup("Damage Effects"), SerializeField] protected BodyPart[] bodyParts;
+        [FoldoutGroup("Damage Effects"), SerializeField] protected Color damageEffectColor;
+        [FoldoutGroup("Damage Effects"), SerializeField] protected float damageEffectDuration = 0.035f;
 
 
         protected Material Material;

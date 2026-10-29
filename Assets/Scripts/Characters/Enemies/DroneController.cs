@@ -1,19 +1,36 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Characters.Enemies
 {
     public class DroneController : EnemyController
     {
-        
-        [SerializeField] private float arrivalRadius = 3f;
-        [SerializeField] private float stoppingDistance = 0.5f;
-        [SerializeField] private float altitudeDamping = 0.5f;
-        [SerializeField] private float maxVerticalSpeed = 4f;
-        [SerializeField] private float maxBankAngle = 25f;
-        [SerializeField] private float bankSmoothing = 4f;
-        [SerializeField] private float hoverHeight = 5f;
-        [SerializeField] private LayerMask groundMask;
-        [SerializeField] private float altitudeCorrectionSpeed = 6f;
+        [FoldoutGroup("Drone Movement")] [SerializeField]
+        private float arrivalRadius = 3f;
+
+        [FoldoutGroup("Drone Movement")] [SerializeField]
+        private float stoppingDistance = 0.5f;
+
+        [FoldoutGroup("Drone Movement")] [SerializeField]
+        private float altitudeDamping = 0.5f;
+
+        [FoldoutGroup("Drone Movement")] [SerializeField]
+        private float maxVerticalSpeed = 4f;
+
+        [FoldoutGroup("Drone Movement")] [SerializeField]
+        private float maxBankAngle = 25f;
+
+        [FoldoutGroup("Drone Movement")] [SerializeField]
+        private float bankSmoothing = 4f;
+
+        [FoldoutGroup("Drone Movement")] [SerializeField]
+        private float hoverHeight = 5f;
+
+        [FoldoutGroup("Drone Movement")] [SerializeField]
+        private LayerMask groundMask;
+
+        [FoldoutGroup("Drone Movement")] [SerializeField]
+        private float altitudeCorrectionSpeed = 6f;
 
         private float _currentBank;
         private Rigidbody _rb;
@@ -22,12 +39,12 @@ namespace Characters.Enemies
         {
             base.Initialize(enemy);
             _rb = GetComponent<Rigidbody>();
-            
+
             Vector3 initialFlatForward = new Vector3(transform.forward.x, 0f, transform.forward.z);
             if (initialFlatForward.sqrMagnitude < 0.001f) initialFlatForward = Vector3.forward;
             headingRotation = Quaternion.LookRotation(initialFlatForward.normalized, Vector3.up);
         }
-        
+
         private void FixedUpdate()
         {
             UpdateFollowTarget();
@@ -84,7 +101,7 @@ namespace Characters.Enemies
             Destination = followPoint;
             HasDestination = true;
         }
-        
+
         private float CalculateVerticalVelocity()
         {
             if (groundMask.value == 0) return 0f;
@@ -119,7 +136,8 @@ namespace Characters.Enemies
             }
             else if (HasTarget)
             {
-                flatDirection = new Vector3(CurrentTarget.position.x - transform.position.x, 0f, CurrentTarget.position.z - transform.position.z);
+                flatDirection = new Vector3(CurrentTarget.position.x - transform.position.x, 0f,
+                    CurrentTarget.position.z - transform.position.z);
 
                 CalculateHeadingAndBank();
             }
@@ -129,7 +147,7 @@ namespace Characters.Enemies
             }
 
             _rb.MoveRotation(headingRotation * Quaternion.Euler(0f, 0f, _currentBank));
-            
+
             return;
 
             void CalculateHeadingAndBank()
@@ -186,33 +204,33 @@ namespace Characters.Enemies
         {
             throw new System.NotImplementedException();
         }
-        
-        
+
+
         private void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.green;
             Gizmos.DrawWireSphere(transform.position, arrivalRadius);
- 
+
             Gizmos.color = Color.cyan;
             Gizmos.DrawRay(transform.position, transform.forward * avoidanceLookahead);
             Gizmos.DrawWireSphere(
                 transform.position + transform.forward * avoidanceLookahead, avoidanceRadius);
- 
+
             Gizmos.color = Color.yellow;
             Gizmos.DrawRay(transform.position, Vector3.down * hoverHeight);
- 
+
             if (HasDestination)
             {
                 Gizmos.color = Color.magenta;
                 Gizmos.DrawLine(transform.position, Destination);
                 Gizmos.DrawWireSphere(Destination, stoppingDistance);
             }
- 
+
             if (followTarget != null)
             {
                 Gizmos.color = Color.blue;
                 Gizmos.DrawWireSphere(followTarget.position + followOffset, 0.3f);
-                
+
                 if (!(followDistance > 0.001f)) return;
                 Gizmos.color = new Color(0f, 0f, 1f, 0.3f);
                 Gizmos.DrawWireSphere(followTarget.position + followOffset, followDistance);

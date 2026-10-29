@@ -133,6 +133,7 @@ namespace Characters.Player
                  var speed = _requestedSprint ? _character.Stats.SprintSpeed : _character.Stats.WalkSpeed;
                  speed = _requestedCrouch ? _character.Stats.CrouchSpeed : speed;
                  speed = _state is CharacterState.Slowed ? _character.Stats.SlowedSpeed : speed;
+                 speed *= _character.Stats.SpeedModifier;
 
                 var targetVelocity = projectedMovement * speed;
                 currentVelocity = Vector3.Lerp(currentVelocity, targetVelocity,

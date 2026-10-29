@@ -4,6 +4,8 @@ using Utility;
 
 namespace Characters
 {
+    
+    
     public class BasicModifier : StatModifier
     {
         private readonly StatType _type;

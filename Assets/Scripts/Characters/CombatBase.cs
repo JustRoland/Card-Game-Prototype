@@ -1,5 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using Weapons;
 
@@ -9,76 +10,74 @@ namespace Characters
     public class CombatBase : MonoBehaviour
     {
         [SerializeField] protected WeaponData testWeapon;
-        [SerializeField] protected Transform bulletOrigin;
+        [SerializeField] protected Transform bulletOrigin; //This is currently moved around by the designated weapon origin of the scriptable object. Remove this middleman operation later.
+
 
         public float MaxRange => testWeapon?.maxRange ?? 0f;
         
         private ControllerBase _controller;
-        private CharacterBase _character;
+        protected CharacterBase Character;
 
-        private Weapon _weapon;
+        protected Weapon Weapon;
         private LineRenderer _lineRenderer;
 
 
         public void Initialize(ControllerBase controller)
         {
             _controller = controller;
-            _character = GetComponent<CharacterBase>();
+            Character = GetComponent<CharacterBase>();
             _lineRenderer = GetComponent<LineRenderer>();
-            _weapon = testWeapon.GenerateWeapon();
-            _weapon.FireEvent.AddListener(OnFire);
-            bulletOrigin.localPosition = _weapon.BulletOrigin;
+            ChangeWeapon();
         }
 
-        private bool ChangeWeapon()
+        protected virtual bool ChangeWeapon()
         {
-            if (_weapon == null) return false;
-            if (_weapon == testWeapon.GenerateWeapon()) return true;
-            _weapon.FireEvent.RemoveListener(OnFire);
-            _weapon = testWeapon.GenerateWeapon();
-            _weapon.FireEvent.AddListener(OnFire);
-            bulletOrigin.localPosition = _weapon.BulletOrigin;
+            if (!testWeapon) return false;
+            if (Weapon == testWeapon.GenerateWeapon()) return true;
+            Weapon?.FireEvent.RemoveListener(OnFire);
+            Weapon = testWeapon.GenerateWeapon();
+            Weapon.FireEvent.AddListener(OnFire);
+            bulletOrigin.localPosition = Weapon.BulletOrigin;
             return true;
         }
 
         private void OnDisable()
         {
-            _weapon?.FireEvent.RemoveListener(OnFire);
+            Weapon?.FireEvent.RemoveListener(OnFire);
         }
 
-        public void Attack(bool pressedThisFrame)
+        public virtual void Attack(bool pressedThisFrame, float fireRateMultiplier)
         {
             // !! TEMP FOR TESTING !! -- checks and updates what weapon is assigned in Editor to allow hot-swapping. 
             if (!ChangeWeapon()) return;
             
-            switch (_weapon.Bullets)
+            switch (Weapon.Bullets)
             {
                 case 0:
-                    Reload();
                     break;
                 case > 0:
-                    _weapon.Fire(pressedThisFrame);
+                    Weapon.Fire(pressedThisFrame, fireRateMultiplier);
                     break;
                 case -1:
-                    _weapon.Fire(pressedThisFrame);
+                    Weapon.Fire(pressedThisFrame, fireRateMultiplier);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
 
-        protected void Reload()
+        protected virtual void Reload()
         {
-            if (_weapon == null) return;
-            _weapon.Reload();
-            print($"{_weapon.Bullets} / {_weapon.MagazineSize}");
+            if (Weapon == null) return;
+            Weapon.Reload();
+            print($"{Weapon.Bullets} / {Weapon.MagazineSize}");
 
             // Animations later
         }
 
         protected void OnFire()
         {
-            InterpretRaycast(_controller.GetRaycast(_weapon.MaxRange));
+            InterpretRaycast(_controller.GetRaycast(Weapon.MaxRange));
         }
         
 
@@ -86,13 +85,13 @@ namespace Characters
         {
             if (raycast.hit.HasValue && raycast.hit.Value.collider.transform.TryGetComponent(out BodyPart bodyPart))
             {
-                bodyPart.Damage((int)(_weapon.Damage * _character.Stats.DamageMultiplier), _weapon.KnockBack,
+                bodyPart.Damage((int)((Weapon.Damage + Character.Stats.DamageAdded) * Character.Stats.DamageMultiplier), Weapon.KnockBack,
                     transform.position);
                 DisplayBullet(bulletOrigin.position, raycast.hit.Value.point, 0.05f).Forget();
             }
             else
             {
-                DisplayBullet(bulletOrigin.position, bulletOrigin.position + raycast.ray.direction * _weapon.Range,
+                DisplayBullet(bulletOrigin.position, bulletOrigin.position + raycast.ray.direction * Weapon.Range,
                     0.05f).Forget();
             }
         }
@@ -101,8 +100,8 @@ namespace Characters
         private async UniTask DisplayBullet(Vector3 origin, Vector3 target, float delay)
         {
             _lineRenderer.SetPositions(new[] { origin, target });
-            _lineRenderer.startColor = _character.Stats.Damage;
-            _lineRenderer.endColor = _character.Stats.Damage;
+            _lineRenderer.startColor = Character.Stats.Damage;
+            _lineRenderer.endColor = Character.Stats.Damage;
             _lineRenderer.enabled = true;
             await UniTask.WaitForSeconds(delay);
             _lineRenderer.enabled = false;

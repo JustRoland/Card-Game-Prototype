@@ -6,14 +6,14 @@ namespace Characters.Enemies
 {
     public class Dummy : EnemyCharacter
     {
-        [Header("State")] private StateMachine<Dummy> stateMachine;
-        [SerializeField] private bool debugMode = false;
+        private StateMachine<Dummy> stateMachine;
 
-        [ShowInInspector]
+        [ShowInInspector, PropertySpace]
         private string CurrentState => stateMachine != null ? stateMachine.CurrentState.Name : "No state";
 
         // TODO: Protect variable later
         public float attackCooldown = 4f;
+        [SerializeField, Space] private bool debugMode = false;
 
         protected override void OnEnable()
         {
@@ -23,7 +23,7 @@ namespace Characters.Enemies
             stateMachine.OnStateChanged += StateChangeDebugMessage;
             stateMachine.Start<DummyIdle>();
 
-            GetComponent<DummyController>()?.Initialize(this);
+            // GetComponent<DummyController>()?.Initialize(this);
         }
 
         protected override void OnDisable()

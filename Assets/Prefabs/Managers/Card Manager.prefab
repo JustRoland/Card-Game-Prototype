@@ -51,18 +51,12 @@ MonoBehaviour:
   handCamera: {fileID: 0}
   player: {fileID: 0}
   cardData:
-  - {fileID: 11400000, guid: 271d5059193ce044ea5019670291661e, type: 2}
-  - {fileID: 11400000, guid: 22d0dfccf54e6aa4fb56f519342940a8, type: 2}
-  - {fileID: 11400000, guid: 933162c215b3f9e499df9cd35f592833, type: 2}
-  recipes:
-  - {fileID: 11400000, guid: 5c8038f8f5811cb419bcae6ea81cc597, type: 2}
-  - {fileID: 11400000, guid: 3696d5b0a489f0a4a96b9ee571144cc9, type: 2}
-  - {fileID: 11400000, guid: 81ec7806f0584c0428abf35a499502ea, type: 2}
-  - {fileID: 11400000, guid: f789b483e6794864ba2ebc74eb6799b0, type: 2}
-  - {fileID: 11400000, guid: 577aba06054ce0a4f8a683989e7b0214, type: 2}
-  - {fileID: 11400000, guid: 72657e08d0fcee64fab8289782639059, type: 2}
-  - {fileID: 11400000, guid: 72657e08d0fcee64fab8289782639059, type: 2}
-  - {fileID: 11400000, guid: 25db4cfab15c92141aad03fc7c978e0e, type: 2}
+  - {fileID: 11400000, guid: b163e17017ca73443962cba330f911df, type: 2}
+  - {fileID: 11400000, guid: b28f60dba40594b408d5d91f2d54b285, type: 2}
+  - {fileID: 11400000, guid: 8690030d9de7f434f94d86c09e1448b2, type: 2}
+  - {fileID: 11400000, guid: 45ca287ca55060d4cb4f8026a355a939, type: 2}
+  - {fileID: 11400000, guid: 3c50e92d500556445aea7963393ac5ff, type: 2}
+  recipes: []
   factoryStartBuffer: 0
   factoryMaxItems: 20
   cardScaleUpTime: 0.15

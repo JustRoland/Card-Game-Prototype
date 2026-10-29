@@ -12,6 +12,7 @@ namespace Cards
         public Sprite Sprite => _data.Sprite;
         public int Rarity => _data.Tier;
         public CardType Type => _data.Type;
+        public Color Color => _data.Color;
         public Effect[] ActiveEffect => _data.ActiveEffects;
         public Effect[] PassiveEffects => _data.PassiveEffects;
         public readonly int[] modifiersID;

@@ -200,16 +200,30 @@ namespace Cards
 
         private bool PlayCards(CardView[] cards, Vector3 dropPos)
         {
-            Debug.Assert(cards is { Length: > 0 }, "Card list is empty");
-            Debug.Assert(recipes is { Length: > 0 }, "Recipe list is empty");
-        
             if (Mathf.Abs(dropPos.y - _startDragPosition.y) < minCardYDragToPlay) return false;
+            
+            Debug.Assert(cards is { Length: > 0 }, "Card list is empty");
+            if (cards.Length == 1) return PlaySingleCard(cards[0]);
 
+            Debug.Assert(recipes is { Length: > 0 }, "Recipe list is empty");
             var recipe = recipes.FirstOrDefault(r => r.InputCards.SequenceEqual(cards.Select(c => c.Card)));
-        
             if (!recipe) return false;
 
             return CardUpgrade(recipe, cards) || CardEffect(recipe, cards);
+        }
+
+        private bool PlaySingleCard(CardView cardView)
+        {
+            foreach (var effect in cardView.Card.ActiveEffect)
+            {
+                var modifier = new BasicModifier(effect.statType, effect.duration, v => v + effect.value);
+                player.Stats.Mediator.AddModifiers(modifier);
+                var colorModifier = new ColorModifier(effect.category, effect.color, effect.duration);
+                player.Stats.Mediator.AddModifiers(colorModifier);
+                player.Stats.UnlockTrait(effect.trait);
+            }
+            UnloadExistingCardView(cardView);
+            return false;
         }
 
         private bool CardUpgrade(CardRecipe recipe, CardView[] cards)
@@ -225,6 +239,7 @@ namespace Cards
             return true;
         }
 
+        // TODO: Refactor this; code repetition.
         private bool CardEffect(CardRecipe recipe, CardView[] cards)
         {
             var effects = recipe.Effects;

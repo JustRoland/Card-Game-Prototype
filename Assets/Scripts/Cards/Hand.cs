@@ -7,6 +7,7 @@ using Characters.Player;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Game;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -16,24 +17,43 @@ namespace Cards
 {
     public class Hand : MonoBehaviour
     {
-        [Header("References")]
-        [SerializeField] private PlayerCharacter character;
-        
-        [Header("Variables")] [SerializeField] private SplineContainer splineContainer;
-        [SerializeField] private float cardSpacing = 0.1f;
-        [SerializeField] private bool dynamicCardSpacing;
-        [SerializeField] private float cardPositionUpdateTime = 0.15f;
-        [SerializeField] private float dealSpeed = 0.1f;
-        [SerializeField] private int maxCards = 8;
-        [SerializeField] private int startingHand = 5;
-        [SerializeField] private Vector3 hoverCardPositionOffset = Vector3.zero;
-        private float _normalHandYPosition;
-        [SerializeField] private float hideHandYPosition = -5f;
-        [SerializeField] private float hideHandMoveTime = 1f;
+        [Header("References")] [SerializeField]
+        private PlayerCharacter character;
 
-        [Header("Events")] 
-        public UnityEvent<Hand> RequestCardView = new();
-        public UnityEvent<CardView> RequestRemoveCardView = new();
+        [FoldoutGroup("Hand Settings"), SerializeField]
+        private SplineContainer splineContainer;
+
+        [FoldoutGroup("Hand Settings"), SerializeField]
+        private float cardSpacing = 0.1f;
+
+        [FoldoutGroup("Hand Settings"), SerializeField]
+        private bool dynamicCardSpacing;
+
+        [FoldoutGroup("Hand Settings"), SerializeField]
+        private float cardPositionUpdateTime = 0.15f;
+
+        [FoldoutGroup("Hand Settings"), SerializeField]
+        private float dealSpeed = 0.1f;
+
+        [FoldoutGroup("Hand Settings"), SerializeField]
+        private int maxCards = 8;
+
+        [FoldoutGroup("Hand Settings"), SerializeField]
+        private int startingHand = 5;
+
+        [FoldoutGroup("Hand Settings"), SerializeField]
+        private Vector3 hoverCardPositionOffset = Vector3.zero;
+
+        private float _normalHandYPosition;
+
+        [FoldoutGroup("Hand Settings"), SerializeField]
+        private float hideHandYPosition = -5f;
+
+        [FoldoutGroup("Hand Settings"), SerializeField]
+        private float hideHandMoveTime = 1f;
+
+        [FoldoutGroup("Events")] public UnityEvent<Hand> RequestCardView = new();
+        [FoldoutGroup("Events")] public UnityEvent<CardView> RequestRemoveCardView = new();
 
         private readonly List<CardView> _cards = new();
 
@@ -42,6 +62,7 @@ namespace Cards
 
         [Header("Temporary For Testing")] [SerializeField]
         private bool toggleHand;
+
         [SerializeField] private InputActionReference inputAdd;
         [SerializeField] private InputActionReference inputRemove;
         [SerializeField] private InputActionReference inputHide;
@@ -64,7 +85,8 @@ namespace Cards
         }
 
 
-        private async UniTask DealCards(int amount, float speed, CancellationToken cancellationToken, float withDelay = 0)
+        private async UniTask DealCards(int amount, float speed, CancellationToken cancellationToken,
+            float withDelay = 0)
         {
             if (cancellationToken.IsCancellationRequested) return;
             await UniTask.WaitForSeconds(withDelay, cancellationToken: cancellationToken);
@@ -82,7 +104,7 @@ namespace Cards
         {
             if (input.ToggleCards) ToggleHand();
         }
-    
+
         //TEMPORARY
         private void Update()
         {
@@ -96,7 +118,7 @@ namespace Cards
             {
                 if (_cards.Count <= 0) return;
                 var card = _cards.FirstOrDefault();
-                RemoveCard(new []{card}, _token).Forget();
+                RemoveCard(new[] { card }, _token).Forget();
                 RequestRemoveCardView.Invoke(card);
             }
         }
@@ -117,7 +139,7 @@ namespace Cards
 
             cardView.transform.parent = transform;
             _cards.Add(cardView);
-            
+
             //Handle effects
             for (var i = 0; i < cardView.Card.PassiveEffects.Length; i++)
             {
@@ -170,7 +192,7 @@ namespace Cards
                 Vector3 forward = spline.EvaluateTangent(p);
                 Vector3 up = spline.EvaluateUpVector(p);
                 Quaternion rotation = Quaternion.LookRotation(-up, Vector3.Cross(-up, forward).normalized);
-                card.transform.DOLocalMove(splinePos * transform.localScale.x + new Vector3(0,0,-0.1f * i), seconds);
+                card.transform.DOLocalMove(splinePos * transform.localScale.x + new Vector3(0, 0, -0.1f * i), seconds);
                 card.transform.DOLocalRotate(rotation.eulerAngles, seconds);
                 card.Order = i;
             }

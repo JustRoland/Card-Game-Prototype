@@ -40,6 +40,12 @@ namespace Utility
             action();
         }
 
+        public void BindItem(T item)
+        {
+            _loadedItems.Add(item);
+            item.name = $"{_prefab.name} {_loadedItems.Count}";
+        }
+
         public void RemoveItem(T item, Action action = null)
         {
             if (!item) return;

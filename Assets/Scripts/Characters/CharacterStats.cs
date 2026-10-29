@@ -12,16 +12,20 @@ namespace Characters
         CrouchSpeed,
         SprintSpeed,
         SlowedSpeed,
+        SpeedModifier,
         JumpForce,
         AirAcceleration,
         DashForce,
         DashCooldown,
         DashAirDistance,
         Health,
+        DamageAdded,
         DamageMultiplier,
         Defense,
         TurnSpeed,
         MaxRange,
+        FireRateModifier,
+        ReloadTimeModifier,
     }
     
 
@@ -104,6 +108,16 @@ namespace Characters
             }
         }
 
+        public float SpeedModifier
+        {
+            get
+            {
+                var q = new Query(StatType.SpeedModifier, _baseStats.speedModifier);
+                _mediator.PerformQuery(this, q);
+                return q.Value;
+            }
+        }
+
         public float JumpForce
         {
             get
@@ -140,7 +154,7 @@ namespace Characters
             {
                 var q = new Query(StatType.DashCooldown, _baseStats.dashCooldown);
                 _mediator.PerformQuery(this, q);
-                return q.Value;
+                return Mathf.Max(q.Value, 0.1f);
             }
         }
 
@@ -153,12 +167,22 @@ namespace Characters
                 return q.Value;
             }
         }
-
+        
         public float Health
         {
             get
             {
                 var q = new Query(StatType.Health, _baseStats.health);
+                _mediator.PerformQuery(this, q);
+                return q.Value;
+            }
+        }
+
+        public float DamageAdded
+        {
+            get
+            {
+                var q = new Query(StatType.DamageAdded, _baseStats.damageAdded);
                 _mediator.PerformQuery(this, q);
                 return q.Value;
             }
@@ -201,6 +225,26 @@ namespace Characters
                 var q = new Query(StatType.MaxRange, _baseStats.maxRange);
                 _mediator.PerformQuery(this, q);
                 return q.Value;
+            }
+        }
+
+        public float FireRateModifier
+        {
+            get
+            {
+                var q = new Query(StatType.FireRateModifier, _baseStats.fireRateModifier);
+                _mediator.PerformQuery(this, q);
+                return q.Value;
+            }
+        }
+        
+        public float ReloadTimeModifier
+        {
+            get
+            {
+                var q = new Query(StatType.ReloadTimeModifier, _baseStats.reloadTimeModifier);
+                _mediator.PerformQuery(this, q);
+                return Mathf.Max(q.Value, 0.1f);
             }
         }
 

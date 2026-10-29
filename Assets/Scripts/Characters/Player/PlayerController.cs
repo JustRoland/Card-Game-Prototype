@@ -1,4 +1,5 @@
 using Cards;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using Utility;
 
@@ -49,12 +50,12 @@ namespace Characters.Player
     {
         private InputSystem_Actions _inputAction;
         
-        [SerializeField] private PlayerCharacter playerCharacter;
-        [SerializeField] private PlayerMovement playerMovement;
-        [SerializeField] private PlayerCombat playerCombat;
-        [SerializeField] private PlayerCamera playerCamera;
-        [SerializeField] private CameraSpring cameraSpring;
-        [SerializeField] private Hand playerHand;
+        [FoldoutGroup("References"), Required, SerializeField] private PlayerCharacter playerCharacter;
+        [FoldoutGroup("References"), Required, SerializeField] private PlayerMovement playerMovement;
+        [FoldoutGroup("References"), Required, SerializeField] private PlayerCombat playerCombat;
+        [FoldoutGroup("References"), Required, SerializeField] private PlayerCamera playerCamera;
+        [FoldoutGroup("References"), Required, SerializeField] private CameraSpring cameraSpring;
+        [FoldoutGroup("References"), Required, SerializeField] private Hand playerHand;
 
         [Space] [SerializeField] private float raycastMaxDistance;
         [SerializeField] private GameObject interactVisual;

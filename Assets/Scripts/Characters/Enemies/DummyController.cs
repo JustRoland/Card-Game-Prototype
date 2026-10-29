@@ -8,23 +8,20 @@ namespace Characters.Enemies
     [RequireComponent(typeof(NavMeshAgent))]
     public class DummyController : EnemyController
     {
+        [FoldoutGroup("Agent")]
         [SerializeField] private float arrivalRadius = 3f;
-        [SerializeField] private float stoppingDistance = 0.5f;
+        [FoldoutGroup("Agent")][SerializeField] private float stoppingDistance = 0.5f;
+        [FoldoutGroup("Agent")][SerializeField] private float repathInterval = 0.2f;
+        [FoldoutGroup("Agent")][SerializeField] private float repathDistance = 0.25f;
+        [FoldoutGroup("Agent")][SerializeField] private float navMeshSampleDistance = 2f;
 
-
-        [SerializeField] private float repathInterval = 0.2f;
-        [SerializeField] private float repathDistance = 0.25f;
-        [SerializeField] private float navMeshSampleDistance = 2f;
-
-        [Header("Ground Alignment")] [SerializeField]
-        private LayerMask groundMask;
-
-        [SerializeField] private float groundCheckDistance = 1.5f;
-        [SerializeField] private bool alignToSlope = true;
-        [SerializeField] private float slopeAlignSpeed = 8f;
-        [SerializeField] private float maxSlopeAngle = 45f;
-
-        [ShowInInspector] private bool _isGrounded;
+        [FoldoutGroup("Ground Alignment")] 
+        [SerializeField] private LayerMask groundMask;
+        [FoldoutGroup("Ground Alignment")] [SerializeField] private float groundCheckDistance = 1.5f;
+        [FoldoutGroup("Ground Alignment")] [SerializeField] private bool alignToSlope = true;
+        [FoldoutGroup("Ground Alignment")] [SerializeField] private float slopeAlignSpeed = 8f;
+        [FoldoutGroup("Ground Alignment")] [SerializeField] private float maxSlopeAngle = 45f;
+        [FoldoutGroup("Ground Alignment")] [ShowInInspector] private bool _isGrounded;
 
         private NavMeshAgent _agent;
         private Vector3 _lastRequestedDestination;
@@ -38,12 +35,7 @@ namespace Characters.Enemies
             Vector3 initialFlatForward = new Vector3(transform.forward.x, 0f, transform.forward.z);
             if (initialFlatForward.sqrMagnitude < 0.001f) initialFlatForward = Vector3.forward;
             headingRotation = Quaternion.LookRotation(initialFlatForward.normalized, Vector3.up);
-
-            SetupAgent();
-        }
-
-        private void SetupAgent()
-        {
+            
             _agent = GetComponent<NavMeshAgent>();
 
             _agent.updatePosition = true;
@@ -54,7 +46,9 @@ namespace Characters.Enemies
             _agent.acceleration = character.Stats.Acceleration;
 
             if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, navMeshSampleDistance, NavMesh.AllAreas))
+            {
                 _agent.Warp(hit.position);
+            }
             else
                 Debug.LogWarning($"{name}: no NavMesh found near spawn position.", this);
         }

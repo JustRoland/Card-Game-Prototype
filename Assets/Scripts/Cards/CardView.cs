@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -10,12 +11,13 @@ namespace Cards
     public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler,
         IBeginDragHandler, IDragHandler, IEndDragHandler
     {
-        [SerializeField] private TMP_Text nameText;
-        [SerializeField] private TMP_Text descriptionText;
-        [SerializeField] private TMP_Text valueText;
-        [SerializeField] private SpriteRenderer spriteRenderer;
-        [SerializeField] private GameObject container;
-        [SerializeField] private GameObject silhouette;
+        [FoldoutGroup("References"), SerializeField] private TMP_Text nameText;
+        [FoldoutGroup("References"), SerializeField] private TMP_Text descriptionText;
+        [FoldoutGroup("References"), SerializeField] private TMP_Text valueText;
+        [FoldoutGroup("References"), SerializeField] private SpriteRenderer spriteRenderer;
+        [FoldoutGroup("References"), SerializeField] private SpriteRenderer background;
+        [FoldoutGroup("References"), SerializeField] private GameObject container;
+        [FoldoutGroup("References"), SerializeField] private GameObject silhouette;
 
         private Vector2 _offsetFromPointerPosition;
         private Vector3 _dragStartPosition;
@@ -24,12 +26,12 @@ namespace Cards
         private Camera _camera;
 
 
-        [Header("Events")] public UnityEvent<CardView, Vector3> StartDrag = new();
-        public UnityEvent<CardView, Vector3> Dragging = new();
-        public UnityEvent<CardView, Vector3> EndDrag = new();
-        public UnityEvent<CardView, Vector3> Click = new();
-        public UnityEvent<CardView, Vector3> HoverEnter = new();
-        public UnityEvent<CardView, Vector3> HoverExit = new();
+        [FoldoutGroup("Events")] public UnityEvent<CardView, Vector3> StartDrag = new();
+        [FoldoutGroup("Events")] public UnityEvent<CardView, Vector3> Dragging = new();
+        [FoldoutGroup("Events")] public UnityEvent<CardView, Vector3> EndDrag = new();
+        [FoldoutGroup("Events")] public UnityEvent<CardView, Vector3> Click = new();
+        [FoldoutGroup("Events")] public UnityEvent<CardView, Vector3> HoverEnter = new();
+        [FoldoutGroup("Events")] public UnityEvent<CardView, Vector3> HoverExit = new();
 
 
         public Card Card { get; private set; }
@@ -42,7 +44,7 @@ namespace Cards
             set => _sortingGroup.sortingOrder = value;
         }
 
-        public CardView Setup(Card card, Vector3 position, Vector3 scale, float scaleUpTime = 0, Camera cam = null)
+        public CardView Setup(Card card, Vector3 position, Vector3 scale, float scaleUpTime = 0,  Camera cam = null)
         {
             _camera = cam;
             if (!_sortingGroup) _sortingGroup = GetComponent<SortingGroup>();
@@ -61,6 +63,7 @@ namespace Cards
             descriptionText.text = card.Description;
             valueText.text = card.Rarity.ToString();
             spriteRenderer.sprite = card.Sprite;
+            background.color = card.Color;
 
             SetActive(true);
             SelectCard(false);

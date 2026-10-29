@@ -19,7 +19,7 @@ namespace Characters.Enemies
         public bool HasWeapon => combat;
         public float MaxRange => combat.MaxRange;
 
-        public UnityEvent<Vector3> targetLocationUpdate = new();
+        [HideInInspector] public UnityEvent<Vector3> targetLocationUpdate = new();
         private EnemyCharacter _reinforcementCaller;
 
         protected override void OnEnable()
@@ -66,7 +66,7 @@ namespace Characters.Enemies
             base.Damage(bodyPart, damage, knockBack, origin);
         }
 
-        public void Attack() => combat?.Attack(true);
+        public void Attack() => combat?.Attack(true, Stats.FireRateModifier);
         public virtual void SetDestination(Vector3 destination, bool investigate) => controller.SetDestination(destination);
         public void SetTarget(Transform target) => controller.SetTarget(target);
         public void ClearTarget() => controller.ClearTarget();

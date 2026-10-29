@@ -11,6 +11,7 @@ namespace Characters
         public float crouchSpeed = 3;
         public float sprintSpeed = 10;
         public float slowedSpeed = 2;
+        public float speedModifier = 1f;
         public float jumpForce = 8;
         public float airAcceleration = 2;
         public float dashForce = 40;
@@ -20,9 +21,12 @@ namespace Characters
     
         [Header("Combat")]
         public float health = 100f;
+        public float damageAdded = 0f;
         public float damageMultiplier = 1f;
         public float defense = 10f;
         public float maxRange = 100f;
+        public float fireRateModifier = 1f;
+        public float reloadTimeModifier = 1f;
 
     }
 }

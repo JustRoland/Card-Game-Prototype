@@ -263,7 +263,7 @@ MonoBehaviour:
   stoppingDistance: 0.5
   repathInterval: 0.2
   repathDistance: 0.25
-  navMeshSampleDistance: 2
+  navMeshSampleDistance: 4
   groundMask:
     serializedVersion: 2
     m_Bits: 8

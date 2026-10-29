@@ -7,9 +7,8 @@ namespace Characters.Enemies
 {
     public class Drone : EnemyCharacter
     {        
-        [Header("State")]
         private StateMachine<Drone> stateMachine;
-        [ShowInInspector] private string CurrentState => stateMachine != null ? stateMachine.CurrentState.Name:"No state";
+        [PropertySpace, ShowInInspector] private string CurrentState => stateMachine != null ? stateMachine.CurrentState.Name:"No state";
         
         
 

@@ -48,7 +48,7 @@ namespace Weapons
         }
     
 
-        public void Fire(bool pressedThisFrame)
+        public void Fire(bool pressedThisFrame, float fireRateMultiplier = 1)
         {
             if (!CanFire) return;
             if (Bullets <= 0) return;
@@ -58,7 +58,7 @@ namespace Weapons
                 case WeaponFireType.SemiAutomatic when pressedThisFrame:
                 case WeaponFireType.FullAuto:
                     HandleFiring();
-                    FireRateTimer().Forget();
+                    FireRateTimer(fireRateMultiplier).Forget();
                     return;
                 case WeaponFireType.Burst when pressedThisFrame:
                 case WeaponFireType.BurstAuto:
@@ -66,7 +66,7 @@ namespace Weapons
                     return;
                 case WeaponFireType.BoltAction when pressedThisFrame:
                     HandleFiring();
-                    FireRateTimer().Forget();
+                    FireRateTimer(fireRateMultiplier).Forget();
                     return;
                 default:
                     return;
@@ -86,7 +86,7 @@ namespace Weapons
         }
 
 
-        private async UniTask BurstFire()
+        private async UniTask BurstFire(float fireRateMultiplier = 1)
         {
             Debug.Assert(BurstSize > 1, $"BurstFire size must be greater than 1. (current: {BurstSize})");
             Debug.Assert(BurstFireRate > 0, $"BurstFireRate must be greater than 0. (current: {BurstFireRate})");
@@ -96,19 +96,19 @@ namespace Weapons
             {
                 if (Bullets <= 0) break;
                 HandleFiring();
-                await UniTask.WaitForSeconds(delay);
+                await UniTask.WaitForSeconds(delay/fireRateMultiplier);
             }
 
-            await FireRateTimer();
+            await FireRateTimer(fireRateMultiplier);
             await UniTask.Yield();
         }
 
-        private async UniTask FireRateTimer()
+        private async UniTask FireRateTimer(float fireRateMultiplier)
         {
             if (Bullets > 0)
             {
                 CanFire = false;
-                var delay = 60 / FireRate;
+                var delay = 60 / (FireRate * fireRateMultiplier);
                 await UniTask.WaitForSeconds(delay);
             }
 

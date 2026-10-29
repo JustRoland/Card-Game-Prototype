@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -6,23 +7,24 @@ namespace Characters
 {
     public class Detection : MonoBehaviour
     {
+        [FoldoutGroup("Detection Settings")]
         [SerializeField] private Transform viewOrigin;
-        [SerializeField] private float detectionRange = 10f;
-        [SerializeField] private float loseRange = 14f;
-        [Range(0f, 360f)] [SerializeField] private float fieldOfViewAngle = 110f;
-        [SerializeField] private LayerMask detectionMask;
-        [SerializeField] private LayerMask obstructionMask;
+        [FoldoutGroup("Detection Settings")][SerializeField] private float detectionRange = 10f;
+        [FoldoutGroup("Detection Settings")][SerializeField] private float loseRange = 14f;
+        [FoldoutGroup("Detection Settings")][Range(0f, 360f)] [SerializeField] private float fieldOfViewAngle = 110f;
+        [FoldoutGroup("Detection Settings")][SerializeField] private LayerMask detectionMask;
+        [FoldoutGroup("Detection Settings")][SerializeField] private LayerMask obstructionMask;
 
-        [SerializeField] private float scanInterval = 0.2f;
-        [SerializeField] private int maxCandidates = 6;
+        [FoldoutGroup("Detection Settings")][SerializeField] private float scanInterval = 0.2f;
+        [FoldoutGroup("Detection Settings")][SerializeField] private int maxCandidates = 6;
 
-        public bool HasTarget => CurrentTarget;
-        public Transform CurrentTarget { get; private set; }
+        [ShowInInspector][ReadOnly] public bool HasTarget => CurrentTarget;
+        [ShowInInspector][ReadOnly] public Transform CurrentTarget { get; private set; }
 
         public IReadOnlyList<Transform> VisibleTargets => _visibleTargets;
 
-        public UnityEvent<Transform> targetAcquired;
-        public UnityEvent<Transform> targetLost;
+        [FoldoutGroup("Events")] public UnityEvent<Transform> targetAcquired;
+        [FoldoutGroup("Events")] public UnityEvent<Transform> targetLost;
 
         private readonly List<Transform> _visibleTargets = new();
         private readonly Collider[] _candidateBuffer = new Collider[32];
