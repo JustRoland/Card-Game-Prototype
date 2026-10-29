@@ -41,7 +41,11 @@ namespace Game
             
             if (spawnOnStart) Spawn(spawnAmount, spawnRadius);
         }
-        
+
+        public void PresetSpawn()
+        {
+            Spawn(spawnAmount, spawnRadius);
+        }
 
         public EnemyCharacter[] Spawn(int amount, float radius = 0)
         {

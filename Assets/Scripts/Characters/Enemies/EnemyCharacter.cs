@@ -3,11 +3,14 @@ using Characters.State_Machine;
 using Game;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 namespace Characters.Enemies
 {
     public abstract class EnemyCharacter : CharacterBase, IEntity
     {
+        [SerializeField] protected bool enableThisEnemy = true;
+        
         protected CombatBase combat;
         protected EnemyController controller;
         public EnemySpawner Spawner { get; private set; }
@@ -25,6 +28,7 @@ namespace Characters.Enemies
         protected override void OnEnable()
         {
             base.OnEnable();
+            if (!enableThisEnemy) return;
             controller = GetComponent<EnemyController>();
             combat = GetComponent<CombatBase>();
             controller?.Initialize(this);
@@ -69,7 +73,7 @@ namespace Characters.Enemies
         public void Attack() => combat?.Attack(true, Stats.FireRateModifier);
         public virtual void SetDestination(Vector3 destination, bool investigate) => controller.SetDestination(destination);
         public void SetTarget(Transform target) => controller.SetTarget(target);
-        public void ClearTarget() => controller.ClearTarget();
+        public void ClearTarget() => controller?.ClearTarget();
         public void SetSpeed(float speed) => controller.currentSpeed = speed;
     }
 }

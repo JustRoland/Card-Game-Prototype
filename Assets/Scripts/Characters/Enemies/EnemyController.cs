@@ -40,6 +40,7 @@ namespace Characters.Enemies
         {
             character = enemy;
             detection = GetComponent<Detection>();
+            detection.Initialzie();
         }
 
 

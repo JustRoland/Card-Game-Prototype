@@ -10,22 +10,22 @@ namespace Characters.Enemies
         private StateMachine<Drone> stateMachine;
         [PropertySpace, ShowInInspector] private string CurrentState => stateMachine != null ? stateMachine.CurrentState.Name:"No state";
         
-        
-
         protected override void OnEnable()
         {
             base.OnEnable();
-                        
+            if (!enableThisEnemy) return;
+            
             stateMachine = new StateMachine<Drone>(this);
             stateMachine.OnStateChanged += StateChangeDebugMessage;
             stateMachine.Start<DroneIdle>();
             
-            GetComponent<DroneController>()?.Initialize(this);
+            // GetComponent<DroneController>()?.Initialize(this);
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
+            if (!enableThisEnemy) return;
             stateMachine.OnStateChanged -= StateChangeDebugMessage;
         }
         
@@ -34,7 +34,10 @@ namespace Characters.Enemies
             stateMachine.Update(Time.deltaTime);
         }
         
-        private void StateChangeDebugMessage(State<Drone> from, State<Drone> to) => print($"[Enemy] {from?.Name ?? "null"} -> {to.Name}");
+        private void StateChangeDebugMessage(State<Drone> from, State<Drone> to) 
+        {
+            if (debugMode) print($"[Enemy] {from?.Name ?? "null"} -> {to.Name}");
+        }
         
         
         public override void SetDestination(Vector3 destination, bool investigate)

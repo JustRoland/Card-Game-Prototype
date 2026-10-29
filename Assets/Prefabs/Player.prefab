@@ -484,6 +484,9 @@ MonoBehaviour:
   bodyParts: []
   damageEffectColor: {r: 0, g: 0, b: 0, a: 0}
   damageEffectDuration: 0.035
+  onDeathEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &7869319532000814766
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -986,7 +989,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4290628567
-  m_fontColor: {r: 0.8415094, g: 0.79579896, b: 0.74148095, a: 1}
+  m_fontColor: {r: 0.8815899, g: 0.89433956, b: 0.8352794, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1123,7 +1126,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4290628567
-  m_fontColor: {r: 0.8415094, g: 0.79579896, b: 0.74148095, a: 1}
+  m_fontColor: {r: 0.8815899, g: 0.89433956, b: 0.8352794, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:

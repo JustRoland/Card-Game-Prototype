@@ -51,6 +51,8 @@ namespace Characters.Enemies
             }
             else
                 Debug.LogWarning($"{name}: no NavMesh found near spawn position.", this);
+            
+            Debug.Log($"{name}: Initialized", this);
         }
 
         public override void SetDestination(Vector3 destination)

@@ -13,27 +13,27 @@ namespace Characters.Enemies
 
         // TODO: Protect variable later
         public float attackCooldown = 4f;
-        [SerializeField, Space] private bool debugMode = false;
+        
 
         protected override void OnEnable()
         {
             base.OnEnable();
-
+            // if (!enableThisEnemy) return;
             stateMachine = new StateMachine<Dummy>(this);
             stateMachine.OnStateChanged += StateChangeDebugMessage;
             stateMachine.Start<DummyIdle>();
-
-            // GetComponent<DummyController>()?.Initialize(this);
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
+            // if (!enableThisEnemy) return;
             stateMachine.OnStateChanged -= StateChangeDebugMessage;
         }
 
         protected void Update()
         {
+            if (!enableThisEnemy) return;
             stateMachine.Update(Time.deltaTime);
         }
 
@@ -45,6 +45,7 @@ namespace Characters.Enemies
 
         public override void SetDestination(Vector3 destination, bool investigate)
         {
+            if (!enableThisEnemy) return;
             base.SetDestination(destination, investigate);
             controller.SetDestination(destination);
             if (!investigate) return;
@@ -62,7 +63,7 @@ namespace Characters.Enemies
             }
             else
             {
-                stateMachine.ChangeState<DummyDestroy>();
+                stateMachine?.ChangeState<DummyDestroy>();
             }
         }
     }

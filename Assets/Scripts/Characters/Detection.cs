@@ -29,16 +29,19 @@ namespace Characters
         private readonly List<Transform> _visibleTargets = new();
         private readonly Collider[] _candidateBuffer = new Collider[32];
         private float _scanTimer;
+        [ShowInInspector][ReadOnly] private bool _isEnabled;
 
 
-        private void Awake()
+        public void Initialzie()
         {
+            _isEnabled = true;
             if (!viewOrigin) viewOrigin = transform;
             if (loseRange < detectionRange) loseRange = detectionRange;
         }
 
         private void Update()
         {
+            if (!_isEnabled) return;
             _scanTimer -= Time.deltaTime;
             if (_scanTimer > 0f) return;
             _scanTimer = scanInterval;

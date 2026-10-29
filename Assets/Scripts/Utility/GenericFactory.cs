@@ -40,6 +40,7 @@ namespace Utility
             action();
         }
 
+        //TODO: Check for duplicates
         public void BindItem(T item)
         {
             _loadedItems.Add(item);
