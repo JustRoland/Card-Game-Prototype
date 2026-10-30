@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Characters.State_Machine
 {
-    public class DummyInvestigate : State<Dummy>
+    public class ZombieInvestigate : State<Zombie>
     {
         public override void Enter()
         {
@@ -12,8 +12,8 @@ namespace Characters.State_Machine
 
         public override void Update(float deltaTime)
         {
-            if (Enemy.HasTarget) StateMachine.ChangeState<DummyChase>();
-            if (Enemy.HasArrived) StateMachine.ChangeState<DummyIdle>();
+            if (Enemy.HasTarget) StateMachine.ChangeState<ZombieChase>();
+            if (Enemy.HasArrived) StateMachine.ChangeState<ZombieIdle>();
         }
 
         public override void Exit()

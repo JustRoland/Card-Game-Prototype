@@ -8,7 +8,7 @@ namespace Characters.State_Machine
     public class StateMachine<TEnemy> where TEnemy : EnemyCharacter
     {
         public State<TEnemy> CurrentState { get; private set; }
-        public TEnemy Enemy { get; }
+        private TEnemy Enemy { get; }
         
         private readonly Dictionary<Type, State<TEnemy>> statesCache = new ();
         
@@ -21,21 +21,24 @@ namespace Characters.State_Machine
         }
         
         
-        public void Start<TState>() where TState : State<TEnemy>, new()
+        public void Start<TState>(bool terminalState = false) where TState : State<TEnemy>, new()
         {
-            CurrentState = GetOrCreate<TState>();
+            CurrentState = GetOrCreate<TState>(terminalState);
             CurrentState.Enter();
         }
  
         public void Update(float deltaTime)
         {
-            CurrentState?.Update(deltaTime);
+            CurrentState.Update(deltaTime);
         }
 
-        public void ChangeState<T>() where T : State<TEnemy>, new()
+        public void ChangeState<T>(bool terminalState = false) where T : State<TEnemy>, new()
         {
-            var next = GetOrCreate<T>();
+            if (CurrentState.TerminalState && !terminalState) return; //Terminal states are states that can't be changed out of. This line handles exactly that, unless the next state is also an end state.
+            var next = GetOrCreate<T>(terminalState);
             if (next == CurrentState) return;
+            
+            Debug.Assert(next != null, "No state assigned.");
  
             var prev = CurrentState;
             prev?.Exit();
@@ -44,13 +47,13 @@ namespace Characters.State_Machine
             OnStateChanged?.Invoke(prev, CurrentState);
         }
  
-        private State<TEnemy> GetOrCreate<T>() where T : State<TEnemy>, new()
+        private State<TEnemy> GetOrCreate<T>(bool terminalState) where T : State<TEnemy>, new()
         {
             var type = typeof(T);
             if (!statesCache.TryGetValue(type, out var state))
             {
                 state = new T();
-                state.Initialize(Enemy, this);
+                state.Initialize(Enemy, this, terminalState);
                 statesCache[type] = state;
             }
             return state;

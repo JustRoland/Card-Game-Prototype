@@ -1,12 +1,13 @@
 using Characters.State_Machine;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Characters.Enemies
 {
-    public class Dummy : EnemyCharacter
+    public class Zombie : EnemyCharacter
     {
-        private StateMachine<Dummy> stateMachine;
+        private StateMachine<Zombie> stateMachine;
 
         [ShowInInspector, PropertySpace]
         private string CurrentState => stateMachine != null ? stateMachine.CurrentState.Name : "No state";
@@ -18,38 +19,36 @@ namespace Characters.Enemies
         protected override void OnEnable()
         {
             base.OnEnable();
-            // if (!enableThisEnemy) return;
-            stateMachine = new StateMachine<Dummy>(this);
+            
+            stateMachine = new StateMachine<Zombie>(this);
             stateMachine.OnStateChanged += StateChangeDebugMessage;
-            stateMachine.Start<DummyIdle>();
+            stateMachine.Start<ZombieIdle>(!responsive);
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
-            // if (!enableThisEnemy) return;
+            
             stateMachine.OnStateChanged -= StateChangeDebugMessage;
         }
 
         protected void Update()
         {
-            if (!enableThisEnemy) return;
             stateMachine.Update(Time.deltaTime);
         }
 
-        private void StateChangeDebugMessage(State<Dummy> from, State<Dummy> to)
+        private void StateChangeDebugMessage(State<Zombie> from, State<Zombie> to)
         {
-            if (debugMode) print($"[Enemy] {from?.Name ?? "null"} -> {to.Name}");
+            if (debug) print($"[Enemy] {from?.Name ?? "null"} -> {to.Name}");
         }
 
 
         public override void SetDestination(Vector3 destination, bool investigate)
         {
-            if (!enableThisEnemy) return;
             base.SetDestination(destination, investigate);
-            controller.SetDestination(destination);
+            // controller.SetDestination(destination);
             if (!investigate) return;
-            if (stateMachine.CurrentState is DummyIdle or DummyPatrol) stateMachine.ChangeState<DummyInvestigate>();
+            if (stateMachine.CurrentState is ZombieIdle or ZombiePatrol) stateMachine.ChangeState<ZombieInvestigate>();
         }
 
 
@@ -59,11 +58,11 @@ namespace Characters.Enemies
 
             if (Stats.Health > 0)
             {
-                SetDestination(origin, true);
+                if (responsive) SetDestination(origin, true);
             }
             else
             {
-                stateMachine?.ChangeState<DummyDestroy>();
+                stateMachine.ChangeState<ZombieDestroy>(true);
             }
         }
     }

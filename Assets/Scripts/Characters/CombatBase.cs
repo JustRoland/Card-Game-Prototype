@@ -22,10 +22,10 @@ namespace Characters
         private LineRenderer _lineRenderer;
 
 
-        public void Initialize(ControllerBase controller)
+        public void Initialize(ControllerBase controller, CharacterBase character)
         {
             _controller = controller;
-            Character = GetComponent<CharacterBase>();
+            Character = character;
             _lineRenderer = GetComponent<LineRenderer>();
             ChangeWeapon();
         }

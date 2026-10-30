@@ -36,6 +36,13 @@ namespace Characters.Enemies
             if (initialFlatForward.sqrMagnitude < 0.001f) initialFlatForward = Vector3.forward;
             headingRotation = Quaternion.LookRotation(initialFlatForward.normalized, Vector3.up);
             
+            AgentSetup();
+            
+            if (debug) Debug.Log($"{name}: Initialized", this);
+        }
+
+        private void AgentSetup()
+        {
             _agent = GetComponent<NavMeshAgent>();
 
             _agent.updatePosition = true;
@@ -51,8 +58,6 @@ namespace Characters.Enemies
             }
             else
                 Debug.LogWarning($"{name}: no NavMesh found near spawn position.", this);
-            
-            Debug.Log($"{name}: Initialized", this);
         }
 
         public override void SetDestination(Vector3 destination)
@@ -217,6 +222,8 @@ namespace Characters.Enemies
 
         private void OnDrawGizmosSelected()
         {
+            if (!debug) return;
+            
             Gizmos.color = Color.green;
             Gizmos.DrawWireSphere(transform.position, arrivalRadius);
 

@@ -487,6 +487,7 @@ MonoBehaviour:
   onDeathEvent:
     m_PersistentCalls:
       m_Calls: []
+  debug: 0
 --- !u!114 &7869319532000814766
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -499,6 +500,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5be0a6aa9cc9f24419e9230581517b23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debug: 0
   playerCharacter: {fileID: 8906799147051182683}
   playerMovement: {fileID: 8276705700602300862}
   playerCombat: {fileID: 5497454162118663694}
@@ -981,7 +983,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: Reload
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 4a0d64bed6c6919448184056d7fff2c2, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: -7639940895519871018, guid: 4a0d64bed6c6919448184056d7fff2c2, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}

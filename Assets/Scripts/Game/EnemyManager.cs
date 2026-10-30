@@ -1,6 +1,6 @@
-using System;
 using System.Linq;
 using Characters.Enemies;
+using Sirenix.Utilities;
 using UnityEngine;
 
 namespace Game
@@ -40,7 +40,7 @@ namespace Game
             GetNearestAvailableSpawner(toLocation).Spawn(3);
             
             //Grab all spawners and bind all active entities to the caller. Caller can then update their target location.
-            _spawners.ToList().ForEach(sp => sp.GetActiveEntities().ForEach(e => e.BindToCaller(caller)));
+            _spawners.ToList().Where(spawner => spawner.AllowReinforcements).ForEach(spawner => spawner.GetActiveEntities().ForEach(enemy => enemy.BindToCaller(caller)));
         }
         
         private EnemySpawner GetNearestAvailableSpawner(Vector3 location)

@@ -1,16 +1,12 @@
-using System;
-using Characters.State_Machine;
 using Game;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
 
 namespace Characters.Enemies
 {
     public abstract class EnemyCharacter : CharacterBase, IEntity
     {
-        [SerializeField] protected bool enableThisEnemy = true;
-        
+        [SerializeField] protected bool responsive = true;
         protected CombatBase combat;
         protected EnemyController controller;
         public EnemySpawner Spawner { get; private set; }
@@ -18,9 +14,10 @@ namespace Characters.Enemies
         public bool HasArrived => controller.HasArrived;
         public Vector3 Destination => controller.Destination;
         public Transform CurrentTarget => controller.CurrentTarget;
-        public bool HasTarget => controller.HasTarget;
+        public bool HasTarget => controller && controller.HasTarget;
         public bool HasWeapon => combat;
         public float MaxRange => combat.MaxRange;
+        public bool Responsive => responsive;
 
         [HideInInspector] public UnityEvent<Vector3> targetLocationUpdate = new();
         private EnemyCharacter _reinforcementCaller;
@@ -28,11 +25,11 @@ namespace Characters.Enemies
         protected override void OnEnable()
         {
             base.OnEnable();
-            if (!enableThisEnemy) return;
+
             controller = GetComponent<EnemyController>();
             combat = GetComponent<CombatBase>();
             controller?.Initialize(this);
-            combat?.Initialize(controller);
+            combat?.Initialize(controller, this);
         }
         protected virtual void OnDisable()
         {
@@ -64,12 +61,6 @@ namespace Characters.Enemies
         }
         
         public void SetSpawner(EnemySpawner spawner) => this.Spawner = spawner;
-
-        public override void Damage(BodyPart bodyPart, int damage, float knockBack, Vector3 origin)
-        {
-            base.Damage(bodyPart, damage, knockBack, origin);
-        }
-
         public void Attack() => combat?.Attack(true, Stats.FireRateModifier);
         public virtual void SetDestination(Vector3 destination, bool investigate) => controller.SetDestination(destination);
         public void SetTarget(Transform target) => controller.SetTarget(target);

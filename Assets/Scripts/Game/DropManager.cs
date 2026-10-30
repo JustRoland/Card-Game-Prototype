@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cards;
+using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Utility;
@@ -31,7 +32,8 @@ namespace Game
             SetLimitValues();
         }
 
-        public GameObject GetDrop()
+        [CanBeNull]
+        public GameObject GetDrop(Vector3 position)
         {
             if (_factories.Count == 0) return null;
             
@@ -39,7 +41,11 @@ namespace Game
 
             var index = drops.FindIndex(d => roll >= d.lowerLimit && roll <= d.upperLimit);
 
-            return _factories[index].GetItem();
+            var drop = _factories[index].GetItem();
+            
+            if (drop) drop.transform.position = position;
+
+            return drop;
 
         }
         

@@ -19,7 +19,7 @@ namespace Characters
         public void Damage(int damage, float knockBack, Vector3 origin)
         {
             int damageTaken = (int)(damage * data.multiplier);
-            print($"Hit <b>{transform.parent.name}</b> in the <b>{data.name}</b> for <b>{damageTaken}</b> damage.");
+            // print($"Hit <b>{transform.parent.name}</b> in the <b>{data.name}</b> for <b>{damageTaken}</b> damage.");
             _character?.Damage(this, damageTaken, knockBack, origin);
         }
 

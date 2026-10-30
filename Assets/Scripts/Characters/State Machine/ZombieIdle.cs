@@ -3,11 +3,10 @@ using UnityEngine;
 
 namespace Characters.State_Machine
 {
-    public class DummyIdle : State<Dummy>
+    public class ZombieIdle : State<Zombie>
     {
         private float _idleTimer;
-        
-        
+
         public override void Enter()
         {
             _idleTimer = 0;
@@ -18,11 +17,11 @@ namespace Characters.State_Machine
         {
             _idleTimer += deltaTime;
             
-            if (Enemy.HasTarget) StateMachine.ChangeState<DummyChase>();
+            if (Enemy.HasTarget) StateMachine.ChangeState<ZombieChase>();
             
             if (_idleTimer > 3f)
             {
-                StateMachine.ChangeState<DummyPatrol>();
+                StateMachine.ChangeState<ZombiePatrol>();
             }
         }
 

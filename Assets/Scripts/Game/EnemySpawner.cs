@@ -16,11 +16,13 @@ namespace Game
 
     public class EnemySpawner : MonoBehaviour
     {
+        [SerializeField] private bool debug;
         [SerializeField] private EnemyCharacter prefab;
         [SerializeField] private int spawnAmount;
         [SerializeField] private int maxAmount;
         [SerializeField] private float spawnRadius;
         [SerializeField] private bool spawnOnStart;
+        [SerializeField] private bool spawnOnDeath;
         [SerializeField] private bool allowReinforcements;
         [Tooltip("Binds pre-existing enemies to this spawner. Note: These enemies will be recycled by the factory!")]
         [SerializeField] private EnemyCharacter[] bindOnStart;
@@ -33,28 +35,33 @@ namespace Game
         public bool IsFull => _counter >= maxAmount;
         public bool AllowReinforcements => allowReinforcements;
 
-        private void Start()
+        private void OnEnable()
         {
             _factory = new GenericFactory<EnemyCharacter>(prefab, enemy => !enemy.gameObject.activeSelf, 0, maxAmount + 1);
 
             bindOnStart.ForEach(b => _factory.BindItem(b));
             
             if (spawnOnStart) Spawn(spawnAmount, spawnRadius);
+
+            if (spawnOnDeath)
+                _factory.LoadedItems.ForEach(character => character.onDeathEvent.AddListener(OnDeathSpawn));
         }
 
-        public void PresetSpawn()
+        private void OnDisable()
         {
-            Spawn(spawnAmount, spawnRadius);
+            if (spawnOnDeath) _factory.LoadedItems.ForEach(character => character.onDeathEvent.RemoveListener(OnDeathSpawn));
         }
 
-        public EnemyCharacter[] Spawn(int amount, float radius = 0)
+        public void Spawn(int amount, float radius = 0)
         {
+            
             var rad = radius > 0 ? radius : spawnRadius;
             var fixedAmount = Math.Min(amount, maxAmount - _counter);
             
-            if (fixedAmount <= 0) return null;
+            if (debug) Debug.Log($"Requested to spawn {amount} enemies -- Actually spawning {amount} enemies");
+
+            if (fixedAmount <= 0) return;
             
-            EnemyCharacter[] spawnedEnemies = new EnemyCharacter[fixedAmount];
             for (int i = 0; i < fixedAmount; i++)
             {
                 var newEnemy = _factory.GetItem();
@@ -63,12 +70,13 @@ namespace Game
                     transform.position.z + Random.Range(-rad, rad));
                 newEnemy.GetComponent<IEntity>()?.SetSpawner(this);
                 newEnemy.gameObject.SetActive(true);
-                spawnedEnemies[i] = newEnemy;
+                if (spawnOnDeath) newEnemy.onDeathEvent.AddListener(OnDeathSpawn);
                 _counter++;
             }
-            
-            return spawnedEnemies;
         }
+
+        private void OnDeathSpawn() => Spawn(1, spawnRadius);
+
 
         public void UnloadEntity(EnemyCharacter entity)
         {

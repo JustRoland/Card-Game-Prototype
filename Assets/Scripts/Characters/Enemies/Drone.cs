@@ -13,7 +13,6 @@ namespace Characters.Enemies
         protected override void OnEnable()
         {
             base.OnEnable();
-            if (!enableThisEnemy) return;
             
             stateMachine = new StateMachine<Drone>(this);
             stateMachine.OnStateChanged += StateChangeDebugMessage;
@@ -25,7 +24,7 @@ namespace Characters.Enemies
         protected override void OnDisable()
         {
             base.OnDisable();
-            if (!enableThisEnemy) return;
+
             stateMachine.OnStateChanged -= StateChangeDebugMessage;
         }
         
@@ -36,14 +35,14 @@ namespace Characters.Enemies
         
         private void StateChangeDebugMessage(State<Drone> from, State<Drone> to) 
         {
-            if (debugMode) print($"[Enemy] {from?.Name ?? "null"} -> {to.Name}");
+            if (debug) print($"[Enemy] {from?.Name ?? "null"} -> {to.Name}");
         }
         
         
         public override void SetDestination(Vector3 destination, bool investigate)
         {
             base.SetDestination(destination, investigate);
-            controller.SetDestination(destination);
+            // controller.SetDestination(destination);
             if (!investigate) return;
             if (stateMachine.CurrentState is DroneIdle or DronePatrol) stateMachine.ChangeState<DroneInvestigate>();
         }

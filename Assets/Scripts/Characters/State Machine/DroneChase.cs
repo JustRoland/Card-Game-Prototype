@@ -8,6 +8,7 @@ namespace Characters.State_Machine
     {
         private float _locationUpdateTimer;
         private readonly float _locationUpdateInterval = 2f;
+        
 
         public override void Enter()
         {
@@ -20,7 +21,11 @@ namespace Characters.State_Machine
 
         public override void Update(float deltaTime)
         {
-            if (!Enemy.HasTarget) StateMachine.ChangeState<DroneIdle>();
+            if (!Enemy.HasTarget)
+            {
+                StateMachine.ChangeState<DroneIdle>();
+                return;
+            }
 
             _locationUpdateTimer -= deltaTime;
 

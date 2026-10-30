@@ -17,7 +17,7 @@ namespace Characters
         
         [FoldoutGroup("Events")] public UnityEvent onDeathEvent = new ();
 
-        [SerializeField, Space] protected bool debugMode = false;
+        [SerializeField, Space] protected bool debug;
 
         protected Material Material;
         protected Rigidbody RigidBody;

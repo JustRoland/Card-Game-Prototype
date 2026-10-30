@@ -1,10 +1,9 @@
 using Characters.Enemies;
-using Game;
 using UnityEngine;
 
 namespace Characters.State_Machine
 {
-    public class DummyChase : State<Dummy>
+    public class ZombieChase : State<Zombie>
     {
         private float _attackTimer;
 
@@ -19,7 +18,7 @@ namespace Characters.State_Machine
         {
             if (!Enemy.HasTarget)
             {
-                StateMachine.ChangeState<DummyIdle>();
+                StateMachine.ChangeState<ZombieIdle>();
                 return;
             }
             

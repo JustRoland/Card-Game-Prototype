@@ -29,6 +29,7 @@ namespace Characters
         private readonly List<Transform> _visibleTargets = new();
         private readonly Collider[] _candidateBuffer = new Collider[32];
         private float _scanTimer;
+        [SerializeField] private bool debug;
         [ShowInInspector][ReadOnly] private bool _isEnabled;
 
 
@@ -132,6 +133,7 @@ namespace Characters
 
         private void OnDrawGizmosSelected()
         {
+            if (!debug) return;
             Vector3 origin = viewOrigin != null ? viewOrigin.position : transform.position;
             Vector3 forward = viewOrigin != null ? viewOrigin.forward : transform.forward;
 

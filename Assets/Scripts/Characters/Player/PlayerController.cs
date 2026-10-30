@@ -72,7 +72,7 @@ namespace Characters.Player
             _inputAction.Enable();
 
             playerMovement.Initialize();
-            playerCombat.Initialize(this);
+            playerCombat.Initialize(this, playerCharacter);
             playerCamera.Initialize(playerMovement.GetCameraTarget());
             cameraSpring.Initialize();
         }
