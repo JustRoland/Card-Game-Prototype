@@ -179,6 +179,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 171bf96ff2b521144a680609b26c5706, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hand
+  statsHolder:
+    underlyingValue: {fileID: 0}
   splineContainer: {fileID: 2598800310244090212}
   cardSpacing: 0.4
   dynamicCardSpacing: 1
@@ -195,7 +197,6 @@ MonoBehaviour:
   RequestRemoveCardView:
     m_PersistentCalls:
       m_Calls: []
-  toggleHand: 1
   inputAdd: {fileID: 7476244043514120974, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   inputRemove: {fileID: 2411907206095950430, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   inputHide: {fileID: 1402783566546207916, guid: 052faaac586de48259a63d0c4782560b, type: 3}
@@ -270,7 +271,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4753740482342897262, guid: 784f4a1d4513ae142b300024c661046e, type: 3}
       propertyPath: m_Name
-      value: Card
+      value: Hover Card
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

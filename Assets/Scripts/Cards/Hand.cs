@@ -17,8 +17,9 @@ namespace Cards
 {
     public class Hand : MonoBehaviour
     {
-        [Header("References")] [SerializeField]
-        private PlayerCharacter character;
+        [Header("References")] 
+        [SerializeField]
+        private InterfaceReference<IStats> statsHolder;
 
         [FoldoutGroup("Hand Settings"), SerializeField]
         private SplineContainer splineContainer;
@@ -38,6 +39,8 @@ namespace Cards
         [FoldoutGroup("Hand Settings"), SerializeField]
         private int maxCards = 8;
 
+        [ReadOnly] [ShowInInspector] private int CurrentCards => _cards.Count;
+
         [FoldoutGroup("Hand Settings"), SerializeField]
         private int startingHand = 5;
 
@@ -53,7 +56,7 @@ namespace Cards
         private float hideHandMoveTime = 1f;
 
         [FoldoutGroup("Events")] public UnityEvent<Hand> RequestCardView = new();
-        [FoldoutGroup("Events")] public UnityEvent<CardView> RequestRemoveCardView = new();
+        [FoldoutGroup("Events")] public UnityEvent<Hand, CardView> RequestRemoveCardView = new();
 
         private readonly List<CardView> _cards = new();
 
@@ -61,9 +64,8 @@ namespace Cards
 
 
         [Header("Temporary For Testing")] [SerializeField]
-        private bool toggleHand;
+        private InputActionReference inputAdd;
 
-        [SerializeField] private InputActionReference inputAdd;
         [SerializeField] private InputActionReference inputRemove;
         [SerializeField] private InputActionReference inputHide;
 
@@ -80,7 +82,6 @@ namespace Cards
         {
             _token = CardManager.Instance.Source.Token;
             _normalHandYPosition = transform.localPosition.y;
-            if (toggleHand) ToggleHand();
             DealCards(startingHand, dealSpeed, _token, .5f).Forget();
         }
 
@@ -108,28 +109,34 @@ namespace Cards
         //TEMPORARY
         private void Update()
         {
-            if (inputAdd.action.WasPressedThisFrame())
-            {
-                if (_cards.Count >= maxCards) return;
-                RequestCardView.Invoke(this);
-            }
+            if (inputAdd.action.WasPressedThisFrame()) AddCard();
 
-            if (inputRemove.action.WasPressedThisFrame())
-            {
-                if (_cards.Count <= 0) return;
-                var card = _cards.FirstOrDefault();
-                RemoveCard(new[] { card }, _token).Forget();
-                RequestRemoveCardView.Invoke(card);
-            }
+            if (inputRemove.action.WasPressedThisFrame()) RemoveCard();
         }
 
+        [PropertySpace, ButtonGroup, GUIColor(0.5f, 1, 0.4f)]
+        private void AddCard()
+        {
+            if (_cards.Count >= maxCards) return;
+            RequestCardView.Invoke(this);
+        }
+
+        [PropertySpace, ButtonGroup, GUIColor(1f, .1f, .2f)]
+        private void RemoveCard()
+        {
+            if (_cards.Count <= 0) return;
+            var card = _cards.FirstOrDefault();
+            RequestRemoveCardView.Invoke(this, card);
+        }
+
+        [PropertySpace, ButtonGroup]
         private void ToggleHand()
         {
             Hide = !Hide;
             transform.DOLocalMoveY(Hide ? hideHandYPosition : _normalHandYPosition, hideHandMoveTime);
             Cursor.lockState = Hide ? CursorLockMode.Locked : CursorLockMode.Confined;
             Cursor.visible = !Hide;
-            GameManager.Instance.SlowTime(Hide ? Speed.Normal : Speed.Slow);
+            GameManager.Instance?.SlowTime(Hide ? Speed.Normal : Speed.Slow);
         }
 
         public async UniTask AddCard(CardView cardView, CancellationToken cancellationToken)
@@ -140,17 +147,20 @@ namespace Cards
             cardView.transform.parent = transform;
             _cards.Add(cardView);
 
-            //Handle effects
-            for (var i = 0; i < cardView.Card.PassiveEffects.Length; i++)
-            {
-                var effect = cardView.Card.PassiveEffects[i];
-                var modifier = new BasicModifier(effect.statType, effect.duration, v => v + effect.value);
-                character.Stats.Mediator.AddModifiers(modifier);
-                cardView.Card.modifiersID[i] = modifier.ID;
-                var colorModifier = new ColorModifier(effect.category, effect.color, effect.duration);
-                character.Stats.Mediator.AddModifiers(colorModifier);
-                character.Stats.UnlockTrait(effect.trait);
+            if (statsHolder.Value != null) {
+                //Handle effects
+                for (var i = 0; i < cardView.Card.PassiveEffects.Length; i++)
+                {
+                    var effect = cardView.Card.PassiveEffects[i];
+                    var modifier = new BasicModifier(effect.statType, effect.duration, v => v + effect.value);
+                    statsHolder.Value.Stats.Mediator.AddModifiers(modifier);
+                    cardView.Card.modifiersID[i] = modifier.ID;
+                    var colorModifier = new ColorModifier(effect.category, effect.color, effect.duration);
+                    statsHolder.Value.Stats.Mediator.AddModifiers(colorModifier);
+                    statsHolder.Value.Stats.UnlockTrait(effect.trait);
+                }
             }
+
 
             await UpdateCardPositions(cardPositionUpdateTime, cancellationToken);
 
@@ -166,9 +176,10 @@ namespace Cards
             {
                 if (!_cards.Contains(cardView)) continue;
                 _cards.Remove(cardView);
+                if (statsHolder.Value == null) continue;
                 foreach (var id in cardView.Card.modifiersID)
                 {
-                    character.Stats.Mediator.RemoveModifier(id);
+                    statsHolder.Value.Stats.Mediator.RemoveModifier(id);
                 }
             }
 

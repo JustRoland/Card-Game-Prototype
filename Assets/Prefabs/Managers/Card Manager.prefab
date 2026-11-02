@@ -49,7 +49,8 @@ MonoBehaviour:
   cardSpawnLocation: {fileID: 0}
   hand: {fileID: 0}
   handCamera: {fileID: 0}
-  player: {fileID: 0}
+  statsHolder:
+    underlyingValue: {fileID: 0}
   cardData:
   - {fileID: 11400000, guid: b163e17017ca73443962cba330f911df, type: 2}
   - {fileID: 11400000, guid: b28f60dba40594b408d5d91f2d54b285, type: 2}

@@ -22,7 +22,7 @@ namespace Cards
 
         [SerializeField] private Hand hand;
         [SerializeField] private Camera handCamera;
-        [SerializeField] private PlayerCharacter player;
+        [SerializeField] private InterfaceReference<IStats> statsHolder;
         public readonly List<CardView> SelectedCards = new();
         public bool IsDragging { get; private set; }
 
@@ -156,8 +156,9 @@ namespace Cards
             hnd.AddCard(cardView, _token).Forget();
         }
 
-        private void OnRequestRemoveCardView(CardView cardView)
+        private void OnRequestRemoveCardView(Hand hnd, CardView cardView)
         {
+            hnd.RemoveCard(new[] { cardView }, _token).Forget();
             UnloadExistingCardView(cardView);
         }
 
@@ -214,13 +215,16 @@ namespace Cards
 
         private bool PlaySingleCard(CardView cardView)
         {
-            foreach (var effect in cardView.Card.ActiveEffect)
+            if (statsHolder.Value != null)
             {
-                var modifier = new BasicModifier(effect.statType, effect.duration, v => v + effect.value);
-                player.Stats.Mediator.AddModifiers(modifier);
-                var colorModifier = new ColorModifier(effect.category, effect.color, effect.duration);
-                player.Stats.Mediator.AddModifiers(colorModifier);
-                player.Stats.UnlockTrait(effect.trait);
+                foreach (var effect in cardView.Card.ActiveEffect)
+                {
+                    var modifier = new BasicModifier(effect.statType, effect.duration, v => v + effect.value);
+                    statsHolder.Value.Stats.Mediator.AddModifiers(modifier);
+                    var colorModifier = new ColorModifier(effect.category, effect.color, effect.duration);
+                    statsHolder.Value.Stats.Mediator.AddModifiers(colorModifier);
+                    statsHolder.Value.Stats.UnlockTrait(effect.trait);
+                }
             }
             UnloadExistingCardView(cardView);
             return false;
@@ -246,13 +250,16 @@ namespace Cards
 
             if (effects == null) return false;
 
-            foreach (var effect in effects)
+            if (statsHolder.Value != null)
             {
-                var modifier = new BasicModifier(effect.statType, effect.duration, v => v + effect.value);
-                player.Stats.Mediator.AddModifiers(modifier);
-                var colorModifier = new ColorModifier(effect.category, effect.color, effect.duration);
-                player.Stats.Mediator.AddModifiers(colorModifier);
-                player.Stats.UnlockTrait(effect.trait);
+                foreach (var effect in effects)
+                {
+                    var modifier = new BasicModifier(effect.statType, effect.duration, v => v + effect.value);
+                    statsHolder.Value.Stats.Mediator.AddModifiers(modifier);
+                    var colorModifier = new ColorModifier(effect.category, effect.color, effect.duration);
+                    statsHolder.Value.Stats.Mediator.AddModifiers(colorModifier);
+                    statsHolder.Value.Stats.UnlockTrait(effect.trait);
+                }
             }
         
             UnloadExistingCardViews(cards);

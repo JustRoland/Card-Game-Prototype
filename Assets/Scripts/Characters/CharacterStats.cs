@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -34,6 +35,11 @@ namespace Characters
         None,
         Damage,
         Heal,
+    }
+    
+    public interface IStats
+    {
+        public CharacterStats Stats { get; }
     }
 
     public class CharacterStats

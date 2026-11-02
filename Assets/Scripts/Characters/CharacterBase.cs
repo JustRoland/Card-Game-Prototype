@@ -6,7 +6,7 @@ using UnityEngine.Serialization;
 
 namespace Characters
 {
-    public abstract class CharacterBase : MonoBehaviour
+    public abstract class CharacterBase : MonoBehaviour, IStats
     {
         [SerializeField] protected BaseStats stats;
         [SerializeField, PropertySpace(SpaceBefore = 0, SpaceAfter = 8)] protected BaseTraits baseTraits;

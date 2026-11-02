@@ -335,6 +335,10 @@ PrefabInstance:
       propertyPath: 'recipes.Array.data[6]'
       value: 
       objectReference: {fileID: 11400000, guid: dc76198703fe6ba4a8159799ef320711, type: 2}
+    - target: {fileID: 3755707943395445908, guid: b73f9a6dbe94a9747861060f49154581, type: 3}
+      propertyPath: statsHolder.underlyingValue
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
