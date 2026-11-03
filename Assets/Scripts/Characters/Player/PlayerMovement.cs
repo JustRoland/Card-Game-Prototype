@@ -240,7 +240,6 @@ namespace Characters.Player
 
             if (_requestedCrouch && _stance is Stance.Stand)
             {
-                print("Crouch");
                 _stance = Stance.Crouch;
                 _motor.SetCapsuleDimensions(radius: _motor.Capsule.radius, height: crouchHeight, yOffset: crouchHeight * 0.5f);
             }
