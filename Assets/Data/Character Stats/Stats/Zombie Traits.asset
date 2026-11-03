@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3e0908d0de5abea4786d6480bca7632c, type: 3}
-  m_Name: Test Traits
+  m_Name: Zombie Traits
   m_EditorClassIdentifier: Assembly-CSharp::Characters.Traits
   traits:
   - type: 0

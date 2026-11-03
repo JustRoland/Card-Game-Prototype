@@ -11,7 +11,7 @@ namespace Characters.State_Machine
             if (Enemy.Spawner) Enemy.Spawner.UnloadEntity(Enemy);
             else UnityEngine.Object.Destroy(Enemy.gameObject);
 
-            DropManager.Instance.GetDrop(Enemy.transform.position);
+            DropManager.Instance.GetDrop(Enemy.Value, Enemy.transform.position);
         }
 
         public override void Update(float deltaTime)

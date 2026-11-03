@@ -202,7 +202,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Characters.Enemies.Drone
   stats: {fileID: 11400000, guid: cd316eb78168d354da5589c1a0ead40f, type: 2}
-  baseTraits: {fileID: 11400000, guid: 3cc1236aaa41cbf4698bc6889391b84a, type: 2}
+  baseTraits: {fileID: 11400000, guid: 0668ce6fad64d934bb769e1c65b08afa, type: 2}
   bodyParts:
   - {fileID: 3610849727792978468}
   damageEffectColor: {r: 1, g: 1, b: 1, a: 1}
@@ -212,6 +212,7 @@ MonoBehaviour:
       m_Calls: []
   debug: 0
   responsive: 1
+  value: 0
   targetLocationUpdate:
     m_PersistentCalls:
       m_Calls: []

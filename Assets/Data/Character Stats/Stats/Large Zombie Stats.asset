@@ -10,19 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c5b3bb8305c64c088d7c6d68fb304b65, type: 3}
-  m_Name: Test Stats
+  m_Name: Large Zombie Stats
   m_EditorClassIdentifier: Assembly-CSharp::BaseStats
-  acceleration: 135
-  walkSpeed: 4.5
+  acceleration: 115
+  walkSpeed: 4
   crouchSpeed: 3
-  sprintSpeed: 10
+  sprintSpeed: 8
   slowedSpeed: 2
+  speedModifier: 1
   jumpForce: 8
   airAcceleration: 2
   dashForce: 40
   dashAirDistance: 3
   dashCooldown: 2
   turnSpeed: 320
-  health: 100
-  damageMultiplier: 1
+  health: 250
+  damageAdded: 0
+  damageMultiplier: 1.5
   defense: 20
+  maxRange: 100
+  fireRateModifier: 1
+  reloadTimeModifier: 1

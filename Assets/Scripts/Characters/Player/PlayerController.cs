@@ -59,8 +59,6 @@ namespace Characters.Player
 
         [Space] [SerializeField] private float raycastMaxDistance;
         [SerializeField] private GameObject interactVisual;
-        [SerializeField] private bool canDash;
-        [SerializeField] private bool canDoubleJump;
 
         private Camera _camera;
 
@@ -156,8 +154,5 @@ namespace Characters.Player
                 if (interactVisual) interactVisual.SetActive(false);
             }
         }
-
-        public void EnableDash(bool value) => canDash = value;
-        public void EnableDoubleJump(bool value) => canDoubleJump = value;
     }
 }

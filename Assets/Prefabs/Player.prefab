@@ -480,8 +480,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6232b3203b9e9b445a60f0542a4e261f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Characters.Player.PlayerCharacter
-  stats: {fileID: 11400000, guid: fe37cedd88cfeb94581651ebb4f8befb, type: 2}
-  baseTraits: {fileID: 11400000, guid: 3cc1236aaa41cbf4698bc6889391b84a, type: 2}
+  stats: {fileID: 11400000, guid: 8267ee79d2ed43c428ff5c8b20f2c959, type: 2}
+  baseTraits: {fileID: 11400000, guid: f527f4484d19527409cdcb21ed6bd9ed, type: 2}
   bodyParts: []
   damageEffectColor: {r: 0, g: 0, b: 0, a: 0}
   damageEffectDuration: 0.035
@@ -508,7 +508,7 @@ MonoBehaviour:
   playerCamera: {fileID: 2882246367711227111}
   cameraSpring: {fileID: 2162836548943498538}
   playerHand: {fileID: 0}
-  raycastMaxDistance: 3
+  raycastMaxDistance: 5
   interactVisual: {fileID: 5323699604350334803}
   canDash: 1
   canDoubleJump: 1

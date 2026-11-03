@@ -27,9 +27,9 @@ namespace Utility
             }
         }
 
-        public T GetItem()
+        public T GetItem(Func<T, bool> additionalFilter = null)
         {
-            var loaded = _loadedItems.FirstOrDefault(_filterPredicate);
+            var loaded = _loadedItems.FirstOrDefault(additionalFilter != null ? i => _filterPredicate(i) && additionalFilter(i) : _filterPredicate);
     
             return loaded ?? CreateNew();
         }

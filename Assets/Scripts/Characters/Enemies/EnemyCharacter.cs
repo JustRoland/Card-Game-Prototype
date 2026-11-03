@@ -7,6 +7,7 @@ namespace Characters.Enemies
     public abstract class EnemyCharacter : CharacterBase, IEntity
     {
         [SerializeField] protected bool responsive = true;
+        [SerializeField] private int value = 1;
         protected CombatBase combat;
         protected EnemyController controller;
         public EnemySpawner Spawner { get; private set; }
@@ -18,6 +19,7 @@ namespace Characters.Enemies
         public bool HasWeapon => combat;
         public float MaxRange => combat.MaxRange;
         public bool Responsive => responsive;
+        public int Value => value;
 
         [HideInInspector] public UnityEvent<Vector3> targetLocationUpdate = new();
         private EnemyCharacter _reinforcementCaller;
