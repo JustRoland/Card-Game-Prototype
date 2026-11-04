@@ -48,12 +48,14 @@ namespace Characters
         private readonly StatsMediator _mediator;
         private readonly Color _baseColor;
         private readonly List<Trait> _traits = new();
+        private readonly int _round;
 
         public StatsMediator Mediator => _mediator;
 
-        public CharacterStats(StatsMediator mediator, BaseStats baseStats, BaseTraits baseTraits, Color baseColor)
+        public CharacterStats(StatsMediator mediator, BaseStats baseStats, BaseTraits baseTraits, Color baseColor, int round = 1)
         {
             _mediator = mediator;
+            _round = round - 1;
             _baseStats = baseStats;
             _baseColor = baseColor;
             foreach (var trait in baseTraits.traits)
@@ -178,7 +180,7 @@ namespace Characters
         {
             get
             {
-                var q = new Query(StatType.Health, _baseStats.health);
+                var q = new Query(StatType.Health, _baseStats.health + _baseStats.healthIncrease * _round);
                 _mediator.PerformQuery(this, q);
                 return q.Value;
             }
@@ -188,7 +190,7 @@ namespace Characters
         {
             get
             {
-                var q = new Query(StatType.DamageAdded, _baseStats.damageAdded);
+                var q = new Query(StatType.DamageAdded, _baseStats.damageAdded + _baseStats.dmgAddIncrease * _round);
                 _mediator.PerformQuery(this, q);
                 return q.Value;
             }
@@ -198,7 +200,7 @@ namespace Characters
         {
             get
             {
-                var q = new Query(StatType.DamageMultiplier, _baseStats.damageMultiplier);
+                var q = new Query(StatType.DamageMultiplier, _baseStats.damageMultiplier + _baseStats.dmgMultIncrease * _round);
                 _mediator.PerformQuery(this, q);
                 return q.Value;
             }

@@ -24,9 +24,9 @@ namespace Characters
         protected Color OriginalColor;
         public CharacterStats Stats { get; private set; }
 
-        protected virtual void OnEnable()
+        public virtual void Initialize(int statsRoundScaling = 1)
         {
-            Stats = new CharacterStats(new StatsMediator(), stats, baseTraits, Color.white);
+            Stats = new CharacterStats(new StatsMediator(), stats, baseTraits, Color.white, statsRoundScaling);
             Material = GetComponentInChildren<MeshRenderer>().material;
             RigidBody = GetComponent<Rigidbody>();
             OriginalColor = Material.color;

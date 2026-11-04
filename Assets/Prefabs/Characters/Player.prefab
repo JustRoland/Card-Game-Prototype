@@ -510,8 +510,6 @@ MonoBehaviour:
   playerHand: {fileID: 0}
   raycastMaxDistance: 5
   interactVisual: {fileID: 5323699604350334803}
-  canDash: 1
-  canDoubleJump: 1
 --- !u!114 &5497454162118663694
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -714,13 +712,22 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
+        value: 0.5354843
+        inSlope: 0.5506325
+        outSlope: 0.5506325
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
-        outWeight: 0.33333334
+        outWeight: 0.19625518
+      - serializedVersion: 3
+        time: 1
+        value: 0.9983884
+        inSlope: 0.48061496
+        outSlope: 0.48061496
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.18793344
+        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4

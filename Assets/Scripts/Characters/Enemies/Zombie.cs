@@ -16,9 +16,9 @@ namespace Characters.Enemies
         public float attackCooldown = 4f;
         
 
-        protected override void OnEnable()
+        public override void Initialize(int statsRoundScaling = 1)
         {
-            base.OnEnable();
+            base.Initialize(statsRoundScaling);
             
             stateMachine = new StateMachine<Zombie>(this);
             stateMachine.OnStateChanged += StateChangeDebugMessage;

@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Characters
@@ -5,7 +6,7 @@ namespace Characters
     [CreateAssetMenu(fileName = "New Stats", menuName = "Base Stats")]
     public class BaseStats : ScriptableObject
     {
-        [Header("Movement")]
+        [Title("Movement")]
         public float acceleration = 135;
         public float walkSpeed = 4.5f;
         public float crouchSpeed = 3;
@@ -18,11 +19,13 @@ namespace Characters
         public float dashAirDistance = 3;
         public float dashCooldown = 2;
         public float turnSpeed = 180;
-    
-        [Header("Combat")]
-        public float health = 100f;
-        public float damageAdded = 0f;
-        public float damageMultiplier = 1f;
+        
+        [HorizontalGroup("Health", Title = "Combat")] public float health = 100f;
+        [HorizontalGroup("Health")] public float healthIncrease = 0f;
+        [HorizontalGroup("DamageAdded")]public float damageAdded = 0f;
+        [HorizontalGroup("DamageAdded")]public float dmgAddIncrease = 0f;
+        [HorizontalGroup("DamageMultiplier")]public float damageMultiplier = 1f;
+        [HorizontalGroup("DamageMultiplier")]public float dmgMultIncrease = 0f;
         public float defense = 10f;
         public float maxRange = 100f;
         public float fireRateModifier = 1f;

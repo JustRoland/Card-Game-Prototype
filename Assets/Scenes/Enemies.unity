@@ -426,7 +426,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79c25232415f15e4eb49a5cc8c3d83e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.EnemyManager
+  player: {fileID: 2075589275}
+  debug: 1
+  playerLocationKnownToEnemies: 0
   reinforcementsCooldown: 15
+  round: 25
+  roundSpawnMultiplier: 1.2
+  roundStartDelay: 5
+  baseSpawnDelay: 6
+  baseSpawnAmount: 3
+  baseReinforcementAmount: 2
 --- !u!4 &283722748
 Transform:
   m_ObjectHideFlags: 0
@@ -740,11 +749,12 @@ MonoBehaviour:
   spawns:
   - enemyPrefab: {fileID: 6077540049571290851, guid: 6b3ad0f31bf5bf540852036334e99543, type: 3}
     amount: 10
-  maxAmount: 12
   spawnRadius: 15
   spawnOnStart: 1
   spawnOnDeath: 1
   allowReinforcements: 0
+  allowRoundSpawn: 0
+  minRoundToSpawn: 1
   bindOnStart: []
 --- !u!1001 &672787600
 PrefabInstance:
@@ -843,11 +853,12 @@ MonoBehaviour:
     amount: 3
   - enemyPrefab: {fileID: 6077540049571290851, guid: 4d381912c24589a4d83fd3231ab67ba3, type: 3}
     amount: 1
-  maxAmount: 7
   spawnRadius: 2
-  spawnOnStart: 1
+  spawnOnStart: 0
   spawnOnDeath: 0
   allowReinforcements: 1
+  allowRoundSpawn: 1
+  minRoundToSpawn: 1
   bindOnStart: []
 --- !u!4 &678767086
 Transform:
@@ -966,6 +977,10 @@ PrefabInstance:
     - target: {fileID: 6152184304388536287, guid: a315623f596d4244ba31305e6fbc98df, type: 3}
       propertyPath: m_Name
       value: Zombie
+      objectReference: {fileID: 0}
+    - target: {fileID: 6152184304388536287, guid: a315623f596d4244ba31305e6fbc98df, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1334,6 +1349,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Large Zombie
       objectReference: {fileID: 0}
+    - target: {fileID: 6152184304388536287, guid: 4d381912c24589a4d83fd3231ab67ba3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1681,11 +1700,12 @@ MonoBehaviour:
   spawns:
   - enemyPrefab: {fileID: 6077540049571290851, guid: a315623f596d4244ba31305e6fbc98df, type: 3}
     amount: 4
-  maxAmount: 6
   spawnRadius: 2
-  spawnOnStart: 1
+  spawnOnStart: 0
   spawnOnDeath: 0
   allowReinforcements: 1
+  allowRoundSpawn: 1
+  minRoundToSpawn: 1
   bindOnStart: []
 --- !u!4 &1484574430
 Transform:
@@ -2006,12 +2026,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.EntitySpawner
   debug: 0
-  spawns: []
-  maxAmount: 6
+  spawns:
+  - enemyPrefab: {fileID: 6077540049571290851, guid: a315623f596d4244ba31305e6fbc98df, type: 3}
+    amount: 3
+  - enemyPrefab: {fileID: 6077540049571290851, guid: 4d381912c24589a4d83fd3231ab67ba3, type: 3}
+    amount: 1
   spawnRadius: 2
   spawnOnStart: 0
   spawnOnDeath: 0
   allowReinforcements: 1
+  allowRoundSpawn: 1
+  minRoundToSpawn: 1
   bindOnStart: []
 --- !u!4 &2003207190
 Transform:
@@ -2061,11 +2086,12 @@ MonoBehaviour:
   spawns:
   - enemyPrefab: {fileID: 3933841195924752374, guid: e2c04d7ff4c043f4499201e3edd00034, type: 3}
     amount: 1
-  maxAmount: 3
   spawnRadius: 10
-  spawnOnStart: 1
+  spawnOnStart: 0
   spawnOnDeath: 0
   allowReinforcements: 0
+  allowRoundSpawn: 1
+  minRoundToSpawn: 1
   bindOnStart:
   - {fileID: 1263111197}
 --- !u!4 &2061403485
@@ -2083,6 +2109,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 283722748}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &2075589275 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4558679506495862503, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
+  m_PrefabInstance: {fileID: 1387529674}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2097138163
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6476,6 +6507,10 @@ PrefabInstance:
     - target: {fileID: 1967138255364516750, guid: e2c04d7ff4c043f4499201e3edd00034, type: 3}
       propertyPath: m_Name
       value: Drone
+      objectReference: {fileID: 0}
+    - target: {fileID: 1967138255364516750, guid: e2c04d7ff4c043f4499201e3edd00034, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3933841195924752374, guid: e2c04d7ff4c043f4499201e3edd00034, type: 3}
       propertyPath: showDamageEffect

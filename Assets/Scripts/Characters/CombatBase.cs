@@ -70,7 +70,6 @@ namespace Characters
         {
             if (Weapon == null) return;
             Weapon.Reload();
-            print($"{Weapon.Bullets} / {Weapon.MagazineSize}");
 
             // Animations later
         }

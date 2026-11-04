@@ -14,6 +14,7 @@ namespace Utility
         private readonly List<T> _loadedItems = new ();
         public List<T> LoadedItems => _loadedItems;
         public List<T> ActiveItems => _loadedItems.Where(item => !_filterPredicate(item)).ToList();
+        public string Name => $"{_prefab.name} Factory";
     
         public GenericFactory(T prefab, Func<T, bool> filterPredicate, int startBuffer = 0, int maxItems = 0 )
         {

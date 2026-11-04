@@ -24,9 +24,9 @@ namespace Characters.Enemies
         [HideInInspector] public UnityEvent<Vector3> targetLocationUpdate = new();
         private EnemyCharacter _reinforcementCaller;
 
-        protected override void OnEnable()
+        public override void Initialize(int statsRoundScaling = 1)
         {
-            base.OnEnable();
+            base.Initialize(statsRoundScaling);
 
             controller = GetComponent<EnemyController>();
             combat = GetComponent<CombatBase>();

@@ -10,15 +10,13 @@ namespace Characters.Enemies
         private StateMachine<Drone> stateMachine;
         [PropertySpace, ShowInInspector] private string CurrentState => stateMachine != null ? stateMachine.CurrentState.Name:"No state";
         
-        protected override void OnEnable()
+        public override void Initialize(int statsRoundScaling = 1)
         {
-            base.OnEnable();
+            base.Initialize(statsRoundScaling);
             
             stateMachine = new StateMachine<Drone>(this);
             stateMachine.OnStateChanged += StateChangeDebugMessage;
             stateMachine.Start<DroneIdle>();
-            
-            // GetComponent<DroneController>()?.Initialize(this);
         }
 
         protected override void OnDisable()

@@ -25,8 +25,11 @@ MonoBehaviour:
   dashCooldown: 2
   turnSpeed: 320
   health: 250
+  healthIncrease: 15
   damageAdded: 0
+  dmgAddIncrease: 5
   damageMultiplier: 1.5
+  dmgMultIncrease: 0
   defense: 20
   maxRange: 100
   fireRateModifier: 1

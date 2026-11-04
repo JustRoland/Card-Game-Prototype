@@ -14,6 +14,7 @@ namespace Characters.Player
         private void Awake()
         {
             _combat = GetComponent<PlayerCombat>();
+            base.Initialize();
         }
 
         public void SetInDialogue(bool locked) => _inDialogue = locked;
