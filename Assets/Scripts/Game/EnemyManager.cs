@@ -26,6 +26,8 @@ namespace Game
 
         [ShowInInspector, ReadOnly] private int TotalEnemies => _spawners?.Sum(s => s.activeEnemies) ?? 0;
         
+        public int Round => round;
+        
 
         private bool _reinforcementsCalled;
         private float _reinforcementsCooldownTimer;
@@ -66,18 +68,16 @@ namespace Game
             if (debug) Debug.Log($"Spawning round {round} with {amountToSpawn} enemies.", this);
             
             await UniTask.WaitForSeconds(roundStartDelay);
-            // grab all spawners that fit the level requirement
+            
             var spawners = _spawners.Where(spawner => spawner.AllowRoundSpawn && spawner.MinRoundToSpawn <= round).ToList();
             var counter = 0;
 
             while (counter < amountToSpawn)
             {
-                // loop over spawners and call their spawn method, tracking the number of spawned units
                 counter = spawners.Aggregate(counter,
                     (current, enemySpawner) => current + enemySpawner.Spawn(round, amountToSpawn - current,
                         playerLocationKnownToEnemies ? player : null).Count);
 
-                // after a delay, loop again until amountToSpawn is reached
                 await UniTask.WaitForSeconds(baseSpawnDelay);
             }
 

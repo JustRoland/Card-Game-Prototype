@@ -9,12 +9,16 @@ namespace Characters
     [RequireComponent(typeof(ControllerBase), typeof(CharacterBase))]
     public class CombatBase : MonoBehaviour
     {
+        [SerializeField] protected bool debug;
         [SerializeField] protected WeaponData testWeapon;
-        [SerializeField] protected Transform bulletOrigin; //This is currently moved around by the designated weapon origin of the scriptable object. Remove this middleman operation later.
+
+        [SerializeField]
+        protected Transform
+            bulletOrigin; //This is currently moved around by the designated weapon origin of the scriptable object. Remove this middleman operation later.
 
 
         public float MaxRange => testWeapon?.maxRange ?? 0f;
-        
+
         private ControllerBase _controller;
         protected CharacterBase Character;
 
@@ -50,7 +54,7 @@ namespace Characters
         {
             // !! TEMP FOR TESTING !! -- checks and updates what weapon is assigned in Editor to allow hot-swapping. 
             if (!ChangeWeapon()) return;
-            
+
             switch (Weapon.Bullets)
             {
                 case 0:
@@ -76,15 +80,17 @@ namespace Characters
 
         protected void OnFire()
         {
-            InterpretRaycast(_controller.GetRaycast(Weapon.MaxRange));
+            InterpretRaycast(_controller.GetRaycast(Weapon.MaxRange, ~(1<<gameObject.layer)));
         }
-        
+
 
         private void InterpretRaycast((RaycastHit? hit, Ray ray) raycast)
         {
             if (raycast.hit.HasValue && raycast.hit.Value.collider.transform.TryGetComponent(out BodyPart bodyPart))
             {
-                bodyPart.Damage((int)((Weapon.Damage + Character.Stats.DamageAdded) * Character.Stats.DamageMultiplier), Weapon.KnockBack,
+                if (debug) Debug.Log($"{name} hit {bodyPart.Name}");
+                bodyPart.Damage((int)((Weapon.Damage + Character.Stats.DamageAdded) * Character.Stats.DamageMultiplier),
+                    Weapon.KnockBack,
                     transform.position);
                 DisplayBullet(bulletOrigin.position, raycast.hit.Value.point, 0.05f).Forget();
             }
@@ -98,6 +104,7 @@ namespace Characters
 
         private async UniTask DisplayBullet(Vector3 origin, Vector3 target, float delay)
         {
+            if (!_lineRenderer) return;
             _lineRenderer.SetPositions(new[] { origin, target });
             _lineRenderer.startColor = Character.Stats.Damage;
             _lineRenderer.endColor = Character.Stats.Damage;

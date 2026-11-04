@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 using Utility;
 
@@ -14,6 +15,7 @@ namespace Game
     public class GameManager : MonoBehaviour
     {
         public static GameManager Instance;
+        [SerializeField] private TextMeshProUGUI roundText;
 
         [Header("Time Speeds")]
         [SerializeField] private float slowTime = 0.2f;
@@ -31,6 +33,11 @@ namespace Game
         
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+        }
+
+        private void FixedUpdate()
+        {
+            if (roundText && EnemyManager.Instance) roundText.text = EnemyManager.Instance.Round.ToString();
         }
 
         private void Start()

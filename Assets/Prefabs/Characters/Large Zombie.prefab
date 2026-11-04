@@ -216,7 +216,7 @@ MonoBehaviour:
   bodyParts:
   - {fileID: 4068692998094132781}
   - {fileID: 697446810327204837}
-  damageEffectColor: {r: 0.8867924, g: 0.2058027, b: 0.22603348, a: 1}
+  damageEffectColor: {r: 0.7660377, g: 0.6518547, b: 0.65579206, a: 1}
   damageEffectDuration: 0.035
   onDeathEvent:
     m_PersistentCalls:
@@ -240,6 +240,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14630b05adb27d245bc18b801713009d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Characters.CombatBase
+  debug: 0
   testWeapon: {fileID: 11400000, guid: 4628cc11deff3544893e907d26bdce2e, type: 2}
   bulletOrigin: {fileID: 256600815240822490}
 --- !u!114 &3256562338827936829
@@ -445,7 +446,7 @@ Transform:
   m_GameObject: {fileID: 7670689102701329301}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.422, z: 0.397}
+  m_LocalPosition: {x: 0, y: 0.422, z: 0.448}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

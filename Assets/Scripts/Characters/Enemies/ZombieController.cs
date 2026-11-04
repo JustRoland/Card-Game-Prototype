@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Characters.Enemies
 {
-    public class DroneController : EnemyController
+    public class ZombieController : EnemyController
     {
         [FoldoutGroup("Drone Movement")] [SerializeField]
         private float arrivalRadius = 3f;
@@ -165,24 +165,7 @@ namespace Characters.Enemies
                 _currentBank = Mathf.Lerp(_currentBank, targetBank, bankSmoothing * Time.fixedDeltaTime);
             }
         }
-
-        // private void ApplyAltitudeHold(ref Vector3 direction)
-        // {
-        //     if (groundMask.value == 0) return;
-        //
-        //     if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit,
-        //             hoverHeight * 100, groundMask))
-        //     {
-        //         float currentHeight = hit.distance;
-        //         float heightError = hoverHeight - currentHeight;
-        //
-        //         //TODO: Fix this math
-        //         float verticalCorrection = Mathf.Clamp(
-        //             heightError * altitudeCorrectionSpeed * Time.fixedDeltaTime, -1f, 1f);
-        //         direction += Vector3.up * verticalCorrection;
-        //         direction.Normalize();
-        //     }
-        // }
+        
 
         private Vector3 ApplyObstacleAvoidance(Vector3 desiredDirection)
         {
@@ -199,11 +182,7 @@ namespace Characters.Enemies
             Vector3 blended = Vector3.Slerp(desiredDirection, avoidDirection, avoidanceWeight);
             return blended.normalized;
         }
-
-        public override (RaycastHit?, Ray) GetRaycast(float distance)
-        {
-            throw new System.NotImplementedException();
-        }
+        
 
 
         private void OnDrawGizmosSelected()

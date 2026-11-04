@@ -68,11 +68,11 @@ namespace Characters.Enemies
             HasArrived = false;
         }
 
-        public override (RaycastHit?, Ray) GetRaycast(float distance)
+        public override (RaycastHit?, Ray) GetRaycast(float distance, LayerMask layerMask = default)
         {
             var ray = new Ray(transform.position, transform.forward);
 
-            return Physics.Raycast(ray, out RaycastHit hit, distance) ? (hit, ray) : (null, ray);
+            return Physics.Raycast(ray, out RaycastHit hit, distance, layerMask) ? (hit, ray) : (null, ray);
         }
     }
 }

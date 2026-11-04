@@ -5,6 +5,6 @@ namespace Characters
     public abstract class ControllerBase : MonoBehaviour
     {
         [SerializeField] protected bool debug;
-        public abstract (RaycastHit?, Ray) GetRaycast(float distance);
+        public abstract (RaycastHit?, Ray) GetRaycast(float distance, LayerMask layerMask = default);
     }
 }

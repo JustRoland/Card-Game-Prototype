@@ -24,7 +24,7 @@ MonoBehaviour:
   damageDropOffRange: 0
   damageDropOffRate: 0
   fireType: 0
-  fireRate: 100
+  fireRate: 200
   burstFireRate: 0
   burstSize: 0
   magazineSize: -1

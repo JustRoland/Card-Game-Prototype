@@ -258,9 +258,5 @@ namespace Characters.Enemies
             }
         }
 
-        public override (RaycastHit?, Ray) GetRaycast(float distance)
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }

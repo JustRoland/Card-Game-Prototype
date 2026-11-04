@@ -133,11 +133,11 @@ namespace Characters.Player
             playerCamera.UpdatePosition(cameraTarget);
         }
 
-        public override (RaycastHit?, Ray) GetRaycast(float distance)
+        public override (RaycastHit?, Ray) GetRaycast(float distance, LayerMask layerMask = default)
         {
             var ray = _camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
 
-            return Physics.Raycast(ray, out RaycastHit hit, distance) ? (hit, ray) : (null, ray);
+            return Physics.Raycast(ray, out RaycastHit hit, distance, layerMask) ? (hit, ray) : (null, ray);
         }
 
 

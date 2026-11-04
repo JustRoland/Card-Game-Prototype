@@ -1,6 +1,7 @@
 using System;
 using Characters;
 using Cysharp.Threading.Tasks;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -51,7 +52,7 @@ namespace Weapons
         public void Fire(bool pressedThisFrame, float fireRateMultiplier = 1)
         {
             if (!CanFire) return;
-            if (Bullets <= 0) return;
+            if (Bullets <= 0 && MagazineSize > 0) return;
 
             switch (FireType)
             {
@@ -75,8 +76,7 @@ namespace Weapons
 
         private void HandleFiring()
         {
-            Debug.Assert(Bullets > 0, $"Bullets need to be more than 0. (current: {Bullets})");
-            Bullets--;
+            if (MagazineSize > 0) Bullets--;
             FireEvent.Invoke();
         }
 

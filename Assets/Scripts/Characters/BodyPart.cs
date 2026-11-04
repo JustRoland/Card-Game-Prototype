@@ -5,6 +5,7 @@ namespace Characters
     public class BodyPart : MonoBehaviour
     {
         [SerializeField] private BodyPartData data;
+        public string Name => name + " " + transform.parent?.name;
         private CharacterBase _character;
         private Material _material; 
         private Color _originalColor;
@@ -19,7 +20,7 @@ namespace Characters
         public void Damage(int damage, float knockBack, Vector3 origin)
         {
             int damageTaken = (int)(damage * data.multiplier);
-            // print($"Hit <b>{transform.parent.name}</b> in the <b>{data.name}</b> for <b>{damageTaken}</b> damage.");
+            if (!_character) Debug.LogWarning($"Body part {name} took doesn't have an associated character.", this);
             _character?.Damage(this, damageTaken, knockBack, origin);
         }
 
