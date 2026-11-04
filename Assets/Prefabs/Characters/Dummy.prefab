@@ -219,6 +219,7 @@ MonoBehaviour:
       m_Calls: []
   debug: 0
   responsive: 0
+  value: 0
   targetLocationUpdate:
     m_PersistentCalls:
       m_Calls: []

@@ -102,7 +102,7 @@ namespace Characters.Player
                 playerCamera.UpdateRotation(playerHand.Hide
                     ? _inputAction.Player.Look.ReadValue<Vector2>() : Vector2.zero);
 
-                ToggleInteractVisualOverlay(GetRaycast(raycastMaxDistance));
+                ToggleInteractVisualOverlay(GetRaycast(raycastMaxDistance, ~(1<<gameObject.layer)));
 
                 //character input
                 var input = new CharacterInput

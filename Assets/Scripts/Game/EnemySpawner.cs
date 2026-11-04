@@ -23,9 +23,9 @@ namespace Game
         private int spawnAmount;
         [SerializeField] private float spawnRadius;
         [SerializeField] private bool spawnOnStart;
-        [SerializeField] private bool spawnOnDeath;
+        [FormerlySerializedAs("spawnOnDeath")] [SerializeField] private bool targetPracticeRespawn;
         [SerializeField] private bool allowReinforcements;
-        [SerializeField] private bool allowRoundSpawn;
+        [SerializeField] private bool excludeFromRounds;
         [SerializeField, MinValue(1)] private int minRoundToSpawn;
 
         [Tooltip("Binds pre-existing enemies to this spawner. Note: These enemies will be recycled by the factory!")]
@@ -39,7 +39,7 @@ namespace Game
         private GenericFactory<EnemyCharacter>[] _factories;
         private int _counter;
         public bool AllowReinforcements => allowReinforcements;
-        public bool AllowRoundSpawn => allowRoundSpawn;
+        public bool ExcludeFromRounds => excludeFromRounds;
         public int MinRoundToSpawn => minRoundToSpawn;
 
         private void OnEnable()
@@ -58,18 +58,20 @@ namespace Game
 
             if (spawnOnStart) Spawn();
 
-            if (spawnOnDeath)
+            if (targetPracticeRespawn)
                 _factories[0].LoadedItems.ForEach(character => character.onDeathEvent.AddListener(OnDeathSpawn));
         }
 
         private void OnDisable()
         {
-            if (spawnOnDeath)
+            if (targetPracticeRespawn)
                 _factories[0].LoadedItems.ForEach(character => character.onDeathEvent.RemoveListener(OnDeathSpawn));
         }
 
         public List<EnemyCharacter> Spawn(int roundScaling = 1, int maxAmount = 0, Transform target = null)
         {
+            if (maxAmount < 0) return null; // Currently, the Manager can call this with a negative amount, which leads to the spawners using their default amount. Fix later!!
+            
             var results = new List<EnemyCharacter>();
             int amount = maxAmount > 0 ? Mathf.Min(spawnAmount, maxAmount): spawnAmount;
             int localCounter = 0;
@@ -90,7 +92,7 @@ namespace Game
                     newEnemy.Initialize(roundScaling);
                     newEnemy.gameObject.SetActive(true);
                     if (target) newEnemy.SetTarget(target); // Not working atm!
-                    if (spawnOnDeath) newEnemy.onDeathEvent.AddListener(OnDeathSpawn);
+                    if (targetPracticeRespawn) newEnemy.onDeathEvent.AddListener(OnDeathSpawn);
                     results.Add(newEnemy);
                 }
             }
@@ -99,7 +101,7 @@ namespace Game
             
         }
 
-        private void OnDeathSpawn() => Spawn(1);
+        private void OnDeathSpawn() => Spawn(maxAmount: 1);
 
 
         public void UnloadEntity(EnemyCharacter entity)

@@ -4,10 +4,13 @@ using Characters.Player;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Game
 {
+    public enum RoundState { Start, InProgress, End }
+    
     public class EnemyManager : MonoBehaviour
     {
         public static EnemyManager Instance;
@@ -24,13 +27,16 @@ namespace Game
         [SerializeField, MinValue(1)] private int baseSpawnAmount = 1;
         [SerializeField] private int baseReinforcementAmount;
 
-        [ShowInInspector, ReadOnly] private int TotalEnemies => _spawners?.Sum(s => s.activeEnemies) ?? 0;
+        [ShowInInspector, DisplayAsString] private RoundState RoundState => _roundState;
+        [ShowInInspector] private int TotalEnemies => _spawners?.Sum(s => s.activeEnemies) ?? 0;
         
         public int Round => round;
         
 
         private bool _reinforcementsCalled;
         private float _reinforcementsCooldownTimer;
+        private int _spawnCounter;
+        private RoundState _roundState;
 
 
         private void Awake()
@@ -38,16 +44,36 @@ namespace Game
             if (Instance == null) Instance = this;
             else Destroy(gameObject);
 
-            _spawners = FindObjectsByType<EnemySpawner>(FindObjectsSortMode.None);
+            _spawners = FindObjectsByType<EnemySpawner>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            _spawners = _spawners.Where(spawner => !spawner.ExcludeFromRounds).ToArray();
             
-            RoundSpawner((int)(baseSpawnAmount*Mathf.Pow(roundSpawnMultiplier, round-1))).Forget();
+            StartRound(round);
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
+            RoundStateTracker();
+            if (_roundState is RoundState.End) StartRound(round);
+            
             if (!_reinforcementsCalled) return;
             _reinforcementsCooldownTimer -= Time.deltaTime;
             if (_reinforcementsCooldownTimer <= 0f) _reinforcementsCalled = false;
+        }
+
+        private void RoundStateTracker()
+        {
+            if (TotalEnemies == 0 && _roundState is RoundState.InProgress)
+            {
+                _roundState = RoundState.End;
+                round++;
+            }
+        }
+
+        private void StartRound(int rnd)
+        {
+            _roundState = RoundState.Start;
+            _spawnCounter = (int)(baseSpawnAmount*Mathf.Pow(roundSpawnMultiplier, rnd-1));
+            RoundSpawner(rnd, _spawnCounter).Forget();
         }
 
         public void CallReinforcements(Vector3 toLocation, EnemyCharacter caller)
@@ -56,27 +82,29 @@ namespace Game
             _reinforcementsCalled = true;
             print($"Reinforcements called to {toLocation}");
             _reinforcementsCooldownTimer = reinforcementsCooldown;
-            GetNearestAvailableSpawner(true, toLocation)?.Spawn();
+            GetFarthestAvailableSpawner(true, toLocation)?.Spawn();
 
             //Grab all spawners and bind all active entities to the caller. Caller can then update their target location.
             _spawners.ToList().Where(spawner => spawner.AllowReinforcements).ForEach(spawner =>
                 spawner.GetActiveEntities().ForEach(enemy => enemy.BindToCaller(caller)));
         }
 
-        private async UniTask RoundSpawner(int amountToSpawn)
+        private async UniTask RoundSpawner(int rnd, int amountToSpawn)
         {
-            if (debug) Debug.Log($"Spawning round {round} with {amountToSpawn} enemies.", this);
+            if (debug) Debug.Log($"Spawning round {rnd} with {amountToSpawn} enemies.", this);
             
             await UniTask.WaitForSeconds(roundStartDelay);
+            _roundState = RoundState.InProgress;
             
-            var spawners = _spawners.Where(spawner => spawner.AllowRoundSpawn && spawner.MinRoundToSpawn <= round).ToList();
+            var spawners = _spawners.Where(spawner => spawner.MinRoundToSpawn <= rnd).ToList();
             var counter = 0;
 
             while (counter < amountToSpawn)
             {
-                counter = spawners.Aggregate(counter,
-                    (current, enemySpawner) => current + enemySpawner.Spawn(round, amountToSpawn - current,
-                        playerLocationKnownToEnemies ? player : null).Count);
+                foreach (var spawner in spawners.TakeWhile(spawner => counter < amountToSpawn))
+                {
+                    counter += spawner.Spawn(rnd, amountToSpawn - counter, playerLocationKnownToEnemies ? player : null).Count;
+                }
 
                 await UniTask.WaitForSeconds(baseSpawnDelay);
             }
@@ -84,23 +112,23 @@ namespace Game
             await UniTask.Yield();
         }
 
-        private EnemySpawner GetNearestAvailableSpawner(bool forReinforcement, Vector3 location)
+        private EnemySpawner GetFarthestAvailableSpawner(bool forReinforcement, Vector3 location)
         {
             if (_spawners.Length == 0) return null;
 
-            float minDistance = float.MaxValue;
-            EnemySpawner nearestSpawner = null;
+            float maxDistance = 0;
+            EnemySpawner farthestSp = null;
 
             foreach (var t in _spawners)
             {
                 if (!forReinforcement && !t.AllowReinforcements && t.MinRoundToSpawn <= round) continue;
                 var distance = Vector3.Distance(location, t.transform.position);
-                if (!(distance < minDistance)) continue;
-                minDistance = distance;
-                nearestSpawner = t;
+                if (!(distance > maxDistance)) continue;
+                maxDistance = distance;
+                farthestSp = t;
             }
 
-            return nearestSpawner;
+            return farthestSp;
         }
     }
 }
