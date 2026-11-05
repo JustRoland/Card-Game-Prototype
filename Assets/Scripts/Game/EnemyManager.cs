@@ -1,15 +1,13 @@
 using System.Linq;
 using Characters.Enemies;
-using Characters.Player;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Game
 {
-    public enum RoundState { Start, InProgress, End }
+    public enum RoundState { Idle, Start, InProgress, End }
     
     public class EnemyManager : MonoBehaviour
     {
@@ -18,6 +16,7 @@ namespace Game
         private EnemySpawner[] _spawners;
         [SerializeField] private Transform player;
         [SerializeField] private bool debug;
+        [SerializeField] private bool startRoundOnStart;
         [SerializeField] private bool playerLocationKnownToEnemies;
         [SerializeField] private float reinforcementsCooldown = 10f;
         [SerializeField, MinValue(1)] private int round = 1;
@@ -36,7 +35,7 @@ namespace Game
         private bool _reinforcementsCalled;
         private float _reinforcementsCooldownTimer;
         private int _spawnCounter;
-        private RoundState _roundState;
+        private RoundState _roundState = RoundState.Idle;
 
 
         private void Awake()
@@ -47,7 +46,7 @@ namespace Game
             _spawners = FindObjectsByType<EnemySpawner>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
             _spawners = _spawners.Where(spawner => !spawner.ExcludeFromRounds).ToArray();
             
-            StartRound(round);
+            if (startRoundOnStart) StartRound(round);
         }
 
         private void FixedUpdate()
@@ -69,8 +68,11 @@ namespace Game
             }
         }
 
+        bool ButtonToggle => _roundState is not RoundState.Idle;
+        [Button, HideIf("ButtonToggle")]
         private void StartRound(int rnd)
         {
+            round = rnd;
             _roundState = RoundState.Start;
             _spawnCounter = (int)(baseSpawnAmount*Mathf.Pow(roundSpawnMultiplier, rnd-1));
             RoundSpawner(rnd, _spawnCounter).Forget();

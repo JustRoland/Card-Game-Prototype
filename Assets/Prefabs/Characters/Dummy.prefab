@@ -217,7 +217,7 @@ MonoBehaviour:
   onDeathEvent:
     m_PersistentCalls:
       m_Calls: []
-  debug: 0
+  debug: 1
   responsive: 0
   value: 0
   targetLocationUpdate:

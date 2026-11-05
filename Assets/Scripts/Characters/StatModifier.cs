@@ -52,19 +52,18 @@ namespace Characters
         public int ID = _id++;
         public bool MarkedForRemoval { get; private set;}
         public Action<StatModifier> OnDispose = delegate { };
-
-        public readonly SimpleTimer Timer;
+        private readonly SimpleTimer timer;
 
         protected StatModifier(float duration)
         {
             if (duration <= 0) return;
-            Timer = new SimpleTimer(TimerType.Countdown);
-            Timer.SetTimer(0, 0, duration);
-            Timer.CountdownFinishedEvent.AddListener(() => MarkedForRemoval = true);
-            Timer.StartTimer();
+            timer = new SimpleTimer(TimerType.Countdown);
+            timer.SetTimer(0, 0, duration);
+            timer.CountdownFinishedEvent.AddListener(() => MarkedForRemoval = true);
+            timer.StartTimer();
         }
 
-        public void Update(float deltaTime) => Timer?.UpdateTimer(deltaTime);
+        public void Update(float deltaTime) => timer?.UpdateTimer(deltaTime);
         public abstract void Handle(object sender, Query query);
 
         public void Dispose()

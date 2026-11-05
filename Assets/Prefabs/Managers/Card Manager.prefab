@@ -57,7 +57,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8690030d9de7f434f94d86c09e1448b2, type: 2}
   - {fileID: 11400000, guid: 45ca287ca55060d4cb4f8026a355a939, type: 2}
   - {fileID: 11400000, guid: 3c50e92d500556445aea7963393ac5ff, type: 2}
-  recipes: []
+  recipes:
+  - {fileID: 11400000, guid: b5c3de521634e23458444bccda9471b1, type: 2}
   factoryStartBuffer: 0
   factoryMaxItems: 20
   cardScaleUpTime: 0.15

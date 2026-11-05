@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Characters
@@ -27,6 +25,13 @@ namespace Characters
         MaxRange,
         FireRateModifier,
         ReloadTimeModifier,
+        WeakenedDamageMultiplier
+    }
+
+    public enum StatusEffectType
+    {
+        None,
+        Weakened,
     }
     
 
@@ -256,6 +261,30 @@ namespace Characters
             }
         }
 
+        public float WeakenedDamageMultiplier
+        {
+            get
+            {
+                var q = new Query(StatType.WeakenedDamageMultiplier, _baseStats.weakenedDamageMultiplier);
+                _mediator.PerformQuery(this, q);
+                return q.Value;
+            }
+        }
+
+        #endregion
+        
+        #region StatusEffects
+
+        public float Weakened
+        {
+            get
+            {
+                var q = new Query(StatusEffectType.Weakened, 1);
+                _mediator.PerformQuery(this, q);
+                return q.Value;
+            }
+        }
+        
         #endregion
 
         #region Colors
@@ -284,7 +313,7 @@ namespace Characters
 
         #region Traits
 
-        public bool Trait(TraitType trait) => _traits.Find(t => t.type == trait).unlocked;
+        public bool HasTrait(TraitType trait) => _traits.Find(t => t.type == trait).unlocked;
         public void UnlockTrait(TraitType trait) => _traits.Find(t => t.type == trait).unlocked = true;
         public void LockTrait(TraitType trait) => _traits.Find(t => t.type == trait).unlocked = false;
         public void UnlockAllTraits() => _traits.ForEach(t => t.unlocked = true);

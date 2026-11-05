@@ -19,3 +19,5 @@ MonoBehaviour:
     unlocked: 0
   - type: 2
     unlocked: 0
+  - type: 3
+    unlocked: 0

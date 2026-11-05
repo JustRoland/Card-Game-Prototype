@@ -1,7 +1,6 @@
 using Characters.State_Machine;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace Characters.Enemies
 {
@@ -11,6 +10,9 @@ namespace Characters.Enemies
 
         [ShowInInspector, PropertySpace]
         private string CurrentState => stateMachine != null ? stateMachine.CurrentState.Name : "No state";
+
+        [ShowInInspector]
+        private string CurrentHealth => Stats != null ? Stats.Health.ToString() : "---";
 
         // TODO: Protect variable later
         public float attackCooldown = 4f;
@@ -52,9 +54,9 @@ namespace Characters.Enemies
         }
 
 
-        public override void Damage(BodyPart bodyPart, int damage, float knockBack, Vector3 origin)
+        public override void Damage(BodyPart bodyPart, int damage, float knockBack, Vector3 origin, StatusEffect[] effects = null)
         {
-            base.Damage(bodyPart, damage, knockBack, origin);
+            base.Damage(bodyPart, damage, knockBack, origin, effects);
 
             if (Stats.Health > 0)
             {

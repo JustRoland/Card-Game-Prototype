@@ -2,20 +2,27 @@ using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
+using System.Linq;
 
 namespace Characters
 {
     public abstract class CharacterBase : MonoBehaviour, IStats
     {
         [SerializeField] protected BaseStats stats;
-        [SerializeField, PropertySpace(SpaceBefore = 0, SpaceAfter = 8)] protected BaseTraits baseTraits;
-        
-        [FoldoutGroup("Damage Effects"), SerializeField] protected BodyPart[] bodyParts;
-        [FoldoutGroup("Damage Effects"), SerializeField] protected Color damageEffectColor;
-        [FoldoutGroup("Damage Effects"), SerializeField] protected float damageEffectDuration = 0.035f;
-        
-        [FoldoutGroup("Events")] public UnityEvent onDeathEvent = new ();
+
+        [SerializeField, PropertySpace(SpaceBefore = 0, SpaceAfter = 8)]
+        protected BaseTraits baseTraits;
+
+        [FoldoutGroup("Damage Effects"), SerializeField]
+        protected BodyPart[] bodyParts;
+
+        [FoldoutGroup("Damage Effects"), SerializeField]
+        protected Color damageEffectColor;
+
+        [FoldoutGroup("Damage Effects"), SerializeField]
+        protected float damageEffectDuration = 0.035f;
+
+        [FoldoutGroup("Events")] public UnityEvent onDeathEvent = new();
 
         [SerializeField, Space] protected bool debug;
 
@@ -42,11 +49,18 @@ namespace Characters
             Stats.Mediator.Update(Time.deltaTime);
         }
 
-        public virtual void Damage(BodyPart bodyPart, int damage, float knockBack, Vector3 origin)
+        public virtual void Damage(BodyPart bodyPart, int damage, float knockBack, Vector3 origin,
+            StatusEffect[] effects = null)
         {
-            Stats.Mediator.AddModifiers(new BasicModifier(StatType.Health, 0, v => v - damage));
+            if (debug) Debug.Log($"{damage * Stats.Weakened} damage (Weakened Multiplier: {Stats.Weakened}) taken to {bodyPart.name} from {origin} and {effects?.Length} effects applied. Health: {Stats.Health - damage * Stats.Weakened}",this);
+            
+            float weakenedMultiplier = Stats.Weakened;  //value has to be cached, else the reference updates the modifier even after it was applied.
+            Stats.Mediator.AddModifiers(new BasicModifier(StatType.Health, 0, v => v - damage * weakenedMultiplier));
+
+            effects?.ToList().ForEach(se => Stats.Mediator.AddEffect(se));
 
             OnDamageEffect(bodyPart, damageEffectDuration, knockBack, origin).Forget();
+            
             
             if (Stats.Health <= 0) onDeathEvent.Invoke();
         }

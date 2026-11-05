@@ -1,6 +1,6 @@
 using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using Sirenix.OdinInspector;
 using UnityEngine;
 using Weapons;
 
@@ -89,9 +89,17 @@ namespace Characters
             if (raycast.hit.HasValue && raycast.hit.Value.collider.transform.TryGetComponent(out BodyPart bodyPart))
             {
                 if (debug) Debug.Log($"{name} hit {bodyPart.Name}");
+                
+                //TODO: Clean up; very brute force and not expandable.
+                List<StatusEffect> effects = new List<StatusEffect>();
+                
+                //Using the reference to the variable when creating the status effect has the neat side effect of automatically updating the damage multiplier value on the host. Cache value first if this is unintended.
+                if (Character.Stats.HasTrait(TraitType.Weaken)) effects.Add(new SimpleEffect(StatusEffectType.Weakened, 3f, v => v + Character.Stats.WeakenedDamageMultiplier));
+                
                 bodyPart.Damage((int)((Weapon.Damage + Character.Stats.DamageAdded) * Character.Stats.DamageMultiplier),
                     Weapon.KnockBack,
-                    transform.position);
+                    transform.position,
+                    effects.ToArray());
                 DisplayBullet(bulletOrigin.position, raycast.hit.Value.point, 0.05f).Forget();
             }
             else

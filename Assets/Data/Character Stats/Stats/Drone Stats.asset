@@ -17,11 +17,21 @@ MonoBehaviour:
   crouchSpeed: 3
   sprintSpeed: 12
   slowedSpeed: 3
+  speedModifier: 1
   jumpForce: 8
   airAcceleration: 4
   dashForce: 40
   dashAirDistance: 3
   dashCooldown: 2
+  turnSpeed: 180
   health: 50
+  healthIncrease: 0
+  damageAdded: 0
+  dmgAddIncrease: 0
   damageMultiplier: 1
+  dmgMultIncrease: 0
   defense: 20
+  maxRange: 100
+  fireRateModifier: 1
+  reloadTimeModifier: 1
+  weakenedDamageMultiplier: 0

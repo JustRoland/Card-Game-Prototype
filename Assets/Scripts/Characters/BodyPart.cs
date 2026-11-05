@@ -17,11 +17,11 @@ namespace Characters
             _originalColor = _material.color;
         }
     
-        public void Damage(int damage, float knockBack, Vector3 origin)
+        public void Damage(int damage, float knockBack, Vector3 origin, StatusEffect[] effects = null)
         {
             int damageTaken = (int)(damage * data.multiplier);
             if (!_character) Debug.LogWarning($"Body part {name} took doesn't have an associated character.", this);
-            _character?.Damage(this, damageTaken, knockBack, origin);
+            _character?.Damage(this, damageTaken, knockBack, origin, effects);
         }
 
         public void SetColor(Color color) => _material.color = color;

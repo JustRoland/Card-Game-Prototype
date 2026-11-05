@@ -31,5 +31,8 @@ namespace Characters
         public float fireRateModifier = 1f;
         public float reloadTimeModifier = 1f;
 
+        [Title("Status Effects")]
+        public float weakenedDamageMultiplier = 1.1f;
+
     }
 }

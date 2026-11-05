@@ -57,11 +57,9 @@ namespace Characters.Player
             _indicators.ForEach(i => i.indicator.rotation = AngleToTarget(i.origin));
         }
 
-        public override void Damage(BodyPart bodyPart, int damage, float knockBack, Vector3 origin)
+        public override void Damage(BodyPart bodyPart, int damage, float knockBack, Vector3 origin, StatusEffect[] effects = null)
         {
-            base.Damage(bodyPart, damage, knockBack, origin);
-            
-            if (debug) Debug.Log("Player hit!");
+            base.Damage(bodyPart, damage, knockBack, origin, effects);
 
             ToggleDamageIndicator(origin).Forget();
         }

@@ -8,6 +8,7 @@ namespace Characters
         None,
         Dash,
         DoubleJump,
+        Weaken
     }
 
     [CreateAssetMenu(fileName = "New Traits", menuName = "Traits")]
