@@ -227,7 +227,8 @@ MonoBehaviour:
   targetLocationUpdate:
     m_PersistentCalls:
       m_Calls: []
-  attackCooldown: 4
+  attackSpeed: 0.8
+  attackCooldown: 2
 --- !u!114 &6470082371861446251
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -241,7 +242,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Characters.CombatBase
   debug: 0
+  trackDamageDealt: 0
   testWeapon: {fileID: 11400000, guid: 4628cc11deff3544893e907d26bdce2e, type: 2}
+  maxExplosiveHits: 10
+  explosion: {fileID: 0}
   bulletOrigin: {fileID: 256600815240822490}
 --- !u!114 &3256562338827936829
 MonoBehaviour:
@@ -266,7 +270,7 @@ MonoBehaviour:
   avoidanceLookahead: 3
   avoidanceRadius: 0.8
   avoidanceWeight: 0.8
-  arrivalRadius: 3
+  arrivalRadius: 2
   stoppingDistance: 0.5
   repathInterval: 0.2
   repathDistance: 0.25

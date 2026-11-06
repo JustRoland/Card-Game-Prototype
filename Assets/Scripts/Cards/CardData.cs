@@ -36,6 +36,8 @@ namespace Cards
         [Header("Stat Changes")]
         public StatType statType;
         public float value;
+        [Header("Health Changes")]
+        public int healthChange;
         [FormerlySerializedAs("effectType")] [Header("Effect Color")]
         public Category category;
         public Color color;

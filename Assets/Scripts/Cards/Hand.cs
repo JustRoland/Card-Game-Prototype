@@ -35,6 +35,9 @@ namespace Cards
 
         [FoldoutGroup("Hand Settings"), SerializeField]
         private float dealSpeed = 0.1f;
+        
+        [FoldoutGroup("Hand Settings"), SerializeField]
+        private float cardScaleUpTime = 0.15f;
 
         [FoldoutGroup("Hand Settings"), SerializeField]
         private int maxCards = 8;
@@ -68,8 +71,9 @@ namespace Cards
 
         [SerializeField] private InputActionReference inputRemove;
         [SerializeField] private InputActionReference inputHide;
-
-        private CancellationToken _token;
+        
+        private CancellationTokenSource _cardPositionUpdateTokenSource;
+        
         public bool Hide { get; private set; }
 
         private void Awake()
@@ -80,14 +84,13 @@ namespace Cards
 
         private void Start()
         {
-            _token = CardManager.Instance.Source.Token;
+            _cardPositionUpdateTokenSource = new CancellationTokenSource();
             _normalHandYPosition = transform.localPosition.y;
-            DealCards(startingHand, dealSpeed, _token, .5f).Forget();
+            DealCards(startingHand, dealSpeed, .5f).Forget();
         }
 
 
-        private async UniTask DealCards(int amount, float speed, CancellationToken cancellationToken,
-            float withDelay = 0)
+        private async UniTask DealCards(int amount, float speed, float withDelay = 0, CancellationToken cancellationToken = default)
         {
             if (cancellationToken.IsCancellationRequested) return;
             await UniTask.WaitForSeconds(withDelay, cancellationToken: cancellationToken);
@@ -97,7 +100,7 @@ namespace Cards
                 await UniTask.WaitForSeconds(speed, cancellationToken: cancellationToken);
             }
 
-            await UniTask.Yield(cancellationToken: cancellationToken);
+            await UniTask.Yield();
         }
 
 
@@ -139,9 +142,8 @@ namespace Cards
             GameManager.Instance?.SlowTime(Hide ? Speed.Normal : Speed.Slow);
         }
 
-        public async UniTask AddCard(CardView cardView, CancellationToken cancellationToken)
+        public void AddCard(CardView cardView)
         {
-            if (cancellationToken.IsCancellationRequested) return;
             if (!cardView) return;
 
             cardView.transform.parent = transform;
@@ -162,14 +164,15 @@ namespace Cards
             }
 
 
-            await UpdateCardPositions(cardPositionUpdateTime, cancellationToken);
+            _cardPositionUpdateTokenSource.Cancel();
+            _cardPositionUpdateTokenSource.Dispose();
+            _cardPositionUpdateTokenSource = new CancellationTokenSource();
+            UpdateCardPositions(cardPositionUpdateTime, _cardPositionUpdateTokenSource.Token).Forget();
 
-            await UniTask.Yield(cancellationToken: cancellationToken);
         }
 
-        public async UniTask RemoveCard(CardView[] cardViews, CancellationToken cancellationToken)
+        public void RemoveCard(CardView[] cardViews)
         {
-            if (cancellationToken.IsCancellationRequested) return;
             if (cardViews == null) return;
 
             foreach (var cardView in cardViews)
@@ -183,9 +186,10 @@ namespace Cards
                 }
             }
 
-            await UpdateCardPositions(cardPositionUpdateTime, cancellationToken);
-
-            await UniTask.Yield(cancellationToken: cancellationToken);
+            _cardPositionUpdateTokenSource.Cancel();
+            _cardPositionUpdateTokenSource.Dispose();
+            _cardPositionUpdateTokenSource = new CancellationTokenSource();
+            UpdateCardPositions(cardPositionUpdateTime, _cardPositionUpdateTokenSource.Token).Forget();
         }
 
         private async UniTask UpdateCardPositions(float seconds, CancellationToken cancellationToken)
@@ -203,6 +207,8 @@ namespace Cards
                 Vector3 forward = spline.EvaluateTangent(p);
                 Vector3 up = spline.EvaluateUpVector(p);
                 Quaternion rotation = Quaternion.LookRotation(-up, Vector3.Cross(-up, forward).normalized);
+                card.transform.DOKill();
+                if (card.transform.localScale == Vector3.zero) card.transform.DOScale(transform.localScale, cardScaleUpTime);
                 card.transform.DOLocalMove(splinePos * transform.localScale.x + new Vector3(0, 0, -0.1f * i), seconds);
                 card.transform.DOLocalRotate(rotation.eulerAngles, seconds);
                 card.Order = i;

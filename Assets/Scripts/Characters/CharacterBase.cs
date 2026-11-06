@@ -5,8 +5,6 @@ using UnityEngine;
 using UnityEngine.Events;
 using System.Linq;
 using System.Threading;
-using UnityEngine.Serialization;
-using Utility;
 
 namespace Characters
 {
@@ -59,6 +57,8 @@ namespace Characters
         protected virtual void OnDisable()
         {
             cancellationTokenSource.Cancel();
+            cancellationTokenSource.Dispose();
+            onDeathEvent.RemoveAllListeners();
         }
 
         private void Update()
@@ -66,17 +66,17 @@ namespace Characters
             Stats.Mediator.Update(Time.deltaTime);
         }
 
-        public virtual void Damage(BodyPart bodyPart, int damage, float knockBack, Vector3 origin,
+        public virtual void Damage(BodyPart bodyPart, int damage, float knockBack, CharacterBase origin,
             StatusEffect[] effects = null)
         {
             if (debug) Debug.Log($"{damage * Stats.Weakened} damage (Weakened Multiplier: {Stats.Weakened}) taken to {bodyPart.name} from {origin} and {effects?.Length} effects applied. Health: {Stats.Health - damage * Stats.Weakened}",this);
             
             float weakenedMultiplier = Stats.Weakened;  //value has to be cached, else the reference updates the modifier even after it was applied.
-            Stats.Mediator.AddModifiers(new BasicModifier(StatType.Health, 0, v => v - damage * weakenedMultiplier));
+            Stats.Health -= damage * weakenedMultiplier;
 
             effects?.ToList().ForEach(se => Stats.Mediator.AddEffect(se));
 
-            OnDamageEffect(bodyPart, damageEffectDuration, knockBack, origin).Forget();
+            OnDamageEffect(bodyPart, damageEffectDuration, knockBack, origin.transform.position).Forget();
             
             
             if (Stats.Health <= 0) onDeathEvent.Invoke();

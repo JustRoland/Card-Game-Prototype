@@ -26,7 +26,6 @@ namespace Game
         [FormerlySerializedAs("spawnOnDeath")] [SerializeField] private bool targetPracticeRespawn;
         [SerializeField] private bool allowReinforcements;
         [SerializeField] private bool excludeFromRounds;
-        [SerializeField, MinValue(1)] private int minRoundToSpawn;
 
         [Tooltip("Binds pre-existing enemies to this spawner. Note: These enemies will be recycled by the factory!")]
         [SerializeField]
@@ -40,7 +39,6 @@ namespace Game
         private int _counter;
         public bool AllowReinforcements => allowReinforcements;
         public bool ExcludeFromRounds => excludeFromRounds;
-        public int MinRoundToSpawn => minRoundToSpawn;
 
         private void OnEnable()
         {
@@ -68,19 +66,20 @@ namespace Game
                 _factories[0].LoadedItems.ForEach(character => character.onDeathEvent.RemoveListener(OnDeathSpawn));
         }
 
-        public List<EnemyCharacter> Spawn(int roundScaling = 1, int maxAmount = 0, Transform target = null)
+        public List<EnemyCharacter> Spawn(int round = 1, int maxAmount = 0, Transform target = null)
         {
             if (maxAmount < 0) return null; // Currently, the Manager can call this with a negative amount, which leads to the spawners using their default amount. Fix later!!
             
             var results = new List<EnemyCharacter>();
             int amount = maxAmount > 0 ? Mathf.Min(spawnAmount, maxAmount): spawnAmount;
-            int localCounter = 0;
-            
             if (amount <= 0) return null;
+            
+            int localCounter = 0;
+            var temp = spawns.Where(s => s.minRound < round).ToArray();
 
-            for (var spawnIndex = 0; spawnIndex < spawns.Length; spawnIndex++)
+            for (var spawnIndex = 0; spawnIndex < temp.Length; spawnIndex++)
             {
-                for (int amountIndex = 0; amountIndex < spawns[spawnIndex].amount && localCounter < amount; amountIndex++, localCounter++, _counter++)
+                for (int amountIndex = 0; amountIndex < temp[spawnIndex].amount && localCounter < amount; amountIndex++, localCounter++, _counter++)
                 {
                     var newEnemy = _factories[spawnIndex].GetItem();
                     if (debug) Debug.Log($"Spawning {newEnemy} from {_factories[spawnIndex].Name}.", this);
@@ -89,10 +88,11 @@ namespace Game
                         transform.position.y,
                         transform.position.z + Random.Range(-spawnRadius, spawnRadius));
                     newEnemy.GetComponent<IEntity>()?.SetSpawner(this);
-                    newEnemy.Initialize(roundScaling);
+                    newEnemy.Initialize(round);
                     newEnemy.gameObject.SetActive(true);
                     if (target) newEnemy.SetTarget(target); // Not working atm!
                     if (targetPracticeRespawn) newEnemy.onDeathEvent.AddListener(OnDeathSpawn);
+                    newEnemy.onDeathEvent.AddListener(GameManager.Instance.CountKill);
                     results.Add(newEnemy);
                 }
             }
@@ -118,5 +118,6 @@ namespace Game
     {
         public EnemyCharacter enemyPrefab;
         public int amount;
+        public int minRound;
     }
 }

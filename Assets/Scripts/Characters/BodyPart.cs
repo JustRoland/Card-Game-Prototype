@@ -19,7 +19,7 @@ namespace Characters
             _originalColor = _material.color;
         }
     
-        public void Damage(int damage, float knockBack, Vector3 origin, StatusEffect[] effects = null)
+        public void Damage(int damage, float knockBack, CharacterBase origin, StatusEffect[] effects = null)
         {
             int damageTaken = (int)(damage * data.multiplier);
             if (!_character) Debug.LogWarning($"Body part {name} took doesn't have an associated character.", this);

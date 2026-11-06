@@ -429,13 +429,13 @@ MonoBehaviour:
   player: {fileID: 2075589275}
   debug: 1
   startRoundOnStart: 0
-  playerLocationKnownToEnemies: 0
+  playerLocationKnownToEnemies: 1
   reinforcementsCooldown: 15
   round: 2
   roundSpawnMultiplier: 1.2
   roundStartDelay: 5
   baseSpawnDelay: 6
-  baseSpawnAmount: 3
+  baseSpawnAmount: 7
   baseReinforcementAmount: 2
 --- !u!4 &283722748
 Transform:
@@ -750,12 +750,12 @@ MonoBehaviour:
   spawns:
   - enemyPrefab: {fileID: 6077540049571290851, guid: 6b3ad0f31bf5bf540852036334e99543, type: 3}
     amount: 10
+    minRound: 0
   spawnRadius: 15
   spawnOnStart: 1
   targetPracticeRespawn: 1
   allowReinforcements: 0
   excludeFromRounds: 1
-  minRoundToSpawn: 1
   bindOnStart: []
 --- !u!1001 &672787600
 PrefabInstance:
@@ -765,10 +765,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 320649487}
     m_Modifications:
-    - target: {fileID: 1850008268603424662, guid: fd509ceda48521d4aae29896283da018, type: 3}
-      propertyPath: roundText
-      value: 
-      objectReference: {fileID: 1387529675}
     - target: {fileID: 2073881833468484311, guid: fd509ceda48521d4aae29896283da018, type: 3}
       propertyPath: m_LocalPosition.x
       value: -12.41163
@@ -856,14 +852,15 @@ MonoBehaviour:
   spawns:
   - enemyPrefab: {fileID: 6077540049571290851, guid: a315623f596d4244ba31305e6fbc98df, type: 3}
     amount: 3
+    minRound: 0
   - enemyPrefab: {fileID: 6077540049571290851, guid: 4d381912c24589a4d83fd3231ab67ba3, type: 3}
     amount: 1
+    minRound: 5
   spawnRadius: 2
   spawnOnStart: 0
   targetPracticeRespawn: 0
   allowReinforcements: 1
   excludeFromRounds: 0
-  minRoundToSpawn: 1
   bindOnStart: []
 --- !u!4 &678767086
 Transform:
@@ -1535,21 +1532,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2075589271}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 6499962612031504977, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
---- !u!114 &1387529675 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5680512721818085947, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
-  m_PrefabInstance: {fileID: 1387529674}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!114 &1449846248
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1603,12 +1590,12 @@ MonoBehaviour:
   spawns:
   - enemyPrefab: {fileID: 6077540049571290851, guid: a315623f596d4244ba31305e6fbc98df, type: 3}
     amount: 4
+    minRound: 0
   spawnRadius: 2
   spawnOnStart: 0
   targetPracticeRespawn: 0
   allowReinforcements: 1
   excludeFromRounds: 0
-  minRoundToSpawn: 1
   bindOnStart: []
 --- !u!4 &1484574430
 Transform:
@@ -1932,14 +1919,15 @@ MonoBehaviour:
   spawns:
   - enemyPrefab: {fileID: 6077540049571290851, guid: a315623f596d4244ba31305e6fbc98df, type: 3}
     amount: 3
+    minRound: 0
   - enemyPrefab: {fileID: 6077540049571290851, guid: 4d381912c24589a4d83fd3231ab67ba3, type: 3}
     amount: 1
+    minRound: 5
   spawnRadius: 2
   spawnOnStart: 0
   targetPracticeRespawn: 0
   allowReinforcements: 1
   excludeFromRounds: 0
-  minRoundToSpawn: 1
   bindOnStart: []
 --- !u!4 &2003207190
 Transform:
@@ -1989,12 +1977,12 @@ MonoBehaviour:
   spawns:
   - enemyPrefab: {fileID: 3933841195924752374, guid: e2c04d7ff4c043f4499201e3edd00034, type: 3}
     amount: 1
+    minRound: 7
   spawnRadius: 10
   spawnOnStart: 0
   targetPracticeRespawn: 0
   allowReinforcements: 0
   excludeFromRounds: 0
-  minRoundToSpawn: 1
   bindOnStart: []
 --- !u!4 &2061403485
 Transform:
@@ -2230,9 +2218,17 @@ PrefabInstance:
       value: Card Hand
       objectReference: {fileID: 0}
     - target: {fileID: 4648881761536732298, guid: cd3fc06882c3f224aab8b6d4c1cad70b, type: 3}
+      propertyPath: maxCards
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4648881761536732298, guid: cd3fc06882c3f224aab8b6d4c1cad70b, type: 3}
       propertyPath: character
       value: 
       objectReference: {fileID: 489033215}
+    - target: {fileID: 4648881761536732298, guid: cd3fc06882c3f224aab8b6d4c1cad70b, type: 3}
+      propertyPath: startingHand
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 4648881761536732298, guid: cd3fc06882c3f224aab8b6d4c1cad70b, type: 3}
       propertyPath: statsHolder.underlyingValue
       value: 

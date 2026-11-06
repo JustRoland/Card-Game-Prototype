@@ -44,19 +44,12 @@ namespace Cards
             set => _sortingGroup.sortingOrder = value;
         }
 
-        public CardView Setup(Card card, Vector3 position, Vector3 scale, float scaleUpTime = 0,  Camera cam = null)
+        public CardView Setup(Card card, Vector3 position, Camera cam = null)
         {
             _camera = cam;
             if (!_sortingGroup) _sortingGroup = GetComponent<SortingGroup>();
 
             transform.localPosition = position;
-
-            if (scaleUpTime > 0)
-            {
-                transform.localScale = Vector3.zero;
-                transform.DOScale(scale, scaleUpTime);
-            }
-            else transform.localScale = scale;
 
             Card = card;
             nameText.text = card.Name;

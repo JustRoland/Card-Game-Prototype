@@ -1,4 +1,5 @@
 using Cards;
+using Game;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Utility;
@@ -87,12 +88,25 @@ namespace Characters.Player
             playerCamera.Initialize(playerMovement.GetCameraTarget());
             cameraSpring.Initialize();
         }
+        
+        public void LockPlayerControls(bool state)
+        {
+            switch (state)
+            {
+                case true:
+                    _inputAction.Disable();
+                    break;
+                case false:
+                    _inputAction.Enable();
+                    break;
+            }
+        }
 
         private void Update()
         {
             if (_inputAction.Player.Reset.WasPressedThisFrame())
             {
-                ResetPlayer();
+                GameManager.Instance.RestartGame();
             }
 
 

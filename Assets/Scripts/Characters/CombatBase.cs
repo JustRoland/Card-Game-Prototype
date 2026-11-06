@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Characters.Enemies;
 using Cysharp.Threading.Tasks;
+using Game;
 using UnityEngine;
 using Utility;
 using Weapons;
@@ -13,6 +14,7 @@ namespace Characters
     public class CombatBase : MonoBehaviour
     {
         [SerializeField] protected bool debug;
+        [SerializeField] protected bool trackDamageDealt;
         [SerializeField] protected WeaponData testWeapon;
         private Collider[] _hitColliders;
         [SerializeField] private int maxExplosiveHits = 10;
@@ -131,11 +133,11 @@ namespace Characters
                     RegularDamage(bodyPart, effects.ToArray());
 
                     if (Character.Stats.HasTrait(TraitType.Pierce))
-                        PiercingShot(raycast.hit.Value.collider.transform.position, raycast.ray.direction, 2, points, effects.ToArray());
+                        PiercingShot(raycast.hit.Value.collider.transform.position, raycast.ray.direction, points, effects.ToArray());
                 }
                 else if (Character.Stats.HasTrait(TraitType.Ricochet))
                 {
-                    points.Add(RicochetShot(raycast.hit.Value.point, raycast.ray.direction, raycast.hit.Value.normal, points, effects.ToArray()));
+                    RicochetShot(raycast.hit.Value.point, raycast.ray.direction, raycast.hit.Value.normal, points, effects.ToArray());
                 }
 
                 DisplayBullet(points.ToArray(), 0.05f, _cancellationTokenSource.Token).Forget();
@@ -144,10 +146,12 @@ namespace Characters
 
         private void RegularDamage(BodyPart bodyPart, StatusEffect[] effects)
         {
-            bodyPart.Damage((int)((Weapon.Damage + Character.Stats.DamageAdded) * Character.Stats.DamageMultiplier),
+            var damage = (int)((Weapon.Damage + Character.Stats.DamageAdded) * Character.Stats.DamageMultiplier);
+            bodyPart.Damage(damage,
                 Weapon.KnockBack,
-                transform.position,
+                Character,
                 effects);
+            if (trackDamageDealt) GameManager.Instance.TrackDamageDealt(damage);
         }
 
         private void ExplosiveDamage(Vector3 position, StatusEffect[] effects)
@@ -203,14 +207,15 @@ namespace Characters
             _lineRenderer.startColor = Character.Stats.Damage;
             _lineRenderer.endColor = Character.Stats.Damage;
             _lineRenderer.enabled = true;
-            await UniTask.WaitForSeconds(delay);
+            await UniTask.WaitForSeconds(delay, cancellationToken: cancellationToken);
             _lineRenderer.enabled = false;
             await UniTask.Yield();
         }
 
-        private void PiercingShot(Vector3 position, Vector3 direction, int pierceCount, List<Vector3> points,
+        private void PiercingShot(Vector3 position, Vector3 direction, List<Vector3> points,
             StatusEffect[] effects)
         {
+            var pierceCount = Character.Stats.PierceCount;
             while (pierceCount > 0)
             {
                 if (!Physics.Raycast(position, direction, out var hit, Character.Stats.MaxRange,
@@ -230,19 +235,36 @@ namespace Characters
             }
         }
 
-        private Vector3 RicochetShot(Vector3 position, Vector3 direction, Vector3 surfaceNormal, List<Vector3> points, StatusEffect[] effects)
+        private void RicochetShot(Vector3 position, Vector3 direction, Vector3 surfaceNormal, List<Vector3> points, StatusEffect[] effects)
         {
-            var ricochetDirection = direction - 2 * Vector3.Dot(direction, surfaceNormal) * surfaceNormal;
-            
-            if (!Physics.Raycast(position, ricochetDirection, out var hit, Character.Stats.MaxRange,
-                    ~(1 << gameObject.layer))) return position + ricochetDirection * Character.Stats.MaxRange;
+            var bounces = Character.Stats.RicochetCount;
+            while (bounces > 0)
+            {
+                var ricochetDirection = direction - 2 * Vector3.Dot(direction, surfaceNormal) * surfaceNormal;
 
-            if (!hit.collider.TryGetComponent(out BodyPart bodyPart)) return hit.point;
-            
-            points.Add(hit.point);
-            if (Character.Stats.HasTrait(TraitType.Pierce)) PiercingShot(hit.point, ricochetDirection, 2, points, effects); 
-            else RegularDamage(bodyPart, effects);
-            return hit.point;
+                if (!Physics.Raycast(position, ricochetDirection, out var hit, Character.Stats.MaxRange,
+                        ~(1 << gameObject.layer)))
+                {
+                    points.Add(position + ricochetDirection * Character.Stats.MaxRange);
+                    return;
+                }
+
+                if (!hit.collider.TryGetComponent(out BodyPart bodyPart))
+                {
+                    points.Add(hit.point);
+                    return;
+                }
+
+                points.Add(hit.point);
+                if (Character.Stats.HasTrait(TraitType.Pierce))
+                    PiercingShot(hit.point, ricochetDirection, points, effects);
+                else RegularDamage(bodyPart, effects);
+
+                bounces--;
+                position = hit.point;
+                direction = ricochetDirection;
+                surfaceNormal = hit.normal;
+            }
         }
     }
 }

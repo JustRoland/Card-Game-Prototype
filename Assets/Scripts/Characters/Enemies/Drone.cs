@@ -47,13 +47,13 @@ namespace Characters.Enemies
 
 
 
-        public override void Damage(BodyPart bodyPart, int damage, float knockBack, Vector3 origin, StatusEffect[] effects = null)
+        public override void Damage(BodyPart bodyPart, int damage, float knockBack, CharacterBase origin, StatusEffect[] effects = null)
         {
             base.Damage(bodyPart, damage, knockBack, origin, effects);
             
             if (Stats.Health > 0)
             {
-                SetDestination(origin, true);
+                SetDestination(origin.transform.position, true);
             }
             else
             {

@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89ad1c89bf1c94c41b7c1501699899d7, type: 3}
   m_Name: Ricochet Rounds
   m_EditorClassIdentifier: Assembly-CSharp::Cards.CardData
-  description: 'Active: Bullets bounce off of walls.'
+  description: 'Active: +1 bullet ricochet.'
   tier: 2
   sprite: {fileID: -1561054137, guid: c3d55075e50c97940ae0a49c91c1c45d, type: 3}
   color: {r: 0.24836648, g: 0.23065136, b: 0.78867924, a: 1}
-  type: 0
   activeEffects:
-  - statType: 0
-    value: 0
+  - statType: 23
+    value: 1
+    healthChange: 0
     category: 0
     color: {r: 0, g: 0, b: 0, a: 0}
     trait: 5

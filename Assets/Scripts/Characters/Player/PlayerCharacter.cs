@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using Game;
 using UnityEngine;
 
 namespace Characters.Player
@@ -38,16 +39,17 @@ namespace Characters.Player
         [SerializeField] private Transform damageIndicator;
         [SerializeField] private Canvas canvas;
         [SerializeField] private float damageIndicatorDuration = 0.5f;
-        CancellationTokenSource _damageIndicatorCancellation;
 
         private readonly List<DamageIndicator> _indicators = new();
         private Color _effectColor;
         private PlayerCombat _combat;
+        private PlayerController _controller;
         private bool _inDialogue;
 
         private void Awake()
         {
             _combat = GetComponent<PlayerCombat>();
+            _controller = GetComponent<PlayerController>();
             damageIndicator.gameObject.SetActive(false);
             base.Initialize();
         }
@@ -57,21 +59,35 @@ namespace Characters.Player
             _indicators.ForEach(i => i.indicator.rotation = AngleToTarget(i.origin));
         }
 
-        public override void Damage(BodyPart bodyPart, int damage, float knockBack, Vector3 origin, StatusEffect[] effects = null)
+        public override void Damage(BodyPart bodyPart, int damage, float knockBack, CharacterBase origin, StatusEffect[] effects = null)
         {
             base.Damage(bodyPart, damage, knockBack, origin, effects);
 
-            ToggleDamageIndicator(origin).Forget();
+            ToggleDamageIndicator(origin.transform.position, cancellationTokenSource.Token).Forget();
+            GameManager.Instance.TrackDamageTaken(damage);
+
+            if (Stats.Health > 0) return;
+            if (Stats.Revives > 0)
+            {
+                Revive();
+                return;
+            }
+            
+            onDeathEvent.Invoke();
+            _controller.LockPlayerControls(true);
+            GameManager.Instance.SetKiller(origin.name);
+            GameManager.Instance.EndGame();
+
         }
         
-        private async UniTask ToggleDamageIndicator(Vector3 origin)
+        private async UniTask ToggleDamageIndicator(Vector3 origin, CancellationToken cancellationToken = default)
         {
             
             var indicatorStr = new DamageIndicator(Instantiate(damageIndicator, canvas.transform), origin);
             indicatorStr.indicator.gameObject.SetActive(true);
             _indicators.Add(indicatorStr);
             
-            await UniTask.Delay(TimeSpan.FromSeconds(damageIndicatorDuration));
+            await UniTask.Delay(TimeSpan.FromSeconds(damageIndicatorDuration), cancellationToken: cancellationToken);
             
             _indicators.Remove(indicatorStr);
             Destroy(indicatorStr.indicator.gameObject);
@@ -85,6 +101,12 @@ namespace Characters.Player
             var direction = (origin - transform.position).normalized;
             var angle = Vector3.SignedAngle(direction, transform.forward, Vector3.up);
             return Quaternion.Euler(0, 0, angle);
+        }
+
+        private void Revive()
+        {
+            Stats.Health = Stats.MaxHealth;
+            GameManager.Instance.TrackRevive();
         }
 
         public void SetInDialogue(bool locked) => _inDialogue = locked;

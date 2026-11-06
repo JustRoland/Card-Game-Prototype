@@ -17,8 +17,9 @@ MonoBehaviour:
   sprite: {fileID: -1083007852, guid: e17211d03cdbdae49945303595f7f09c, type: 3}
   color: {r: 0.33589882, g: 0.6710113, b: 0.7207546, a: 1}
   activeEffects:
-  - statType: 23
+  - statType: 22
     value: 1
+    healthChange: 0
     category: 0
     color: {r: 0, g: 0, b: 0, a: 0}
     trait: 0

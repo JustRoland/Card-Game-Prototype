@@ -14,16 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Cards.CardData
   description: 'Passive: ---
 
-    Active: +20 HP'
+    Active: +20 HP, +10 Max HP for 15s'
   tier: 1
   sprite: {fileID: 2135297736, guid: e17211d03cdbdae49945303595f7f09c, type: 3}
   color: {r: 0.3962264, g: 0.14877176, b: 0.15029155, a: 1}
-  type: 0
   activeEffects:
   - statType: 12
-    value: 20
+    value: 10
+    healthChange: 20
     category: 0
     color: {r: 0, g: 0, b: 0, a: 0}
     trait: 0
-    duration: 0
+    duration: 15
   passiveEffects: []

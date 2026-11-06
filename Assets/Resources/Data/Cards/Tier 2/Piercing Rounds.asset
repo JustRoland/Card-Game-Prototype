@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89ad1c89bf1c94c41b7c1501699899d7, type: 3}
   m_Name: Piercing Rounds
   m_EditorClassIdentifier: Assembly-CSharp::Cards.CardData
-  description: 'Active: Bullets pierce through enemies.'
+  description: 'Active: +1 bullet pierce.'
   tier: 2
   sprite: {fileID: -158893385, guid: 79bebc5685a097e4e9094f777f7613ba, type: 3}
   color: {r: 0.36599624, g: 0.22981122, b: 0.7660377, a: 1}
-  type: 0
   activeEffects:
-  - statType: 0
-    value: 0
+  - statType: 24
+    value: 1
+    healthChange: 0
     category: 0
     color: {r: 0, g: 0, b: 0, a: 0}
     trait: 6

@@ -12,16 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89ad1c89bf1c94c41b7c1501699899d7, type: 3}
   m_Name: Dexterity
   m_EditorClassIdentifier: Assembly-CSharp::Cards.CardData
-  description: 'Passive: -10% reload speed
+  description: 'Passive: ---
 
     Active: +20% rate of fire for 10s'
   tier: 1
   sprite: {fileID: 758769576, guid: e17211d03cdbdae49945303595f7f09c, type: 3}
   color: {r: 0.20908909, g: 0.5471698, b: 0.09807754, a: 1}
-  type: 0
   activeEffects:
   - statType: 18
     value: 0.2
+    healthChange: 0
     category: 1
     color: {r: 0.20784315, g: 0.54901963, b: 0.098039225, a: 1}
     trait: 0
@@ -29,6 +29,7 @@ MonoBehaviour:
   passiveEffects:
   - statType: 19
     value: -0.1
+    healthChange: 0
     category: 0
     color: {r: 0, g: 0, b: 0, a: 0}
     trait: 0

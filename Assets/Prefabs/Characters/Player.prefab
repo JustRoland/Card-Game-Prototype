@@ -562,6 +562,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCombat
   debug: 0
+  trackDamageDealt: 1
   testWeapon: {fileID: 11400000, guid: 04ea5d72a1a3beb47af983b4307c9236, type: 2}
   maxExplosiveHits: 10
   explosion: {fileID: 1939521529294801072, guid: 90a2f57f83031134b829f9b48ecd678d, type: 3}

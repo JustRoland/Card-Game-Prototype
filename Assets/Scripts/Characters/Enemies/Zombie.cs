@@ -15,6 +15,7 @@ namespace Characters.Enemies
         private string CurrentHealth => Stats != null ? Stats.Health.ToString() : "---";
 
         // TODO: Protect variable later
+        public float attackSpeed = 1f;
         public float attackCooldown = 4f;
         
 
@@ -54,13 +55,13 @@ namespace Characters.Enemies
         }
 
 
-        public override void Damage(BodyPart bodyPart, int damage, float knockBack, Vector3 origin, StatusEffect[] effects = null)
+        public override void Damage(BodyPart bodyPart, int damage, float knockBack, CharacterBase origin, StatusEffect[] effects = null)
         {
             base.Damage(bodyPart, damage, knockBack, origin, effects);
 
             if (Stats.Health > 0)
             {
-                if (responsive) SetDestination(origin, true);
+                if (responsive) SetDestination(origin.transform.position, true);
             }
             else
             {

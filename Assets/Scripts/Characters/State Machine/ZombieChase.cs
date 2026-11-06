@@ -5,13 +5,15 @@ namespace Characters.State_Machine
 {
     public class ZombieChase : State<Zombie>
     {
-        private float _attackTimer;
+        private float _attackSpeed;
+        private float _attackCooldown;
+        private bool _inRange;
+        private bool _canAttack;
 
         public override void Enter()
         {
             Enemy.SetSpeed(Enemy.Stats.SprintSpeed);
             Enemy.SetTarget(Enemy.CurrentTarget);
-            _attackTimer = Enemy.attackCooldown;
         }
 
         public override void Update(float deltaTime)
@@ -21,18 +23,24 @@ namespace Characters.State_Machine
                 StateMachine.ChangeState<ZombieIdle>();
                 return;
             }
-            
+
             if (!Enemy.HasWeapon) return;
 
+            _attackCooldown -= Time.deltaTime;
             var distance = Vector3.Distance(Enemy.transform.position, Enemy.CurrentTarget.transform.position);
-            _attackTimer -= deltaTime;
 
-            if (_attackTimer <= 0 && distance <= Enemy.MaxRange)
+            _inRange = distance <= Enemy.MaxRange;
+            if (_inRange) _attackSpeed -= Time.deltaTime;
+            else _attackSpeed = Enemy.attackSpeed;
+            
+            _canAttack = _inRange && _attackSpeed <= 0 && _attackCooldown <= 0;
+            
+            if (_canAttack)
             {
-                _attackTimer = Enemy.attackCooldown;
                 Enemy.Attack();
-                Debug.Log($"{Enemy.name} is attacking {Enemy.CurrentTarget.name}.");
+                _attackCooldown = Enemy.attackCooldown;
             }
+            
         }
 
         public override void Exit()

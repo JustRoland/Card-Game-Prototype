@@ -217,12 +217,13 @@ MonoBehaviour:
   onDeathEvent:
     m_PersistentCalls:
       m_Calls: []
-  debug: 1
+  debug: 0
   responsive: 0
   value: 0
   targetLocationUpdate:
     m_PersistentCalls:
       m_Calls: []
+  attackSpeed: 1
   attackCooldown: 4
 --- !u!1 &6357361598914669055
 GameObject:

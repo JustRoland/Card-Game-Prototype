@@ -17,10 +17,10 @@ MonoBehaviour:
   tier: 2
   sprite: {fileID: 21300000, guid: 11297f04d8a1f8249b9a04de04cff772, type: 3}
   color: {r: 0.78867924, g: 0.43103057, b: 0.18898536, a: 1}
-  type: 0
   activeEffects:
-  - statType: 0
-    value: 0
+  - statType: 21
+    value: 0.5
+    healthChange: 0
     category: 0
     color: {r: 0, g: 0, b: 0, a: 0}
     trait: 4

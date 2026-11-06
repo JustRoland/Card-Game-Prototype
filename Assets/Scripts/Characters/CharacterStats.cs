@@ -17,7 +17,7 @@ namespace Characters
         DashForce,
         DashCooldown,
         DashAirDistance,
-        Health,
+        MaxHealth,
         DamageAdded,
         DamageMultiplier,
         Defense,
@@ -27,15 +27,15 @@ namespace Characters
         ReloadTimeModifier,
         WeakenedDamageMultiplier,
         ExplosiveShotRadius,
-        MaxHealth,
         Revives,
+        RicochetCount,
+        PierceCount,
     }
 
     public enum StatusEffectType
     {
         None,
-        Weakened,
-        ExplosiveShot,
+        Weakened
     }
     
 
@@ -58,6 +58,7 @@ namespace Characters
         private readonly Color _baseColor;
         private readonly List<Trait> _traits = new();
         private readonly int _round;
+        private float _currentHealth;
 
         public StatsMediator Mediator => _mediator;
 
@@ -67,6 +68,7 @@ namespace Characters
             _round = round - 1;
             _baseStats = baseStats;
             _baseColor = baseColor;
+            _currentHealth = Mathf.Min(_baseStats.health + _baseStats.healthIncrease * round, MaxHealth);
             foreach (var trait in baseTraits.traits)
             {
                 _traits.Add(new Trait(trait.type, trait.unlocked));
@@ -187,22 +189,24 @@ namespace Characters
         
         public float Health
         {
-            get
+            get => Mathf.Min(_currentHealth, MaxHealth);
+            set
             {
-                var q = new Query(StatType.Health, _baseStats.health + _baseStats.healthIncrease * _round);
-                _mediator.PerformQuery(this, q);
-                return Mathf.Min(q.Value, MaxHealth);
+                _currentHealth = value;
+                _currentHealth = Mathf.Min(_currentHealth, MaxHealth);
             }
         }
-        
+
         public float MaxHealth
         {
             get
             {
-                var q = new Query(StatType.MaxHealth, _baseStats.maxHealth);
+                var q = new Query(StatType.MaxHealth, _baseStats.maxHealth + _baseStats.healthIncrease * _round);
                 _mediator.PerformQuery(this, q);
                 return q.Value;
             }
+            
+
         }
 
         public int Revives
@@ -302,6 +306,26 @@ namespace Characters
                 var q = new Query(StatType.ExplosiveShotRadius, _baseStats.explosiveShotRadius);
                 _mediator.PerformQuery(this, q);
                 return q.Value;
+            }
+        }
+
+        public int RicochetCount
+        {
+            get
+            {
+                var q = new Query(StatType.RicochetCount, _baseStats.ricochetCount);
+                _mediator.PerformQuery(this, q);
+                return (int)q.Value;
+            }
+        }
+        
+        public int PierceCount
+        {
+            get
+            {
+                var q = new Query(StatType.PierceCount, _baseStats.pierceCount);
+                _mediator.PerformQuery(this, q);
+                return (int)q.Value;
             }
         }
 

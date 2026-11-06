@@ -35,5 +35,8 @@ namespace Characters
         public float recoil = 0.5f;
         public float weakenedDamageMultiplier = 1.1f;
         public float explosiveShotRadius = 0.4f;
+        public float knockback = 10f;
+        public float ricochetCount = 0;
+        public float pierceCount = 0;
     }
 }

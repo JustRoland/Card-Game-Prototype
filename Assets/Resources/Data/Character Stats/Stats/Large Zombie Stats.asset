@@ -25,11 +25,13 @@ MonoBehaviour:
   dashCooldown: 2
   turnSpeed: 320
   health: 250
-  healthIncrease: 15
+  healthIncrease: 20
   damageAdded: 0
-  dmgAddIncrease: 5
-  damageMultiplier: 1.5
+  dmgAddIncrease: 0
+  damageMultiplier: 1.2
   dmgMultIncrease: 0
+  maxHealth: 250
+  revives: 0
   defense: 20
   maxRange: 100
   fireRateModifier: 1
@@ -37,3 +39,6 @@ MonoBehaviour:
   recoil: 0.5
   weakenedDamageMultiplier: 0
   explosiveShotRadius: 1
+  knockback: 10
+  ricochetCount: 0
+  pierceCount: 0

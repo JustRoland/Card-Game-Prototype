@@ -30,7 +30,6 @@ namespace Game
         [ShowInInspector] private int TotalEnemies => _spawners?.Sum(s => s.activeEnemies) ?? 0;
         
         public int Round => round;
-        
 
         private bool _reinforcementsCalled;
         private float _reinforcementsCooldownTimer;
@@ -68,6 +67,7 @@ namespace Game
             }
         }
 
+
         bool ButtonToggle => _roundState is not RoundState.Idle;
         [Button, HideIf("ButtonToggle")]
         private void StartRound(int rnd)
@@ -98,12 +98,11 @@ namespace Game
             await UniTask.WaitForSeconds(roundStartDelay);
             _roundState = RoundState.InProgress;
             
-            var spawners = _spawners.Where(spawner => spawner.MinRoundToSpawn <= rnd).ToList();
             var counter = 0;
 
             while (counter < amountToSpawn)
             {
-                foreach (var spawner in spawners.TakeWhile(spawner => counter < amountToSpawn))
+                foreach (var spawner in _spawners.TakeWhile(spawner => counter < amountToSpawn))
                 {
                     counter += spawner.Spawn(rnd, amountToSpawn - counter, playerLocationKnownToEnemies ? player : null).Count;
                 }
@@ -123,7 +122,7 @@ namespace Game
 
             foreach (var t in _spawners)
             {
-                if (!forReinforcement && !t.AllowReinforcements && t.MinRoundToSpawn <= round) continue;
+                if (!forReinforcement && !t.AllowReinforcements) continue;
                 var distance = Vector3.Distance(location, t.transform.position);
                 if (!(distance > maxDistance)) continue;
                 maxDistance = distance;

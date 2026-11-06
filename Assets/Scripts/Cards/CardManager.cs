@@ -30,7 +30,6 @@ namespace Cards
         private CardRecipe[] recipes;
         [SerializeField] private int factoryStartBuffer;
         [SerializeField] private int factoryMaxItems;
-        [SerializeField] private float cardScaleUpTime = 0.15f;
         [SerializeField] private int maxDeckSize = 10;
         [SerializeField] private float minCardYDragToPlay = 2f;
         private Vector3 _startDragPosition;
@@ -38,9 +37,6 @@ namespace Cards
 
         private GenericFactory<CardView> _cardFactory;
         private GenericFactory<GameObject> _cardGameObjectFactory;
-
-        public CancellationTokenSource Source;
-        private CancellationToken _token;
 
 
         private void Awake()
@@ -54,9 +50,6 @@ namespace Cards
             recipes = Resources.LoadAll<CardRecipe>("Data/Cards");
             Debug.Assert(recipes.Length > 0, "No recipes found");
             Debug.Log($"Loaded {recipes.Length} recipes");
-
-            Source = new CancellationTokenSource();
-            _token = Source.Token;
 
             _cardFactory = new GenericFactory<CardView>(cardPrefab, cardView => cardView.Active == false,
                 factoryStartBuffer,
@@ -154,18 +147,18 @@ namespace Cards
         public void AddCard()
         {
             var cardView = GetCardView(hand.transform.localScale);
-            hand.AddCard(cardView, _token).Forget();
+            hand.AddCard(cardView);
         }
 
         private void OnRequestNewCardView(Hand hnd)
         {
             var cardView = GetCardView(hnd.transform.localScale);
-            hnd.AddCard(cardView, _token).Forget();
+            hnd.AddCard(cardView);
         }
 
         private void OnRequestRemoveCardView(Hand hnd, CardView cardView)
         {
-            hnd.RemoveCard(new[] { cardView }, _token).Forget();
+            hnd.RemoveCard(new[] { cardView });
             UnloadExistingCardView(cardView);
         }
 
@@ -182,7 +175,7 @@ namespace Cards
                 return null;
             }
 
-            var newCard = _cardFactory.GetItem().Setup(card, cardSpawnLocation.position, scale, cardScaleUpTime, handCamera);
+            var newCard = _cardFactory.GetItem().Setup(card, cardSpawnLocation.position, handCamera);
             RegisterCardViewEvents(newCard);
             _realDeckSize--;
             return newCard;
@@ -228,11 +221,14 @@ namespace Cards
                 {
                     var modifier = new BasicModifier(effect.statType, effect.duration, v => v + effect.value);
                     statsHolder.Value.Stats.Mediator.AddModifiers(modifier);
+                    statsHolder.Value.Stats.Health += effect.healthChange;
                     var colorModifier = new ColorModifier(effect.category, effect.color, effect.duration);
                     statsHolder.Value.Stats.Mediator.AddModifiers(colorModifier);
                     if (effect.trait is not TraitType.None) statsHolder.Value.Stats.UnlockTrait(effect.trait);
                 }
             }
+
+            hand.RemoveCard(new[] { cardView });
             UnloadExistingCardView(cardView);
             return false;
         }
@@ -244,8 +240,8 @@ namespace Cards
             if (outputCard == null) return false;
 
             UnloadExistingCardViews(cards);
-            hand.RemoveCard(cards, Source.Token).Forget();
-            hand.AddCard(GetCardView(outputCard, hand.transform.localScale), _token).Forget();
+            hand.RemoveCard(cards);
+            hand.AddCard(GetCardView(outputCard, hand.transform.localScale));
         
             return true;
         }
@@ -263,6 +259,7 @@ namespace Cards
                 {
                     var modifier = new BasicModifier(effect.statType, effect.duration, v => v + effect.value);
                     statsHolder.Value.Stats.Mediator.AddModifiers(modifier);
+                    statsHolder.Value.Stats.Health += effect.healthChange;
                     var colorModifier = new ColorModifier(effect.category, effect.color, effect.duration);
                     statsHolder.Value.Stats.Mediator.AddModifiers(colorModifier);
                     statsHolder.Value.Stats.UnlockTrait(effect.trait);
