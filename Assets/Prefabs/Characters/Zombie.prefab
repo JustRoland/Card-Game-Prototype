@@ -227,7 +227,7 @@ MonoBehaviour:
   targetLocationUpdate:
     m_PersistentCalls:
       m_Calls: []
-  attackSpeed: 1.2
+  attackSpeed: 0.35
   attackCooldown: 2.5
 --- !u!114 &6470082371861446251
 MonoBehaviour:

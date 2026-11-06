@@ -36,7 +36,6 @@ namespace Cards
         private int _realDeckSize;
 
         private GenericFactory<CardView> _cardFactory;
-        private GenericFactory<GameObject> _cardGameObjectFactory;
 
 
         private void Awake()
@@ -51,13 +50,9 @@ namespace Cards
             Debug.Assert(recipes.Length > 0, "No recipes found");
             Debug.Log($"Loaded {recipes.Length} recipes");
 
-            _cardFactory = new GenericFactory<CardView>(cardPrefab, cardView => cardView.Active == false,
+            _cardFactory = new GenericFactory<CardView>(cardPrefab, cardView => !cardView.Active,
                 factoryStartBuffer,
                 factoryMaxItems);
-
-            if (cardDropPrefab != null)
-                _cardGameObjectFactory =
-                    new GenericFactory<GameObject>(cardDropPrefab, cardDrop => !cardDrop.activeSelf, 0, 20);
 
             _realDeckSize = maxDeckSize;
         }
@@ -77,13 +72,6 @@ namespace Cards
 
 
             _cardFactory.LoadedItems.ForEach(DeregisterCardViewEvents);
-        }
-
-        public void GetCardDrop(Vector3 position)
-        {
-            var drop = _cardGameObjectFactory.GetItem();
-            drop.transform.position = position;
-            drop.SetActive(true);
         }
 
 

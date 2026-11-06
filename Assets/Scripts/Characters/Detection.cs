@@ -111,7 +111,6 @@ namespace Characters
                 if (previous) targetLost?.Invoke(previous);
             }
             
-            print($"Target: {CurrentTarget}");
         }
 
         private bool IsWithinFieldOfView(Vector3 targetPosition)

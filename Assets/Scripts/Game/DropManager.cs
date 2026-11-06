@@ -28,24 +28,27 @@ namespace Game
             Debug.Assert(availableDrops.Count > 0, "No drops found");
 
             availableDrops.ForEach(d =>
-                _factories.Add(new GenericFactory<GameObject>(d.prefab, cardDrop => !cardDrop.activeSelf, 0,
+                _factories.Add(new GenericFactory<GameObject>(d.prefab,
+                    filterPredicate: cardDrop => !cardDrop.activeSelf, 0,
                     d.maxActive)));
-
         }
-        
+
         public List<GameObject>? GetDrop(int value, Vector3 position)
         {
             if (_factories.Count == 0) return null;
 
-            
-            var results  = new List<GameObject>();
+
+            var results = new List<GameObject>();
             var generatedDrops = GenerateDrops(value, availableDrops, 1);
             if (generatedDrops != null)
                 foreach (var drop in generatedDrops.Select(t => availableDrops.FindIndex(d => d.Equals(t)))
                              .Select(index => _factories[index].GetItem()))
                 {
-                    if (drop) drop.transform.position = position;
-                    if (drop) results.Add(drop);
+                    if (!drop) continue;
+
+                    drop.transform.position = position;
+                    drop.SetActive(true);
+                    results.Add(drop);
                 }
 
             return results;
@@ -139,39 +142,39 @@ namespace Game
 
             return result;
         }
-
-
     }
 
     [Serializable]
     public class Drop : IEquatable<Drop>
     {
-    [Required] public GameObject prefab;
-    public int weight;
-    public int value = 1;
-    // [HideInInspector] public int lowerLimit;
-    // [HideInInspector] public int upperLimit;
-    public int maxActive;
-    
+        [Required] public GameObject prefab;
+        public int weight;
 
-    public bool Equals(Drop? other)
-    {
-        if (other is null) return false;
-        if (ReferenceEquals(this, other)) return true;
-        return Equals(prefab, other.prefab);
-    }
+        public int value = 1;
 
-    public override bool Equals(object? obj)
-    {
-        if (obj is null) return false;
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != GetType()) return false;
-        return Equals((Drop)obj);
-    }
+        // [HideInInspector] public int lowerLimit;
+        // [HideInInspector] public int upperLimit;
+        public int maxActive;
 
-    public override int GetHashCode()
-    {
-        return (prefab != null ? prefab.GetHashCode() : 0);
-    }
+
+        public bool Equals(Drop? other)
+        {
+            if (other is null) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Equals(prefab, other.prefab);
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is null) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals((Drop)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (prefab != null ? prefab.GetHashCode() : 0);
+        }
     }
 }
