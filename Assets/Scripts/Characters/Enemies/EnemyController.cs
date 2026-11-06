@@ -56,7 +56,7 @@ namespace Characters.Enemies
             followTarget = target;
             followDistance = standoffDistance > 0f ? standoffDistance : followDistance;
             followOffset = offset ?? followOffset;
-            HasDestination = target;
+            detection.SetTarget(target);
             HasArrived = false;
         }
 

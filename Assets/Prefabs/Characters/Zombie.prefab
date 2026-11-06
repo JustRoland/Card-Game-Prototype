@@ -227,8 +227,8 @@ MonoBehaviour:
   targetLocationUpdate:
     m_PersistentCalls:
       m_Calls: []
-  attackSpeed: 0.8
-  attackCooldown: 2
+  attackSpeed: 1.2
+  attackCooldown: 2.5
 --- !u!114 &6470082371861446251
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -256,7 +256,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6152184304388536287}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7fb70d85278d644a8690420d17a37c5, type: 3}
+  m_Script: {fileID: 11500000, guid: 696d63c18d1aaa041a3b6741d1765a20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Characters.Enemies.DummyController
   debug: 0
@@ -266,18 +266,18 @@ MonoBehaviour:
   currentSpeed: 0
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 136
-  avoidanceLookahead: 3
-  avoidanceRadius: 0.8
+    m_Bits: 0
+  avoidanceLookahead: 2
+  avoidanceRadius: 0.5
   avoidanceWeight: 0.8
-  arrivalRadius: 2
+  arrivalRadius: 3
   stoppingDistance: 0.5
   repathInterval: 0.2
   repathDistance: 0.25
-  navMeshSampleDistance: 4
+  navMeshSampleDistance: 2
   groundMask:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 0
   groundCheckDistance: 1.5
   alignToSlope: 1
   slopeAlignSpeed: 8
@@ -294,6 +294,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 259407d783ede114d8887b043a9647f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Characters.Detection
+  disableDetection: 1
   viewOrigin: {fileID: 0}
   detectionRange: 12
   loseRange: 15.8

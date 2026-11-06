@@ -1,86 +1,88 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Characters.Enemies
 {
+
+    [RequireComponent(typeof(NavMeshAgent))]
     public class ZombieController : EnemyController
     {
-        [FoldoutGroup("Drone Movement")] [SerializeField]
-        private float arrivalRadius = 3f;
+        [FoldoutGroup("Agent")]
+        [SerializeField] private float arrivalRadius = 3f;
+        [FoldoutGroup("Agent")][SerializeField] private float stoppingDistance = 0.5f;
+        [FoldoutGroup("Agent")][SerializeField] private float repathInterval = 0.2f;
+        [FoldoutGroup("Agent")][SerializeField] private float repathDistance = 0.25f;
+        [FoldoutGroup("Agent")][SerializeField] private float navMeshSampleDistance = 2f;
 
-        [FoldoutGroup("Drone Movement")] [SerializeField]
-        private float stoppingDistance = 0.5f;
+        [FoldoutGroup("Ground Alignment")] 
+        [SerializeField] private LayerMask groundMask;
+        [FoldoutGroup("Ground Alignment")] [SerializeField] private float groundCheckDistance = 1.5f;
+        [FoldoutGroup("Ground Alignment")] [SerializeField] private bool alignToSlope = true;
+        [FoldoutGroup("Ground Alignment")] [SerializeField] private float slopeAlignSpeed = 8f;
+        [FoldoutGroup("Ground Alignment")] [SerializeField] private float maxSlopeAngle = 45f;
+        [FoldoutGroup("Ground Alignment")] [ShowInInspector] private bool _isGrounded;
 
-        [FoldoutGroup("Drone Movement")] [SerializeField]
-        private float altitudeDamping = 0.5f;
-
-        [FoldoutGroup("Drone Movement")] [SerializeField]
-        private float maxVerticalSpeed = 4f;
-
-        [FoldoutGroup("Drone Movement")] [SerializeField]
-        private float maxBankAngle = 25f;
-
-        [FoldoutGroup("Drone Movement")] [SerializeField]
-        private float bankSmoothing = 4f;
-
-        [FoldoutGroup("Drone Movement")] [SerializeField]
-        private float hoverHeight = 5f;
-
-        [FoldoutGroup("Drone Movement")] [SerializeField]
-        private LayerMask groundMask;
-
-        [FoldoutGroup("Drone Movement")] [SerializeField]
-        private float altitudeCorrectionSpeed = 6f;
-
-        private float _currentBank;
-        private Rigidbody _rb;
+        private NavMeshAgent _agent;
+        private Vector3 _lastRequestedDestination;
+        private float _nextRepathTime;
+        private bool _hasRequestedPath;
 
         public override void Initialize(EnemyCharacter enemy)
         {
             base.Initialize(enemy);
-            _rb = GetComponent<Rigidbody>();
 
             Vector3 initialFlatForward = new Vector3(transform.forward.x, 0f, transform.forward.z);
             if (initialFlatForward.sqrMagnitude < 0.001f) initialFlatForward = Vector3.forward;
             headingRotation = Quaternion.LookRotation(initialFlatForward.normalized, Vector3.up);
+            
+            AgentSetup();
+            
+            if (debug) Debug.Log($"{name}: Initialized", this);
         }
 
-        private void FixedUpdate()
+        private void AgentSetup()
         {
-            UpdateFollowTarget();
+            _agent = GetComponent<NavMeshAgent>();
 
-            Vector3 desiredDirection = Vector3.zero;
-            float desiredSpeed = 0f;
+            _agent.updatePosition = true;
+            _agent.updateRotation = false; // heading + slope alignment handled below
+            _agent.autoBraking = true;
+            _agent.stoppingDistance = stoppingDistance;
+            _agent.speed = currentSpeed;
+            _agent.acceleration = character.Stats.Acceleration;
 
-            if (HasDestination)
+            if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, navMeshSampleDistance, NavMesh.AllAreas))
             {
-                Vector3 toDestination = Destination - transform.position;
-                float distance = toDestination.magnitude;
-
-                if (distance <= stoppingDistance)
-                {
-                    HasArrived = true;
-                }
-                else
-                {
-                    HasArrived = false;
-                    desiredDirection = toDestination.normalized;
-
-                    // Ease speed down inside the arrival radius
-                    desiredSpeed = distance < arrivalRadius
-                        ? currentSpeed * (distance / arrivalRadius)
-                        : currentSpeed;
-                }
+                _agent.Warp(hit.position);
             }
+            else
+                Debug.LogWarning($"{name}: no NavMesh found near spawn position.", this);
+        }
 
-            desiredDirection = ApplyObstacleAvoidance(desiredDirection);
-            Vector3 horizontalDirection = new Vector3(desiredDirection.x, 0f, desiredDirection.z);
+        public override void SetDestination(Vector3 destination)
+        {
+            if (!_agent.isOnNavMesh || !gameObject.activeSelf) return;
+            base.SetDestination(destination);
+            _agent.SetDestination(destination);
+            _agent.speed = currentSpeed;
+            _lastRequestedDestination = destination;
+            _hasRequestedPath = true;
+        }
 
-            Vector3 targetVelocity = desiredDirection * desiredSpeed;
-            targetVelocity.y += CalculateVerticalVelocity();
+        private void Update()
+        {
+            if (!_agent || !_agent.isOnNavMesh)
+                return;
 
-            MoveTowards(targetVelocity);
-            RotateAndBank(horizontalDirection);
+            UpdateFollowTarget();
+            CheckGrounded(out Vector3 groundNormal);
+
+            UpdatePath();
+            UpdateSpeedAndArrival();
+            
+            RotateTowardsMovement(_agent.desiredVelocity);
+            AlignToGround(groundNormal);
         }
 
         private void UpdateFollowTarget()
@@ -92,6 +94,7 @@ namespace Characters.Enemies
             if (followDistance > 0.001f)
             {
                 Vector3 awayFromTarget = transform.position - followPoint;
+                awayFromTarget.y = 0f;
                 if (awayFromTarget.sqrMagnitude > 0.001f)
                 {
                     followPoint += awayFromTarget.normalized * followDistance;
@@ -102,88 +105,120 @@ namespace Characters.Enemies
             HasDestination = true;
         }
 
-        private float CalculateVerticalVelocity()
+        private void UpdatePath()
         {
-            if (groundMask.value == 0) return 0f;
+            if (!HasDestination)
+            {
+                if (_hasRequestedPath)
+                {
+                    _agent.ResetPath();
+                    _hasRequestedPath = false;
+                }
+                
+                return;
+            }
 
-            if (!Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit,
-                    hoverHeight * 100f, groundMask))
-                return 0f;
+            bool movedEnough = !_hasRequestedPath ||
+                               (Destination - _lastRequestedDestination).sqrMagnitude >
+                               repathDistance * repathDistance;
 
-            float heightError = hoverHeight - hit.distance;
-            if (Mathf.Abs(heightError) < 0.05f) heightError = 0f;
-            float desiredVertical = heightError * altitudeCorrectionSpeed;
+            if (!movedEnough || Time.time < _nextRepathTime)
+                return;
 
-            desiredVertical -= _rb.linearVelocity.y * altitudeDamping;
+            _nextRepathTime = Time.time + repathInterval;
 
-            return Mathf.Clamp(desiredVertical, -maxVerticalSpeed, maxVerticalSpeed);
+            // Snap the destination onto the NavMesh so off-mesh points don't fail outright.
+            if (NavMesh.SamplePosition(Destination, out NavMeshHit hit, navMeshSampleDistance, NavMesh.AllAreas))
+            {
+                _agent.SetDestination(hit.position);
+                _lastRequestedDestination = Destination;
+                _hasRequestedPath = true;
+            }
         }
 
-        private void MoveTowards(Vector3 targetVelocity)
+        private void UpdateSpeedAndArrival()
         {
-            currentVelocity = Vector3.MoveTowards(
-                _rb.linearVelocity, targetVelocity, character.Stats.Acceleration * Time.fixedDeltaTime);
-            _rb.linearVelocity = currentVelocity;
+            if (!HasDestination || !_hasRequestedPath || _agent.pathPending)
+            {
+                if (HasDestination) _agent.speed = currentSpeed;
+                return;
+            }
+
+            if (_agent.pathStatus == NavMeshPathStatus.PathInvalid)
+            {
+                HasArrived = false;
+                return;
+            }
+
+            float remaining = _agent.remainingDistance;
+            HasArrived = remaining <= stoppingDistance + 0.05f;
+            
         }
 
-        private void RotateAndBank(Vector3 moveDirection)
+        private void CheckGrounded(out Vector3 groundNormal)
+        {
+            groundNormal = Vector3.up;
+
+            if (groundMask.value == 0)
+            {
+                _isGrounded = true;
+                return;
+            }
+
+            if (Physics.Raycast(transform.position, Vector3.down,
+                    out RaycastHit hit, groundCheckDistance, groundMask))
+            {
+                _isGrounded = true;
+                groundNormal = hit.normal;
+            }
+            else
+            {
+                _isGrounded = false;
+            }
+        }
+
+        private void RotateTowardsMovement(Vector3 moveDirection)
         {
             Vector3 flatDirection = new Vector3(moveDirection.x, 0f, moveDirection.z);
 
             if (flatDirection.sqrMagnitude > 0.001f)
             {
-                CalculateHeadingAndBank();
+                SetRotation();
             }
             else if (HasTarget)
             {
-                flatDirection = new Vector3(CurrentTarget.position.x - transform.position.x, 0f,
-                    CurrentTarget.position.z - transform.position.z);
+                flatDirection = new Vector3(CurrentTarget.position.x - transform.position.x, 0f, CurrentTarget.position.z - transform.position.z);
 
-                CalculateHeadingAndBank();
+                SetRotation();
             }
-            else
-            {
-                _currentBank = Mathf.Lerp(_currentBank, 0f, bankSmoothing * Time.fixedDeltaTime);
-            }
-
-            _rb.MoveRotation(headingRotation * Quaternion.Euler(0f, 0f, _currentBank));
 
             return;
 
-            void CalculateHeadingAndBank()
+            void SetRotation()
             {
+                if (flatDirection.sqrMagnitude < 0.0001f) return;
                 flatDirection.Normalize();
 
                 Quaternion targetHeading = Quaternion.LookRotation(flatDirection, Vector3.up);
                 headingRotation = Quaternion.RotateTowards(
-                    headingRotation, targetHeading, character.Stats.TurnSpeed * Time.fixedDeltaTime);
-
-
-                Vector3 headingForward = headingRotation * Vector3.forward;
-                float signedAngle = Vector3.SignedAngle(headingForward, flatDirection, Vector3.up);
-                float targetBank = Mathf.Clamp(-signedAngle, -maxBankAngle, maxBankAngle);
-                _currentBank = Mathf.Lerp(_currentBank, targetBank, bankSmoothing * Time.fixedDeltaTime);
+                    headingRotation, targetHeading, character.Stats.TurnSpeed * Time.deltaTime);
             }
         }
-        
 
-        private Vector3 ApplyObstacleAvoidance(Vector3 desiredDirection)
+        private void AlignToGround(Vector3 groundNormal)
         {
-            if (obstacleMask.value == 0 || desiredDirection.sqrMagnitude < 0.001f)
-                return desiredDirection;
+            if (!alignToSlope || !_isGrounded)
+            {
+                transform.rotation = headingRotation;
+                return;
+            }
 
-            bool blocked = Physics.SphereCast(
-                transform.position, avoidanceRadius, desiredDirection,
-                out RaycastHit hit, avoidanceLookahead, obstacleMask);
+            float slopeAngle = Vector3.Angle(Vector3.up, groundNormal);
+            Vector3 useNormal = slopeAngle <= maxSlopeAngle ? groundNormal : Vector3.up;
 
-            if (!blocked) return desiredDirection;
-
-            Vector3 avoidDirection = Vector3.Reflect(desiredDirection, hit.normal).normalized;
-            Vector3 blended = Vector3.Slerp(desiredDirection, avoidDirection, avoidanceWeight);
-            return blended.normalized;
+            Quaternion slopeRotation = Quaternion.FromToRotation(Vector3.up, useNormal) * headingRotation;
+            transform.rotation = Quaternion.Slerp(transform.rotation, slopeRotation, slopeAlignSpeed * Time.deltaTime);
         }
-        
-
 
         private void OnDrawGizmosSelected()
         {
@@ -192,19 +227,24 @@ namespace Characters.Enemies
             Gizmos.color = Color.green;
             Gizmos.DrawWireSphere(transform.position, arrivalRadius);
 
-            Gizmos.color = Color.cyan;
-            Gizmos.DrawRay(transform.position, transform.forward * avoidanceLookahead);
-            Gizmos.DrawWireSphere(
-                transform.position + transform.forward * avoidanceLookahead, avoidanceRadius);
-
             Gizmos.color = Color.yellow;
-            Gizmos.DrawRay(transform.position, Vector3.down * hoverHeight);
+            Gizmos.DrawRay(transform.position + Vector3.up * 0.1f, Vector3.down * groundCheckDistance);
 
             if (HasDestination)
             {
                 Gizmos.color = Color.magenta;
-                Gizmos.DrawLine(transform.position, Destination);
                 Gizmos.DrawWireSphere(Destination, stoppingDistance);
+            }
+
+            if (Application.isPlaying && _agent != null && _agent.hasPath)
+            {
+                Vector3[] corners = _agent.path.corners;
+                Gizmos.color = Color.cyan;
+                for (int i = 0; i < corners.Length - 1; i++)
+                    Gizmos.DrawLine(corners[i], corners[i + 1]);
+
+                Gizmos.color = Color.white;
+                Gizmos.DrawWireSphere(_agent.steeringTarget, 0.15f);
             }
 
             if (followTarget != null)
@@ -217,5 +257,6 @@ namespace Characters.Enemies
                 Gizmos.DrawWireSphere(followTarget.position + followOffset, followDistance);
             }
         }
+
     }
 }

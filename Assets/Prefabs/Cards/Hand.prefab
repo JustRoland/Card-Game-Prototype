@@ -186,8 +186,9 @@ MonoBehaviour:
   dynamicCardSpacing: 1
   cardPositionUpdateTime: 0.05
   dealSpeed: 0.03
-  maxCards: 8
-  startingHand: 5
+  cardScaleUpTime: 0.15
+  maxCards: 10
+  startingHand: 3
   hoverCardPositionOffset: {x: 0, y: 1, z: 0}
   hideHandYPosition: -10
   hideHandMoveTime: 0.07

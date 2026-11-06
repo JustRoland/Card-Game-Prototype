@@ -13,7 +13,7 @@ namespace Characters.State_Machine
         public override void Enter()
         {
             Enemy.SetSpeed(Enemy.Stats.SprintSpeed);
-            Enemy.SetTarget(Enemy.CurrentTarget);
+            // Enemy.SetTarget(Enemy.CurrentTarget);
         }
 
         public override void Update(float deltaTime)

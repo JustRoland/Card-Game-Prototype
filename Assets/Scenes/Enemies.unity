@@ -1459,14 +1459,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 80394458321783837, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3995340187542386074, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
-      propertyPath: m_hasFontAssetChanged
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4558679506495862503, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.99
@@ -1507,10 +1499,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5323699604350334803, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5585234062658578643, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
       propertyPath: m_Name
       value: Player
@@ -1532,8 +1520,7 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2075589271}
     m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: 6499962612031504977, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}

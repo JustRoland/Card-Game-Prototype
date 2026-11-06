@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Game;
+using Progress_Bar.Resources;
 using UnityEngine;
 
 namespace Characters.Player
@@ -44,14 +45,18 @@ namespace Characters.Player
         private Color _effectColor;
         private PlayerCombat _combat;
         private PlayerController _controller;
+        private ProgressBar _healthBar;
         private bool _inDialogue;
 
         private void Awake()
         {
+            base.Initialize();
             _combat = GetComponent<PlayerCombat>();
             _controller = GetComponent<PlayerController>();
+            _healthBar = GetComponentInChildren<ProgressBar>();
+            _healthBar.ResetProgressBar((int)Stats.MaxHealth);
+            _healthBar.SetProgressBar(Stats.Health);
             damageIndicator.gameObject.SetActive(false);
-            base.Initialize();
         }
 
         private void FixedUpdate()
@@ -63,6 +68,7 @@ namespace Characters.Player
         {
             base.Damage(bodyPart, damage, knockBack, origin, effects);
 
+            _healthBar.SetProgressBar(Stats.Health);
             ToggleDamageIndicator(origin.transform.position, cancellationTokenSource.Token).Forget();
             GameManager.Instance.TrackDamageTaken(damage);
 

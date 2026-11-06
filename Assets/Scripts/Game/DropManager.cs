@@ -14,9 +14,8 @@ namespace Game
     {
         public static DropManager Instance;
 
-        [ShowInInspector] private int TotalWeight => availableDrops.Sum(drop => drop.weight) /* + noDropWeight */;
-        [FormerlySerializedAs("avialableDrops")] [FormerlySerializedAs("drops")] [SerializeField] private List<Drop> availableDrops = new();
-        // [SerializeField] private int noDropWeight;
+        [ShowInInspector] private int TotalWeight => availableDrops.Sum(drop => drop.weight);
+        [SerializeField] private List<Drop> availableDrops = new();
 
         private readonly List<GenericFactory<GameObject>> _factories = new();
 
@@ -32,18 +31,12 @@ namespace Game
                 _factories.Add(new GenericFactory<GameObject>(d.prefab, cardDrop => !cardDrop.activeSelf, 0,
                     d.maxActive)));
 
-            // SetLimitValues(drops);
         }
         
         public List<GameObject>? GetDrop(int value, Vector3 position)
         {
             if (_factories.Count == 0) return null;
 
-            // OLD SYSTEM
-            // var roll = UnityEngine.Random.Range(0, TotalWeight);
-            // var index = drops.FindIndex(d => roll >= d.lowerLimit && roll <= d.upperLimit);
-            // if (index < 0) return null;
-            
             
             var results  = new List<GameObject>();
             var generatedDrops = GenerateDrops(value, availableDrops, 1);
@@ -148,16 +141,6 @@ namespace Game
         }
 
 
-        // private void SetLimitValues(List<Drop> list)
-        // {
-        //     int limit = 0;
-        //     foreach (var drop in list)
-        //     {
-        //         drop.lowerLimit = limit;
-        //         limit += drop.weight;
-        //         drop.upperLimit = limit;
-        //     }
-        // }
     }
 
     [Serializable]

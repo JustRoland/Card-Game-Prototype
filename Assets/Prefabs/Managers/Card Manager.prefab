@@ -51,16 +51,7 @@ MonoBehaviour:
   handCamera: {fileID: 0}
   statsHolder:
     underlyingValue: {fileID: 0}
-  cardData:
-  - {fileID: 11400000, guid: b163e17017ca73443962cba330f911df, type: 2}
-  - {fileID: 11400000, guid: b28f60dba40594b408d5d91f2d54b285, type: 2}
-  - {fileID: 11400000, guid: 8690030d9de7f434f94d86c09e1448b2, type: 2}
-  - {fileID: 11400000, guid: 45ca287ca55060d4cb4f8026a355a939, type: 2}
-  - {fileID: 11400000, guid: 3c50e92d500556445aea7963393ac5ff, type: 2}
-  recipes:
-  - {fileID: 11400000, guid: b5c3de521634e23458444bccda9471b1, type: 2}
   factoryStartBuffer: 0
   factoryMaxItems: 20
-  cardScaleUpTime: 0.15
   maxDeckSize: 20
-  minCardYDragToPlay: 3.3
+  minCardYDragToPlay: 2.4

@@ -129,7 +129,7 @@ namespace Cards
 
         public void DragCardView(Vector3 pos)
         {
-            transform.localPosition = new Vector3(pos.x - _offsetFromPointerPosition.x, pos.y - _offsetFromPointerPosition.y, pos.z);
+            transform.localPosition = new Vector3(pos.x - _offsetFromPointerPosition.x, pos.y - _offsetFromPointerPosition.y, transform.localPosition.z);
         }
 
         public void OnEndDrag(PointerEventData eventData)

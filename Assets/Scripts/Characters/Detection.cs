@@ -7,6 +7,7 @@ namespace Characters
 {
     public class Detection : MonoBehaviour
     {
+        [SerializeField] private bool disableDetection;
         [FoldoutGroup("Detection Settings")]
         [SerializeField] private Transform viewOrigin;
         [FoldoutGroup("Detection Settings")][SerializeField] private float detectionRange = 10f;
@@ -42,7 +43,7 @@ namespace Characters
 
         private void Update()
         {
-            if (!_isEnabled) return;
+            if (!_isEnabled || disableDetection) return;
             _scanTimer -= Time.deltaTime;
             if (_scanTimer > 0f) return;
             _scanTimer = scanInterval;
@@ -92,6 +93,8 @@ namespace Characters
 
             UpdateCurrentTarget(bestCandidate);
         }
+        
+        public void SetTarget(Transform target) => UpdateCurrentTarget(target);
 
         private void UpdateCurrentTarget(Transform candidate)
         {
@@ -107,6 +110,8 @@ namespace Characters
                 CurrentTarget = null;
                 if (previous) targetLost?.Invoke(previous);
             }
+            
+            print($"Target: {CurrentTarget}");
         }
 
         private bool IsWithinFieldOfView(Vector3 targetPosition)

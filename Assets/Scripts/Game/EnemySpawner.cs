@@ -42,6 +42,8 @@ namespace Game
 
         private void OnEnable()
         {
+            if (TryGetComponent(out MeshRenderer meshRenderer)) meshRenderer.enabled = false;
+            
             _factories = new GenericFactory<EnemyCharacter>[spawns.Length];
             spawnAmount = spawns.Sum(s => s.amount);
 
@@ -90,7 +92,7 @@ namespace Game
                     newEnemy.GetComponent<IEntity>()?.SetSpawner(this);
                     newEnemy.Initialize(round);
                     newEnemy.gameObject.SetActive(true);
-                    if (target) newEnemy.SetTarget(target); // Not working atm!
+                    if (target) newEnemy.SetTarget(target);
                     if (targetPracticeRespawn) newEnemy.onDeathEvent.AddListener(OnDeathSpawn);
                     newEnemy.onDeathEvent.AddListener(GameManager.Instance.CountKill);
                     results.Add(newEnemy);

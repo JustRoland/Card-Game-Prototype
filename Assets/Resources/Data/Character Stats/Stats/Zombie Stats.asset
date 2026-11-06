@@ -15,7 +15,7 @@ MonoBehaviour:
   acceleration: 135
   walkSpeed: 4.5
   crouchSpeed: 3
-  sprintSpeed: 10
+  sprintSpeed: 8
   slowedSpeed: 2
   speedModifier: 1
   jumpForce: 8
