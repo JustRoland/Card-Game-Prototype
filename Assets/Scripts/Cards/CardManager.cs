@@ -25,8 +25,9 @@ namespace Cards
         public readonly List<CardView> SelectedCards = new();
         public bool IsDragging { get; private set; }
 
-        [Header("Variables")] [SerializeField] private CardData[] cardData;
-        [SerializeField] private CardRecipe[] recipes;
+        [Header("Variables")] 
+        private CardData[] cardData;
+        private CardRecipe[] recipes;
         [SerializeField] private int factoryStartBuffer;
         [SerializeField] private int factoryMaxItems;
         [SerializeField] private float cardScaleUpTime = 0.15f;
@@ -46,6 +47,13 @@ namespace Cards
         {
             if (Instance == null) Instance = this;
             else Destroy(gameObject);
+            
+            cardData = Resources.LoadAll<CardData>("Data/Cards/Tier 1");
+            Debug.Assert(cardData.Length > 0, "No cards found");
+            Debug.Log($"Loaded {cardData.Length} cards");
+            recipes = Resources.LoadAll<CardRecipe>("Data/Cards");
+            Debug.Assert(recipes.Length > 0, "No recipes found");
+            Debug.Log($"Loaded {recipes.Length} recipes");
 
             Source = new CancellationTokenSource();
             _token = Source.Token;
@@ -222,7 +230,7 @@ namespace Cards
                     statsHolder.Value.Stats.Mediator.AddModifiers(modifier);
                     var colorModifier = new ColorModifier(effect.category, effect.color, effect.duration);
                     statsHolder.Value.Stats.Mediator.AddModifiers(colorModifier);
-                    statsHolder.Value.Stats.UnlockTrait(effect.trait);
+                    if (effect.trait is not TraitType.None) statsHolder.Value.Stats.UnlockTrait(effect.trait);
                 }
             }
             UnloadExistingCardView(cardView);

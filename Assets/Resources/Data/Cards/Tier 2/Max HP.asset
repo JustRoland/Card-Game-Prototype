@@ -10,21 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 89ad1c89bf1c94c41b7c1501699899d7, type: 3}
-  m_Name: Weaken
+  m_Name: Max HP
   m_EditorClassIdentifier: Assembly-CSharp::Cards.CardData
-  description: 'Passive: ---
-
-    Active: Unlocks Weaken effect. +10% damage to weakened
-    enemies. (stackable)'
+  description: 'Active: +50 max health.'
   tier: 2
-  sprite: {fileID: -483907971, guid: 79bebc5685a097e4e9094f777f7613ba, type: 3}
-  color: {r: 0.7584905, g: 0.25616938, b: 0.68774164, a: 1}
+  sprite: {fileID: -1000591576, guid: efa837da8876c4043b654654a8655576, type: 3}
+  color: {r: 0.078893304, g: 0.4716981, b: 0.07742967, a: 1}
   type: 0
   activeEffects:
-  - statType: 20
-    value: 0.1
+  - statType: 22
+    value: 50
     category: 0
     color: {r: 0, g: 0, b: 0, a: 0}
-    trait: 3
+    trait: 0
+    duration: 0
+  - statType: 12
+    value: 50
+    category: 0
+    color: {r: 0, g: 0, b: 0, a: 0}
+    trait: 0
     duration: 0
   passiveEffects: []

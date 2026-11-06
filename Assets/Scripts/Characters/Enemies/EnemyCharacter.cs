@@ -33,8 +33,9 @@ namespace Characters.Enemies
             controller?.Initialize(this);
             combat?.Initialize(controller, this);
         }
-        protected virtual void OnDisable()
+        protected override void OnDisable()
         {
+            base.OnDisable();
             UnbindFromCaller();
         }
         

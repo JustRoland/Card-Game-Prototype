@@ -26,13 +26,14 @@ namespace Characters
         [HorizontalGroup("DamageAdded")]public float dmgAddIncrease = 0f;
         [HorizontalGroup("DamageMultiplier")]public float damageMultiplier = 1f;
         [HorizontalGroup("DamageMultiplier")]public float dmgMultIncrease = 0f;
+        public float maxHealth = 100f;
+        public int revives = 0;
         public float defense = 10f;
         public float maxRange = 100f;
         public float fireRateModifier = 1f;
         public float reloadTimeModifier = 1f;
-
-        [Title("Status Effects")]
+        public float recoil = 0.5f;
         public float weakenedDamageMultiplier = 1.1f;
-
+        public float explosiveShotRadius = 0.4f;
     }
 }

@@ -62,7 +62,7 @@ namespace Game
                 _factories[0].LoadedItems.ForEach(character => character.onDeathEvent.AddListener(OnDeathSpawn));
         }
 
-        private void OnDisable()
+        protected void OnDisable()
         {
             if (targetPracticeRespawn)
                 _factories[0].LoadedItems.ForEach(character => character.onDeathEvent.RemoveListener(OnDeathSpawn));

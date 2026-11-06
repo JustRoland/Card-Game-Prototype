@@ -5,10 +5,12 @@ namespace Characters
     public class BodyPart : MonoBehaviour
     {
         [SerializeField] private BodyPartData data;
-        public string Name => name + " " + transform.parent?.name;
         private CharacterBase _character;
         private Material _material; 
         private Color _originalColor;
+        
+        public CharacterBase Character => _character;
+        public string Name => name + " " + transform.parent?.name;
 
         public void Initialize(CharacterBase character)
         {

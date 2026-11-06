@@ -157,7 +157,7 @@ namespace Cards
                     cardView.Card.modifiersID[i] = modifier.ID;
                     var colorModifier = new ColorModifier(effect.category, effect.color, effect.duration);
                     statsHolder.Value.Stats.Mediator.AddModifiers(colorModifier);
-                    statsHolder.Value.Stats.UnlockTrait(effect.trait);
+                    if (effect.trait is not TraitType.None) statsHolder.Value.Stats.UnlockTrait(effect.trait);
                 }
             }
 

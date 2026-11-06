@@ -15,7 +15,6 @@ namespace Cards
         [SerializeField] private int tier = 1;
         [SerializeField] private Sprite sprite;
         [SerializeField] private Color color;
-        [SerializeField] private CardType type;
         [PropertySpace(6)][Title("Card Effects", bold: false)]
         [SerializeField] private Effect[] activeEffects;
         [SerializeField] private Effect[] passiveEffects;
@@ -24,7 +23,6 @@ namespace Cards
         public int Tier => tier;
         public Sprite Sprite => sprite;
         public Color Color => color;
-        public CardType Type => type;
         public Effect[] ActiveEffects => activeEffects;
         public Effect[] PassiveEffects => passiveEffects;
 

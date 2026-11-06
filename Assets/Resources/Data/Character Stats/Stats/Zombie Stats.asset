@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c5b3bb8305c64c088d7c6d68fb304b65, type: 3}
-  m_Name: Player Stats
+  m_Name: Zombie Stats
   m_EditorClassIdentifier: Assembly-CSharp::BaseStats
   acceleration: 135
   walkSpeed: 4.5
@@ -25,13 +25,15 @@ MonoBehaviour:
   dashCooldown: 2
   turnSpeed: 320
   health: 100
-  healthIncrease: 0
+  healthIncrease: 10
   damageAdded: 0
-  dmgAddIncrease: 0
+  dmgAddIncrease: 2
   damageMultiplier: 1
   dmgMultIncrease: 0
   defense: 20
   maxRange: 100
   fireRateModifier: 1
   reloadTimeModifier: 1
+  recoil: 0.5
   weakenedDamageMultiplier: 0
+  explosiveShotRadius: 1

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b999043d5ec84d42a873e69f9732d715, type: 3}
+  m_Name: Max HP Recipe
+  m_EditorClassIdentifier: Assembly-CSharp::Cards.CardRecipe
+  description: 
+  input:
+  - {fileID: 11400000, guid: 8690030d9de7f434f94d86c09e1448b2, type: 2}
+  - {fileID: 11400000, guid: 8690030d9de7f434f94d86c09e1448b2, type: 2}
+  - {fileID: 11400000, guid: 8690030d9de7f434f94d86c09e1448b2, type: 2}
+  output: {fileID: 11400000, guid: baf0cb5b234dd9d43be9edb61486bc75, type: 2}
+  effects: []

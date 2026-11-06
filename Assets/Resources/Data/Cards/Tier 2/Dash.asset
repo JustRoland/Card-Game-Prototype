@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89ad1c89bf1c94c41b7c1501699899d7, type: 3}
+  m_Name: Dash
+  m_EditorClassIdentifier: Assembly-CSharp::Cards.CardData
+  description: 'Active: unlock Dash ability. [Q]'
+  tier: 2
+  sprite: {fileID: 0}
+  color: {r: 0.3430046, g: 0.6983259, b: 0.7735849, a: 1}
+  activeEffects:
+  - statType: 0
+    value: 0
+    category: 0
+    color: {r: 0, g: 0, b: 0, a: 0}
+    trait: 1
+    duration: 0
+  passiveEffects: []

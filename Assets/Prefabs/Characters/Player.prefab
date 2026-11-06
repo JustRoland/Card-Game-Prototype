@@ -563,6 +563,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCombat
   debug: 0
   testWeapon: {fileID: 11400000, guid: 04ea5d72a1a3beb47af983b4307c9236, type: 2}
+  maxExplosiveHits: 10
+  explosion: {fileID: 1939521529294801072, guid: 90a2f57f83031134b829f9b48ecd678d, type: 3}
   bulletOrigin: {fileID: 314598109000948806}
   reloadIndicator: {fileID: 6205012897623825701}
   ammoText: {fileID: 3995340187542386074}
@@ -743,7 +745,7 @@ LineRenderer:
   m_MaskInteraction: 0
   m_Positions:
   - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 1}
+  - {x: 0, y: 0, z: 0}
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 0.02

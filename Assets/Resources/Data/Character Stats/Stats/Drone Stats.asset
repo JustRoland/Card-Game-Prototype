@@ -10,28 +10,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c5b3bb8305c64c088d7c6d68fb304b65, type: 3}
-  m_Name: Large Zombie Stats
+  m_Name: Drone Stats
   m_EditorClassIdentifier: Assembly-CSharp::BaseStats
-  acceleration: 115
-  walkSpeed: 4
+  acceleration: 110
+  walkSpeed: 7
   crouchSpeed: 3
-  sprintSpeed: 8
-  slowedSpeed: 2
+  sprintSpeed: 12
+  slowedSpeed: 3
   speedModifier: 1
   jumpForce: 8
-  airAcceleration: 2
+  airAcceleration: 4
   dashForce: 40
   dashAirDistance: 3
   dashCooldown: 2
-  turnSpeed: 320
-  health: 250
-  healthIncrease: 15
+  turnSpeed: 180
+  health: 50
+  healthIncrease: 0
   damageAdded: 0
-  dmgAddIncrease: 5
-  damageMultiplier: 1.5
+  dmgAddIncrease: 0
+  damageMultiplier: 1
   dmgMultIncrease: 0
   defense: 20
   maxRange: 100
   fireRateModifier: 1
   reloadTimeModifier: 1
+  recoil: 0.5
   weakenedDamageMultiplier: 0
+  explosiveShotRadius: 1

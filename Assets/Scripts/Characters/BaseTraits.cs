@@ -8,15 +8,26 @@ namespace Characters
         None,
         Dash,
         DoubleJump,
-        Weaken
+        Weaken,
+        ExplosiveShot,
+        Ricochet,
+        Pierce
     }
 
     [CreateAssetMenu(fileName = "New Traits", menuName = "Traits")]
     public class BaseTraits : ScriptableObject
     {
-        public Trait[] traits = new Trait[Enum.GetValues(typeof(TraitType)).Length];
+        public Trait[] traits = new Trait[Enum.GetValues(typeof(TraitType)).Length - 1];
+
+        public BaseTraits()
+        {
+            for (int i = 0; i < traits.Length; i++)
+            {
+                traits[i] = new Trait((TraitType)i + 1, false);
+            }
+        }
     }
-    
+
     [Serializable]
     public class Trait
     {

@@ -25,13 +25,17 @@ namespace Characters
         MaxRange,
         FireRateModifier,
         ReloadTimeModifier,
-        WeakenedDamageMultiplier
+        WeakenedDamageMultiplier,
+        ExplosiveShotRadius,
+        MaxHealth,
+        Revives,
     }
 
     public enum StatusEffectType
     {
         None,
         Weakened,
+        ExplosiveShot,
     }
     
 
@@ -187,7 +191,27 @@ namespace Characters
             {
                 var q = new Query(StatType.Health, _baseStats.health + _baseStats.healthIncrease * _round);
                 _mediator.PerformQuery(this, q);
+                return Mathf.Min(q.Value, MaxHealth);
+            }
+        }
+        
+        public float MaxHealth
+        {
+            get
+            {
+                var q = new Query(StatType.MaxHealth, _baseStats.maxHealth);
+                _mediator.PerformQuery(this, q);
                 return q.Value;
+            }
+        }
+
+        public int Revives
+        {
+            get
+            {
+                var q = new Query(StatType.Revives, _baseStats.revives);
+                _mediator.PerformQuery(this, q);
+                return (int)q.Value;
             }
         }
 
@@ -266,6 +290,16 @@ namespace Characters
             get
             {
                 var q = new Query(StatType.WeakenedDamageMultiplier, _baseStats.weakenedDamageMultiplier);
+                _mediator.PerformQuery(this, q);
+                return q.Value;
+            }
+        }
+
+        public float ExplosiveShotRadius
+        {
+            get
+            {
+                var q = new Query(StatType.ExplosiveShotRadius, _baseStats.explosiveShotRadius);
                 _mediator.PerformQuery(this, q);
                 return q.Value;
             }
