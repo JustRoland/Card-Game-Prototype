@@ -7,8 +7,10 @@ using UnityEngine.Serialization;
 namespace Cards
 {
     [CreateAssetMenu(fileName = "Card Data", menuName = "Cards/Card Data")]
-    public class CardData : ScriptableObject
+    public class CardData : ScriptableObject, IEquatable<CardData>
     {
+        private static int _id;
+        public readonly int cardID = _id++;
         [Title("Card Description", bold: false)] [HideLabel] [MultiLineProperty(6)]
         [SerializeField] private string description;
         [Title("Card Properties", bold: false)]
@@ -28,6 +30,27 @@ namespace Cards
 
 
         public Card GenerateCard() => new (this);
+
+
+        public bool Equals(CardData other)
+        {
+            if (other is null) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return base.Equals(other) && cardID == other.cardID;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is null) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals((CardData)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(base.GetHashCode(), cardID);
+        }
     }
     
     [Serializable]

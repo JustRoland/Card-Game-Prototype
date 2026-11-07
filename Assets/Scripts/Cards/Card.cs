@@ -22,13 +22,27 @@ namespace Cards
             _data = data;
             modifiersID = new int[data.PassiveEffects.Length];
         }
-    
+
 
         public bool Equals(Card other)
         {
-            return other != null && Name == other.Name;
+            if (other is null) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Equals(_data, other._data);
         }
-        
+
+        public override bool Equals(object obj)
+        {
+            if (obj is null) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals((Card)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (_data != null ? _data.GetHashCode() : 0);
+        }
     }
 
 }

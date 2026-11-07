@@ -25,9 +25,10 @@ namespace Cards
         public readonly List<CardView> SelectedCards = new();
         public bool IsDragging { get; private set; }
 
-        [Header("Variables")] 
-        private CardData[] cardData;
+        [Header("Variables")] private CardData[] cardData;
         private CardRecipe[] recipes;
+        [SerializeField] private Color foundRecipeColor;
+        private Color _originalColor;
         [SerializeField] private int factoryStartBuffer;
         [SerializeField] private int factoryMaxItems;
         [SerializeField] private int maxDeckSize = 10;
@@ -42,7 +43,7 @@ namespace Cards
         {
             if (Instance == null) Instance = this;
             else Destroy(gameObject);
-            
+
             cardData = Resources.LoadAll<CardData>("Data/Cards/Tier 1");
             Debug.Assert(cardData.Length > 0, "No cards found");
             Debug.Log($"Loaded {cardData.Length} cards");
@@ -53,6 +54,8 @@ namespace Cards
             _cardFactory = new GenericFactory<CardView>(cardPrefab, cardView => !cardView.Active,
                 factoryStartBuffer,
                 factoryMaxItems);
+
+            _originalColor = cardPrefab.SilhouetteColor;
 
             _realDeckSize = maxDeckSize;
         }
@@ -88,7 +91,7 @@ namespace Cards
             IsDragging = true;
             hand.HoverSystem.Hide();
             _startDragPosition = position;
-        
+
             if (cardView.Selected) SelectedCards.ForEach(c => c.SetDragStartParameters(position));
             else cardView.SetDragStartParameters(position);
         }
@@ -190,12 +193,14 @@ namespace Cards
         private bool PlayCards(CardView[] cards, Vector3 dropPos)
         {
             if (Mathf.Abs(dropPos.y - _startDragPosition.y) < minCardYDragToPlay) return false;
-            
+
             Debug.Assert(cards is { Length: > 0 }, "Card list is empty");
             if (cards.Length == 1) return PlaySingleCard(cards[0]);
 
             Debug.Assert(recipes is { Length: > 0 }, "Recipe list is empty");
-            var recipe = recipes.FirstOrDefault(r => r.InputCards.SequenceEqual(cards.Select(c => c.Card)));
+            // var recipe = recipes.FirstOrDefault(r => r.InputCards.SequenceEqual(cards.Select(c => c.Card)));
+            var recipe = recipes.FirstOrDefault(r =>
+                CompareLists(r.InputCards.ToList(), cards.Select(c => c.Card).ToList()));
             if (!recipe) return false;
 
             return CardUpgrade(recipe, cards) || CardEffect(recipe, cards);
@@ -224,13 +229,13 @@ namespace Cards
         private bool CardUpgrade(CardRecipe recipe, CardView[] cards)
         {
             var outputCard = recipe.Output?.GenerateCard();
-        
+
             if (outputCard == null) return false;
 
             UnloadExistingCardViews(cards);
             hand.RemoveCard(cards);
             hand.AddCard(GetCardView(outputCard, hand.transform.localScale));
-        
+
             return true;
         }
 
@@ -253,12 +258,67 @@ namespace Cards
                     statsHolder.Value.Stats.UnlockTrait(effect.trait);
                 }
             }
-        
+
             UnloadExistingCardViews(cards);
-        
+
             return true;
         }
 
+        public void CheckForRecipe()
+        {
+            // if (recipes.FirstOrDefault(r => r.InputCards.SequenceEqual(SelectedCards.Select(c => c.Card))))
+            if (recipes.Any(r =>
+                    CompareLists(r.InputCards.ToList(), SelectedCards.Select(c => c.Card).ToList())))
+            {
+                _cardFactory.LoadedItems.ForEach(i => i.SilhouetteColor = foundRecipeColor);
+            }
+            else
+            {
+                _cardFactory.LoadedItems.ForEach(i => i.SilhouetteColor = _originalColor);
+            }
+        }
+
         #endregion
+
+        private static bool CompareLists<T>(List<T> aListA, List<T> aListB)
+        {
+            if (aListA == null || aListB == null || aListA.Count != aListB.Count)
+                return false;
+            if (aListA.Count == 0)
+                return true;
+
+            Dictionary<T, int> lookUp = new Dictionary<T, int>();
+            // create index for the first list
+            for (int i = 0; i < aListA.Count; i++)
+            {
+                int count = 0;
+                if (!lookUp.TryGetValue(aListA[i], out count))
+                {
+                    lookUp.Add(aListA[i], 1);
+                    continue;
+                }
+
+                lookUp[aListA[i]] = count + 1;
+            }
+
+            for (int i = 0; i < aListB.Count; i++)
+            {
+                int count = 0;
+                if (!lookUp.TryGetValue(aListB[i], out count))
+                {
+                    // early exit as the current value in B doesn't exist in the lookUp (and not in ListA)
+                    return false;
+                }
+
+                count--;
+                if (count <= 0)
+                    lookUp.Remove(aListB[i]);
+                else
+                    lookUp[aListB[i]] = count;
+            }
+
+            // if there are remaining elements in the lookUp, that means ListA contains elements that do not exist in ListB
+            return lookUp.Count == 0;
+        }
     }
 }

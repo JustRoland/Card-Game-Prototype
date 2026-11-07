@@ -18,6 +18,7 @@ namespace Cards
         [FoldoutGroup("References"), SerializeField] private SpriteRenderer background;
         [FoldoutGroup("References"), SerializeField] private GameObject container;
         [FoldoutGroup("References"), SerializeField] private GameObject silhouette;
+        private SpriteRenderer _silhouetteRenderer;
 
         private Vector2 _offsetFromPointerPosition;
         private Vector3 _dragStartPosition;
@@ -37,6 +38,20 @@ namespace Cards
         public Card Card { get; private set; }
         public bool Active { get; private set; }
         public bool Selected { get; private set; }
+        public Color SilhouetteColor
+        {
+            get
+            {
+                if (!_silhouetteRenderer) _silhouetteRenderer = silhouette.GetComponent<SpriteRenderer>();
+                return _silhouetteRenderer.color;
+            }
+
+            set
+            {
+                if (!_silhouetteRenderer) _silhouetteRenderer = silhouette.GetComponent<SpriteRenderer>();
+                _silhouetteRenderer.color = value;
+            }
+        }
 
         public int Order
         {
@@ -47,6 +62,7 @@ namespace Cards
         public CardView Setup(Card card, Vector3 position, Camera cam = null)
         {
             _camera = cam;
+            
             if (!_sortingGroup) _sortingGroup = GetComponent<SortingGroup>();
 
             transform.localPosition = position;
@@ -75,6 +91,7 @@ namespace Cards
         {
             Selected = selected;
             silhouette.SetActive(selected);
+            CardManager.Instance.CheckForRecipe();
         }
 
         private void SelectAndAdd(bool selected)
