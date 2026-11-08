@@ -139,6 +139,11 @@ namespace Cards
             transform.DOLocalMoveY(Hide ? hideHandYPosition : _normalHandYPosition, hideHandMoveTime);
             Cursor.lockState = Hide ? CursorLockMode.Locked : CursorLockMode.Confined;
             Cursor.visible = !Hide;
+            _cards.Where(c => c.Selected).ToList().ForEach(c =>
+            {
+                c.SelectCard(false, false);
+                CardManager.Instance.SelectedCards.Remove(c);
+            });
             GameManager.Instance?.SlowTime(Hide ? Speed.Normal : Speed.Slow);
         }
 

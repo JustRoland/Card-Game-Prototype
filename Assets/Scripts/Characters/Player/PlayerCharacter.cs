@@ -36,7 +36,8 @@ namespace Characters.Player
                 return HashCode.Combine(indicator, origin);
             }
         }
-        
+
+        [SerializeField] private bool godMode;
         [SerializeField] private Transform damageIndicator;
         [SerializeField] private Canvas canvas;
         [SerializeField] private float damageIndicatorDuration = 0.5f;
@@ -64,9 +65,11 @@ namespace Characters.Player
             _indicators.ForEach(i => i.indicator.rotation = AngleToTarget(i.origin));
         }
 
+        public void ToggleGodMode(bool state) => godMode = state;
+
         public override void Damage(BodyPart bodyPart, int damage, float knockBack, CharacterBase origin, StatusEffect[] effects = null)
         {
-            base.Damage(bodyPart, damage, knockBack, origin, effects);
+            if (!godMode) base.Damage(bodyPart, damage, knockBack, origin, effects);
 
             _healthBar.SetProgressBar(Stats.Health);
             ToggleDamageIndicator(origin.transform.position, cancellationTokenSource.Token).Forget();

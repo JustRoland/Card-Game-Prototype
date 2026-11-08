@@ -179,7 +179,7 @@ namespace Cards
             _cardFactory.UnloadItem(cardView, () =>
             {
                 cardView.SetActive(false);
-                cardView.SelectCard(false);
+                cardView.SelectCard(false, false);
             });
             if (SelectedCards.Contains(cardView)) SelectedCards.Remove(cardView);
             DeregisterCardViewEvents(cardView);

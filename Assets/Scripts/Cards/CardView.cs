@@ -75,7 +75,7 @@ namespace Cards
             background.color = card.Color;
 
             SetActive(true);
-            SelectCard(false);
+            SelectCard(false, false);
 
             return this;
         }
@@ -87,18 +87,18 @@ namespace Cards
             gameObject.SetActive(active);
         }
 
-        public void SelectCard(bool selected)
+        public void SelectCard(bool selected, bool checkRecipe = true)
         {
             Selected = selected;
             silhouette.SetActive(selected);
-            CardManager.Instance.CheckForRecipe();
+            if (checkRecipe) CardManager.Instance.CheckForRecipe();
         }
 
         private void SelectAndAdd(bool selected)
         {
-            SelectCard(selected);
             if (selected) CardManager.Instance.SelectedCards.Add(this);
             else CardManager.Instance.SelectedCards.Remove(this);
+            SelectCard(selected);
         }
 
         public void OnPointerEnter(PointerEventData eventData)

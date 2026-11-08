@@ -18703,9 +18703,7 @@ MonoBehaviour:
   startRoundOnStart: 1
   playerLocationKnownToEnemies: 1
   reinforcementsCooldown: 15
-  round: 1
   roundSpawnMultiplier: 1.2
-  roundStartDelay: 5
   baseSpawnDelay: 6
   baseSpawnAmount: 8
   baseReinforcementAmount: 0
@@ -122735,9 +122733,57 @@ PrefabInstance:
       propertyPath: 'm_Cameras.Array.data[0]'
       value: 
       objectReference: {fileID: 1530172225}
-    - target: {fileID: 7116708428488588948, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
-      propertyPath: m_FillAmount
-      value: 0.417
+    - target: {fileID: 7417355405867614534, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
+      propertyPath: m_Colors.m_PressedColor.b
+      value: 0.13332146
+      objectReference: {fileID: 0}
+    - target: {fileID: 7417355405867614534, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
+      propertyPath: m_Colors.m_PressedColor.g
+      value: 0.13332146
+      objectReference: {fileID: 0}
+    - target: {fileID: 7417355405867614534, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
+      propertyPath: m_Colors.m_PressedColor.r
+      value: 0.6603774
+      objectReference: {fileID: 0}
+    - target: {fileID: 7417355405867614534, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
+      propertyPath: m_Colors.m_SelectedColor.b
+      value: 0.8415094
+      objectReference: {fileID: 0}
+    - target: {fileID: 7417355405867614534, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
+      propertyPath: m_Colors.m_SelectedColor.g
+      value: 0.6314154
+      objectReference: {fileID: 0}
+    - target: {fileID: 7417355405867614534, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
+      propertyPath: m_Colors.m_SelectedColor.r
+      value: 0.44933423
+      objectReference: {fileID: 0}
+    - target: {fileID: 7417355405867614534, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7417355405867614534, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7417355405867614534, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7417355405867614534, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7417355405867614534, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: Select
+      objectReference: {fileID: 0}
+    - target: {fileID: 7417355405867614534, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: UnityEngine.UI.Button, UnityEngine.UI
+      objectReference: {fileID: 0}
+    - target: {fileID: 7417355405867614534, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 7869319532000814766, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
       propertyPath: playerHand

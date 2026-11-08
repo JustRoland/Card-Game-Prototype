@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Characters.Enemies;
 using Cysharp.Threading.Tasks;
@@ -19,22 +20,18 @@ namespace Game
         [SerializeField] private bool startRoundOnStart;
         [SerializeField] private bool playerLocationKnownToEnemies;
         [SerializeField] private float reinforcementsCooldown = 10f;
-        [SerializeField, MinValue(1)] private int round = 1;
         [SerializeField] private float roundSpawnMultiplier = 1.2f;
-        [SerializeField] private float roundStartDelay = 5f;
         [SerializeField] private float baseSpawnDelay = 6f;
         [SerializeField, MinValue(1)] private int baseSpawnAmount = 1;
         [SerializeField] private int baseReinforcementAmount;
 
-        [ShowInInspector, DisplayAsString] private RoundState RoundState => _roundState;
-        [ShowInInspector] private int TotalEnemies => _spawners?.Sum(s => s.activeEnemies) ?? 0;
+
+        public int TotalEnemies => _spawners?.Sum(s => s.activeEnemies) ?? 0;
         
-        public int Round => round;
 
         private bool _reinforcementsCalled;
         private float _reinforcementsCooldownTimer;
         private int _spawnCounter;
-        private RoundState _roundState = RoundState.Idle;
 
 
         private void Awake()
@@ -44,38 +41,21 @@ namespace Game
 
             _spawners = FindObjectsByType<EnemySpawner>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
             _spawners = _spawners.Where(spawner => !spawner.ExcludeFromRounds).ToArray();
-            
-            if (startRoundOnStart) StartRound(round);
+
         }
 
         private void FixedUpdate()
         {
-            RoundStateTracker();
-            if (_roundState is RoundState.End) StartRound(round);
-            
             if (!_reinforcementsCalled) return;
             _reinforcementsCooldownTimer -= Time.deltaTime;
             if (_reinforcementsCooldownTimer <= 0f) _reinforcementsCalled = false;
         }
-
-        private void RoundStateTracker()
+        
+        
+        public void SpawnWave(int round)
         {
-            if (TotalEnemies == 0 && _roundState is RoundState.InProgress)
-            {
-                _roundState = RoundState.End;
-                round++;
-            }
-        }
-
-
-        bool ButtonToggle => _roundState is not RoundState.Idle;
-        [Button, HideIf("ButtonToggle")]
-        private void StartRound(int rnd)
-        {
-            round = rnd;
-            _roundState = RoundState.Start;
-            _spawnCounter = (int)(baseSpawnAmount*Mathf.Pow(roundSpawnMultiplier, rnd-1));
-            RoundSpawner(rnd, _spawnCounter).Forget();
+            _spawnCounter = (int)(baseSpawnAmount*Mathf.Pow(roundSpawnMultiplier, round-1));
+            RoundSpawner(round, _spawnCounter).Forget();
         }
 
         public void CallReinforcements(Vector3 toLocation, EnemyCharacter caller)
@@ -91,12 +71,9 @@ namespace Game
                 spawner.GetActiveEntities().ForEach(enemy => enemy.BindToCaller(caller)));
         }
 
-        private async UniTask RoundSpawner(int rnd, int amountToSpawn)
+        private async UniTask RoundSpawner(int round, int amountToSpawn)
         {
-            if (debug) Debug.Log($"Spawning round {rnd} with {amountToSpawn} enemies.", this);
-            
-            await UniTask.WaitForSeconds(roundStartDelay);
-            _roundState = RoundState.InProgress;
+            if (debug) Debug.Log($"Spawning round {round} with {amountToSpawn} enemies.", this);
             
             var counter = 0;
 
@@ -104,7 +81,7 @@ namespace Game
             {
                 foreach (var spawner in _spawners.TakeWhile(spawner => counter < amountToSpawn))
                 {
-                    counter += spawner.Spawn(rnd, amountToSpawn - counter, playerLocationKnownToEnemies ? player : null).Count;
+                    counter += spawner.Spawn(round, amountToSpawn - counter, playerLocationKnownToEnemies ? player : null).Count;
                 }
 
                 await UniTask.WaitForSeconds(baseSpawnDelay);
