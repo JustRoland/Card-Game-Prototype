@@ -10,12 +10,23 @@ using Weapons;
 
 namespace Characters
 {
+    public interface IChangeWeaponAccess
+    {
+        public void ChangeWeapon(WeaponData weaponData);
+    }
+    
     [RequireComponent(typeof(ControllerBase), typeof(CharacterBase))]
-    public class CombatBase : MonoBehaviour
+    public class CombatBase : MonoBehaviour, IChangeWeaponAccess
     {
         [SerializeField] protected bool debug;
         [SerializeField] protected bool trackDamageDealt;
+        [SerializeField] protected bool autoReload;
+        [SerializeField] protected bool infiniteAmmo;
+        [SerializeField] protected bool infiniteMagazine;
+        [SerializeField] protected bool removeWeaponWhenEmpty;
         [SerializeField] protected WeaponData testWeapon;
+        [SerializeField] private Transform weaponSlot;
+        private GameObject _weaponModel;
         private Collider[] _hitColliders;
         [SerializeField] private int maxExplosiveHits = 10;
         [SerializeField] protected GameObject explosion;
@@ -24,7 +35,7 @@ namespace Characters
             bulletOrigin; //This is currently moved around by the designated weapon origin of the scriptable object. Remove this middleman operation later.
 
 
-        public float MaxRange => testWeapon?.maxRange ?? 0f;
+        public float MaxRange => Weapon?.MaxRange ?? 0f;
 
         private ControllerBase _controller;
         protected CharacterBase Character;
@@ -33,8 +44,8 @@ namespace Characters
         private LineRenderer _lineRenderer;
 
         private GenericFactory<GameObject> _explosionFactory;
-        
-        protected CancellationTokenSource _cancellationTokenSource;
+
+        protected CancellationTokenSource CancellationTokenSource;
 
 
         public void Initialize(ControllerBase controller, CharacterBase character)
@@ -44,51 +55,60 @@ namespace Characters
             Character = character;
             _lineRenderer = GetComponent<LineRenderer>();
             _explosionFactory = new GenericFactory<GameObject>(explosion, go => !go.activeSelf, maxItems: 100);
-            _cancellationTokenSource = new CancellationTokenSource();
-            ChangeWeapon();
+            CancellationTokenSource = new CancellationTokenSource();
+            ChangeWeapon(testWeapon);
         }
+        
 
-        protected virtual bool ChangeWeapon()
+        public virtual void ChangeWeapon(WeaponData weaponData)
         {
-            if (!testWeapon) return false;
-            if (Weapon == testWeapon.GenerateWeapon()) return true;
-            Weapon?.FireEvent.RemoveListener(OnFire);
-            Weapon = testWeapon.GenerateWeapon();
+            if (!weaponData)
+            {
+                Weapon?.FireEvent.RemoveAllListeners();
+                Weapon = null;
+                if (_weaponModel) Destroy(_weaponModel);
+                return;
+            }
+
+            Weapon?.FireEvent.RemoveAllListeners();
+            Weapon = new Weapon(weaponData);
             Weapon.FireEvent.AddListener(OnFire);
+            if (_weaponModel) Destroy(_weaponModel);
+            if (Weapon.Model) _weaponModel = Instantiate(Weapon.Model, weaponSlot);
             bulletOrigin.localPosition = Weapon.BulletOrigin;
-            return true;
         }
 
         protected virtual void OnDisable()
         {
-            Weapon?.FireEvent.RemoveListener(OnFire);
-            _cancellationTokenSource.Cancel();
+            Weapon?.FireEvent.RemoveAllListeners();
+            CancellationTokenSource.Cancel();
         }
 
         public virtual void Attack(bool pressedThisFrame, float fireRateMultiplier)
         {
-            // !! TEMP FOR TESTING !! -- checks and updates what weapon is assigned in Editor to allow hot-swapping. 
-            if (!ChangeWeapon()) return;
+            if (Weapon == null) return;
 
             switch (Weapon.Bullets)
             {
                 case 0:
+                    if (autoReload) Reload();
                     break;
                 case > 0:
-                    Weapon.Fire(pressedThisFrame, fireRateMultiplier);
+                    Weapon.Fire(pressedThisFrame, infiniteMagazine, fireRateMultiplier);
                     break;
                 case -1:
-                    Weapon.Fire(pressedThisFrame, fireRateMultiplier);
+                    Weapon.Fire(pressedThisFrame, infiniteMagazine, fireRateMultiplier);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            if (removeWeaponWhenEmpty && Weapon.Empty) ChangeWeapon(null);
         }
 
         protected virtual void Reload()
         {
-            if (Weapon == null) return;
-            Weapon.Reload();
+            Weapon?.Reload(infiniteAmmo);
 
             // Animations later
         }
@@ -105,7 +125,7 @@ namespace Characters
             {
                 DisplayBullet(
                     new[] { bulletOrigin.position, bulletOrigin.position + raycast.ray.direction * Weapon.Range },
-                    0.05f, _cancellationTokenSource.Token).Forget();
+                    0.05f, CancellationTokenSource.Token).Forget();
             }
             else
             {
@@ -118,8 +138,8 @@ namespace Characters
 
 
                 Vector3 impactPosition = raycast.hit.Value.point;
-                List<Vector3> points = new List<Vector3> {bulletOrigin.position, impactPosition};
-                
+                List<Vector3> points = new List<Vector3> { bulletOrigin.position, impactPosition };
+
                 if (Character.Stats.HasTrait(TraitType.ExplosiveShot))
                 {
                     ExplosiveDamage(impactPosition, effects.ToArray());
@@ -133,14 +153,16 @@ namespace Characters
                     RegularDamage(bodyPart, effects.ToArray());
 
                     if (Character.Stats.HasTrait(TraitType.Pierce))
-                        PiercingShot(raycast.hit.Value.collider.transform.position, raycast.ray.direction, points, effects.ToArray());
+                        PiercingShot(raycast.hit.Value.collider.transform.position, raycast.ray.direction, points,
+                            effects.ToArray());
                 }
                 else if (Character.Stats.HasTrait(TraitType.Ricochet))
                 {
-                    RicochetShot(raycast.hit.Value.point, raycast.ray.direction, raycast.hit.Value.normal, points, effects.ToArray());
+                    RicochetShot(raycast.hit.Value.point, raycast.ray.direction, raycast.hit.Value.normal, points,
+                        effects.ToArray());
                 }
 
-                DisplayBullet(points.ToArray(), 0.05f, _cancellationTokenSource.Token).Forget();
+                DisplayBullet(points.ToArray(), 0.05f, CancellationTokenSource.Token).Forget();
             }
         }
 
@@ -158,7 +180,8 @@ namespace Characters
         {
             var size = Physics.OverlapSphereNonAlloc(position, Character.Stats.ExplosiveShotRadius, _hitColliders);
 
-            ExplosiveShotEffect(position, Character.Stats.ExplosiveShotRadius, 0.075f, _cancellationTokenSource.Token).Forget();
+            ExplosiveShotEffect(position, Character.Stats.ExplosiveShotRadius, 0.075f, CancellationTokenSource.Token)
+                .Forget();
 
             var hitCharacters = new List<CharacterBase>();
 
@@ -171,7 +194,8 @@ namespace Characters
             }
         }
 
-        private async UniTask ExplosiveShotEffect(Vector3 position, float radius, float duration, CancellationToken cancellationToken = default)
+        private async UniTask ExplosiveShotEffect(Vector3 position, float radius, float duration,
+            CancellationToken cancellationToken = default)
         {
             if (cancellationToken.IsCancellationRequested)
             {
@@ -182,7 +206,7 @@ namespace Characters
 
                 return;
             }
-            
+
             var explosive = _explosionFactory.GetItem();
             explosive.transform.position = position;
             explosive.transform.localScale = new Vector3(radius, radius, radius);
@@ -193,14 +217,15 @@ namespace Characters
         }
 
 
-        private async UniTask DisplayBullet(Vector3[] positions, float delay, CancellationToken cancellationToken = default)
+        private async UniTask DisplayBullet(Vector3[] positions, float delay,
+            CancellationToken cancellationToken = default)
         {
             if (cancellationToken.IsCancellationRequested)
             {
                 _lineRenderer.enabled = false;
                 return;
             }
-            
+
             if (!_lineRenderer) return;
             _lineRenderer.positionCount = positions.Length;
             _lineRenderer.SetPositions(positions);
@@ -235,7 +260,8 @@ namespace Characters
             }
         }
 
-        private void RicochetShot(Vector3 position, Vector3 direction, Vector3 surfaceNormal, List<Vector3> points, StatusEffect[] effects)
+        private void RicochetShot(Vector3 position, Vector3 direction, Vector3 surfaceNormal, List<Vector3> points,
+            StatusEffect[] effects)
         {
             var bounces = Character.Stats.RicochetCount;
             while (bounces > 0)

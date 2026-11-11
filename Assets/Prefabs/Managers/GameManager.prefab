@@ -839,7 +839,7 @@ MonoBehaviour:
   slowTime: 0.02
   normalTime: 1
   fastTime: 1.5
-  nextRoundTime: 30
+  nextRoundTime: 60
   startRoundOnPlay: 1
   round: 1
 --- !u!114 &1384990582047326400

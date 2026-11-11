@@ -3,6 +3,7 @@ using Characters;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Weapons;
 
 namespace Cards
 {
@@ -68,5 +69,6 @@ namespace Cards
         public TraitType trait;
         [Header("Duration")]
         public float duration;
+        [Header("Weapon Unlock")] public WeaponData weaponData;
     }
 }

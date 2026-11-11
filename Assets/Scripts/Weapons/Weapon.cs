@@ -1,7 +1,5 @@
 using System;
-using Characters;
 using Cysharp.Threading.Tasks;
-using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -34,7 +32,9 @@ namespace Weapons
         public int MaxAmmo => _data.maxAmmo;
         public float ReloadSpeed => _data.reloadSpeed;
         public int Bullets { get; private set; }
+        public int ReserveAmmo { get; private set; }
         public bool CanFire { get; private set; }
+        public bool Empty => Bullets == 0 && ReserveAmmo == 0;
 
         public readonly UnityEvent FireEvent = new();
 
@@ -46,10 +46,11 @@ namespace Weapons
             WeaponID = _id++;
             CanFire = true;
             Bullets = MagazineSize;
+            ReserveAmmo = MaxAmmo;
         }
     
 
-        public void Fire(bool pressedThisFrame, float fireRateMultiplier = 1)
+        public void Fire(bool pressedThisFrame, bool infiniteMagazine, float fireRateMultiplier = 1)
         {
             if (!CanFire) return;
             if (Bullets <= 0 && MagazineSize > 0) return;
@@ -58,15 +59,15 @@ namespace Weapons
             {
                 case WeaponFireType.SemiAutomatic when pressedThisFrame:
                 case WeaponFireType.FullAuto:
-                    HandleFiring();
+                    HandleFiring(infiniteMagazine);
                     FireRateTimer(fireRateMultiplier).Forget();
                     return;
                 case WeaponFireType.Burst when pressedThisFrame:
                 case WeaponFireType.BurstAuto:
-                    BurstFire().Forget();
+                    BurstFire(infiniteMagazine, fireRateMultiplier).Forget();
                     return;
                 case WeaponFireType.BoltAction when pressedThisFrame:
-                    HandleFiring();
+                    HandleFiring(infiniteMagazine);
                     FireRateTimer(fireRateMultiplier).Forget();
                     return;
                 default:
@@ -74,19 +75,22 @@ namespace Weapons
             }
         }
 
-        private void HandleFiring()
+        private void HandleFiring(bool infiniteMagazine)
         {
-            if (MagazineSize > 0) Bullets--;
+            if (MagazineSize > 0 && !infiniteMagazine) Bullets--;
             FireEvent.Invoke();
         }
 
-        public void Reload()
+        public void Reload(bool infiniteAmmo)
         {
-            Bullets = MagazineSize;
+            ReserveAmmo += Bullets; 
+            Bullets = Mathf.Min(MagazineSize, ReserveAmmo);
+            if (!infiniteAmmo && ReserveAmmo > 0) ReserveAmmo -= MagazineSize;
+            if (ReserveAmmo < 0) ReserveAmmo = 0;
         }
 
 
-        private async UniTask BurstFire(float fireRateMultiplier = 1)
+        private async UniTask BurstFire(bool infiniteMagazine, float fireRateMultiplier = 1)
         {
             Debug.Assert(BurstSize > 1, $"BurstFire size must be greater than 1. (current: {BurstSize})");
             Debug.Assert(BurstFireRate > 0, $"BurstFireRate must be greater than 0. (current: {BurstFireRate})");
@@ -95,7 +99,7 @@ namespace Weapons
             for (var i = 0; i < BurstSize; i++)
             {
                 if (Bullets <= 0) break;
-                HandleFiring();
+                HandleFiring(infiniteMagazine);
                 await UniTask.WaitForSeconds(delay/fireRateMultiplier);
             }
 
@@ -115,8 +119,7 @@ namespace Weapons
             CanFire = true;
             await UniTask.Yield();
         }
-
-
+        
     }
 
     public enum WeaponFireType

@@ -514,11 +514,11 @@
                 },
                 {
                     "name": "",
-                    "id": "36e52cba-0905-478e-a818-f4bfcb9f3b9a",
-                    "path": "<Keyboard>/c",
+                    "id": "4279dcf4-6503-423e-a844-937d3f2faad0",
+                    "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard&Mouse",
+                    "groups": "",
                     "action": "Dash",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -547,8 +547,8 @@
                 },
                 {
                     "name": "",
-                    "id": "4279dcf4-6503-423e-a844-937d3f2faad0",
-                    "path": "<Keyboard>/q",
+                    "id": "38a11e6b-8aef-4d7d-b902-3efd76a75c6b",
+                    "path": "<Keyboard>/tab",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

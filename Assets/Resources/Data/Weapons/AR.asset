@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WeaponData
   description: 
   icon: {fileID: 0}
-  model: {fileID: 0}
+  model: {fileID: 1684716002916097247, guid: f440f67ba09252e4e8c7932af5d3b0ce, type: 3}
   projectile: {fileID: 0}
   bulletOrigin: {x: 0.37799996, y: -0.2079997, z: 1.6672}
   damage: 25

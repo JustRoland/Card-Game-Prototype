@@ -69123,6 +69123,10 @@ PrefabInstance:
       propertyPath: statsHolder.underlyingValue
       value: 
       objectReference: {fileID: 1760196435}
+    - target: {fileID: 590813794022155100, guid: cd3fc06882c3f224aab8b6d4c1cad70b, type: 3}
+      propertyPath: weaponHolder.underlyingValue
+      value: 
+      objectReference: {fileID: 1760196445}
     - target: {fileID: 2808552531595317509, guid: cd3fc06882c3f224aab8b6d4c1cad70b, type: 3}
       propertyPath: m_Name
       value: Card Hand
@@ -122733,64 +122737,13 @@ PrefabInstance:
       propertyPath: 'm_Cameras.Array.data[0]'
       value: 
       objectReference: {fileID: 1530172225}
-    - target: {fileID: 7417355405867614534, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
-      propertyPath: m_Colors.m_PressedColor.b
-      value: 0.13332146
-      objectReference: {fileID: 0}
-    - target: {fileID: 7417355405867614534, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
-      propertyPath: m_Colors.m_PressedColor.g
-      value: 0.13332146
-      objectReference: {fileID: 0}
-    - target: {fileID: 7417355405867614534, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
-      propertyPath: m_Colors.m_PressedColor.r
-      value: 0.6603774
-      objectReference: {fileID: 0}
-    - target: {fileID: 7417355405867614534, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
-      propertyPath: m_Colors.m_SelectedColor.b
-      value: 0.8415094
-      objectReference: {fileID: 0}
-    - target: {fileID: 7417355405867614534, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
-      propertyPath: m_Colors.m_SelectedColor.g
-      value: 0.6314154
-      objectReference: {fileID: 0}
-    - target: {fileID: 7417355405867614534, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
-      propertyPath: m_Colors.m_SelectedColor.r
-      value: 0.44933423
-      objectReference: {fileID: 0}
-    - target: {fileID: 7417355405867614534, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7417355405867614534, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7417355405867614534, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 7417355405867614534, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7417355405867614534, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
-      value: Select
-      objectReference: {fileID: 0}
-    - target: {fileID: 7417355405867614534, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
-      value: UnityEngine.UI.Button, UnityEngine.UI
-      objectReference: {fileID: 0}
-    - target: {fileID: 7417355405867614534, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
     - target: {fileID: 7869319532000814766, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
       propertyPath: playerHand
       value: 
       objectReference: {fileID: 1099615555}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 2982513426662518848, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
@@ -122810,6 +122763,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4558679506495862503, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
   m_PrefabInstance: {fileID: 1760196434}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1760196445 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5497454162118663694, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
+  m_PrefabInstance: {fileID: 1760196434}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf0f3779fbaae434aa1bea26aaaf7050, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerCombat
 --- !u!1 &1780382755
 GameObject:
   m_ObjectHideFlags: 0
@@ -140101,5 +140065,5 @@ SceneRoots:
   m_Roots:
   - {fileID: 2519702156278163702}
   - {fileID: 1862009251}
-  - {fileID: 1760196434}
   - {fileID: 1099615554}
+  - {fileID: 1760196434}

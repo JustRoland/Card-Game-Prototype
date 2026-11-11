@@ -22,6 +22,7 @@ namespace Cards
         [SerializeField] private Hand hand;
         [SerializeField] private Camera handCamera;
         [SerializeField] private InterfaceReference<IStats> statsHolder;
+        [SerializeField] private InterfaceReference<IChangeWeaponAccess> weaponHolder;
         public readonly List<CardView> SelectedCards = new();
         public bool IsDragging { get; private set; }
 
@@ -236,6 +237,7 @@ namespace Cards
                     var colorModifier = new ColorModifier(effect.category, effect.color, effect.duration);
                     statsHolder.Value.Stats.Mediator.AddModifiers(colorModifier);
                     if (effect.trait is not TraitType.None) statsHolder.Value.Stats.UnlockTrait(effect.trait);
+                    if (effect.weaponData) weaponHolder.Value.ChangeWeapon(effect.weaponData);
                 }
             }
 

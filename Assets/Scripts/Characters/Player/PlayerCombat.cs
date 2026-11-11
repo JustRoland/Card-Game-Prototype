@@ -1,6 +1,7 @@
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
+using Weapons;
 
 namespace Characters.Player
 {
@@ -8,6 +9,7 @@ namespace Characters.Player
     {
         [Required] [SerializeField] protected GameObject reloadIndicator;
         [Required] [SerializeField] protected TextMeshProUGUI ammoText;
+        
 
         public void UpdateInput(CharacterInput input)
         {
@@ -18,25 +20,40 @@ namespace Characters.Player
         public override void Attack(bool pressedThisFrame, float fireRateMultipier)
         {
             base.Attack(pressedThisFrame, fireRateMultipier);
-            ammoText.text = $"{Weapon.Bullets} / {Weapon.MaxAmmo}";
+            
+            if (Weapon is null)
+            {
+                ammoText.text = null;
+                reloadIndicator.SetActive(false);
+                return;
+            }
+            
+            ammoText.text = $"{Weapon.Bullets} / {Weapon.ReserveAmmo}";
             reloadIndicator.SetActive(Weapon.Bullets <= Weapon.MagazineSize * 0.2);
         }
 
         protected override void Reload()
         {
+            if (Weapon is null)
+            {
+                ammoText.text = null;
+                reloadIndicator.SetActive(false);
+                return;
+            }
+            
             base.Reload();
-            ammoText.text = $"{Weapon.Bullets} / {Weapon.MaxAmmo}";
-            reloadIndicator.SetActive(false);
+            ammoText.text = $"{Weapon.Bullets} / {Weapon.ReserveAmmo}";
+            reloadIndicator.SetActive(Weapon.Bullets <= Weapon.MagazineSize * 0.2);
         }
 
-        protected override bool ChangeWeapon()
+        public override void ChangeWeapon(WeaponData weaponData)
         {
-            if (!base.ChangeWeapon()) return false;
+            base.ChangeWeapon(weaponData);
             
-            ammoText.text = $"{Weapon.Bullets} / {Weapon.MaxAmmo}";
+            if (Weapon is null) return;
+            
+            ammoText.text = $"{Weapon.Bullets} / {Weapon.ReserveAmmo}";
             reloadIndicator.SetActive(Weapon.Bullets <= Weapon.MagazineSize * 0.2);
-            return true;
-
         }
     }
 }
