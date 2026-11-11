@@ -80,7 +80,14 @@ namespace Cards
 
         #region Event Listeners & Registration
 
-        private void OnClick(CardView cardView, Vector3 position) => hand.HoverSystem.Show(cardView, position);
+        private void OnLeftClick(CardView cardView, Vector3 position) => hand.HoverSystem.Show(cardView, position);
+        
+        private void OnRightClick(CardView cardView, Vector3 position)
+        {
+            hand.RemoveCard(new[] { cardView });
+            UnloadExistingCardView(cardView);
+            hand.HoverSystem.Hide();
+        }
 
         private void OnHoverEnter(CardView cardView, Vector3 position) => hand.HoverSystem.Show(cardView, position);
 
@@ -102,32 +109,43 @@ namespace Cards
             else cardView.DragCardView(position);
         }
 
-        private void OnEndDrag(CardView cardView, Vector3 position)
+        private void OnEndDragLeftClick(CardView cardView, Vector3 position)
         {
             IsDragging = false;
             if (PlayCards(cardView.Selected ? SelectedCards.ToArray() : new[] { cardView }, position)) return;
             if (cardView.Selected) SelectedCards.ForEach(c => c.ResetCard());
             else cardView.ResetCard();
         }
+        
+        private void OnEndDragRightClick(CardView cardView, Vector3 position)
+        {
+            hand.RemoveCard(new[] { cardView });
+            hand.HoverSystem.Hide();
+            UnloadExistingCardView(cardView);
+        }
 
         private void RegisterCardViewEvents(CardView cardView)
         {
-            cardView.Click.AddListener(OnClick);
+            cardView.LeftClick.AddListener(OnLeftClick);
+            cardView.RightClick.AddListener(OnRightClick);
             cardView.HoverEnter.AddListener(OnHoverEnter);
             cardView.HoverExit.AddListener(OnHoverExit);
             cardView.StartDrag.AddListener(OnStartDrag);
             cardView.Dragging.AddListener(OnBeingDragged);
-            cardView.EndDrag.AddListener(OnEndDrag);
+            cardView.EndDragLeftClick.AddListener(OnEndDragLeftClick);
+            cardView.EndDragRightClick.AddListener(OnEndDragRightClick);
         }
 
         private void DeregisterCardViewEvents(CardView cardView)
         {
-            cardView.Click.RemoveListener(OnClick);
+            cardView.LeftClick.RemoveListener(OnLeftClick);
+            cardView.RightClick.RemoveListener(OnRightClick);
             cardView.HoverEnter.RemoveListener(OnHoverEnter);
             cardView.HoverExit.RemoveListener(OnHoverExit);
             cardView.StartDrag.RemoveListener(OnStartDrag);
             cardView.Dragging.RemoveListener(OnBeingDragged);
-            cardView.EndDrag.RemoveListener(OnEndDrag);
+            cardView.EndDragLeftClick.RemoveListener(OnEndDragLeftClick);
+            cardView.EndDragRightClick.RemoveListener(OnEndDragRightClick);
         }
 
         #endregion

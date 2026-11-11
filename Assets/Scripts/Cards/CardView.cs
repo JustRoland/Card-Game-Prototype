@@ -1,4 +1,4 @@
-using DG.Tweening;
+using System;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
@@ -11,13 +11,27 @@ namespace Cards
     public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler,
         IBeginDragHandler, IDragHandler, IEndDragHandler
     {
-        [FoldoutGroup("References"), SerializeField] private TMP_Text nameText;
-        [FoldoutGroup("References"), SerializeField] private TMP_Text descriptionText;
-        [FoldoutGroup("References"), SerializeField] private TMP_Text valueText;
-        [FoldoutGroup("References"), SerializeField] private SpriteRenderer spriteRenderer;
-        [FoldoutGroup("References"), SerializeField] private SpriteRenderer background;
-        [FoldoutGroup("References"), SerializeField] private GameObject container;
-        [FoldoutGroup("References"), SerializeField] private GameObject silhouette;
+        [FoldoutGroup("References"), SerializeField]
+        private TMP_Text nameText;
+
+        [FoldoutGroup("References"), SerializeField]
+        private TMP_Text descriptionText;
+
+        [FoldoutGroup("References"), SerializeField]
+        private TMP_Text valueText;
+
+        [FoldoutGroup("References"), SerializeField]
+        private SpriteRenderer spriteRenderer;
+
+        [FoldoutGroup("References"), SerializeField]
+        private SpriteRenderer background;
+
+        [FoldoutGroup("References"), SerializeField]
+        private GameObject container;
+
+        [FoldoutGroup("References"), SerializeField]
+        private GameObject silhouette;
+
         private SpriteRenderer _silhouetteRenderer;
 
         private Vector2 _offsetFromPointerPosition;
@@ -29,8 +43,10 @@ namespace Cards
 
         [FoldoutGroup("Events")] public UnityEvent<CardView, Vector3> StartDrag = new();
         [FoldoutGroup("Events")] public UnityEvent<CardView, Vector3> Dragging = new();
-        [FoldoutGroup("Events")] public UnityEvent<CardView, Vector3> EndDrag = new();
-        [FoldoutGroup("Events")] public UnityEvent<CardView, Vector3> Click = new();
+        [FoldoutGroup("Events")] public UnityEvent<CardView, Vector3> EndDragLeftClick = new();
+        [FoldoutGroup("Events")] public UnityEvent<CardView, Vector3> EndDragRightClick = new();
+        [FoldoutGroup("Events")] public UnityEvent<CardView, Vector3> LeftClick = new();
+        [FoldoutGroup("Events")] public UnityEvent<CardView, Vector3> RightClick = new();
         [FoldoutGroup("Events")] public UnityEvent<CardView, Vector3> HoverEnter = new();
         [FoldoutGroup("Events")] public UnityEvent<CardView, Vector3> HoverExit = new();
 
@@ -38,6 +54,7 @@ namespace Cards
         public Card Card { get; private set; }
         public bool Active { get; private set; }
         public bool Selected { get; private set; }
+
         public Color SilhouetteColor
         {
             get
@@ -62,7 +79,7 @@ namespace Cards
         public CardView Setup(Card card, Vector3 position, Camera cam = null)
         {
             _camera = cam;
-            
+
             if (!_sortingGroup) _sortingGroup = GetComponent<SortingGroup>();
 
             transform.localPosition = position;
@@ -74,6 +91,7 @@ namespace Cards
             spriteRenderer.sprite = card.Sprite;
             background.color = card.Color;
 
+            container.SetActive(true);
             SetActive(true);
             SelectCard(false, false);
 
@@ -94,6 +112,7 @@ namespace Cards
             if (checkRecipe) CardManager.Instance.CheckForRecipe();
         }
 
+        // Weird how Card Manager is pretty much the only one listening to these events, yet these methods still directly reference it.
         private void SelectAndAdd(bool selected)
         {
             if (selected) CardManager.Instance.SelectedCards.Add(this);
@@ -117,14 +136,28 @@ namespace Cards
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            if (CardManager.Instance.IsDragging) return;
-            SelectAndAdd(!Selected);
-            Click.Invoke(this, transform.localPosition);
+            switch (eventData.button)
+            {
+                case PointerEventData.InputButton.Left when CardManager.Instance.IsDragging:
+                    return;
+                case PointerEventData.InputButton.Left:
+                    SelectAndAdd(!Selected);
+                    LeftClick.Invoke(this, transform.localPosition);
+                    break;
+                case PointerEventData.InputButton.Right when CardManager.Instance.IsDragging:
+                    return;
+                case PointerEventData.InputButton.Right:
+                    RightClick.Invoke(this, transform.localPosition);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            var pos = _camera.ScreenToWorldPoint(new Vector3(eventData.position.x, eventData.position.y, 0.6f)); //Z value is distance of Hand to the Camera
+            var pos = _camera.ScreenToWorldPoint(new Vector3(eventData.position.x, eventData.position.y,
+                0.6f)); //Z value is distance of Hand to the Camera
             StartDrag.Invoke(this, pos);
         }
 
@@ -141,18 +174,28 @@ namespace Cards
         {
             var pos = _camera.ScreenToWorldPoint(new Vector3(eventData.position.x, eventData.position.y, 0.6f));
             Dragging.Invoke(this, pos);
-        
         }
 
         public void DragCardView(Vector3 pos)
         {
-            transform.localPosition = new Vector3(pos.x - _offsetFromPointerPosition.x, pos.y - _offsetFromPointerPosition.y, transform.localPosition.z);
+            transform.localPosition = new Vector3(pos.x - _offsetFromPointerPosition.x,
+                pos.y - _offsetFromPointerPosition.y, transform.localPosition.z);
         }
 
         public void OnEndDrag(PointerEventData eventData)
         {
             var pos = _camera.ScreenToWorldPoint(new Vector3(eventData.position.x, eventData.position.y, 0.6f));
-            EndDrag.Invoke(this, pos);
+            switch (eventData.button)
+            {
+                case PointerEventData.InputButton.Left:
+                    EndDragLeftClick.Invoke(this, pos);
+                    break;
+                case PointerEventData.InputButton.Right:
+                    EndDragRightClick.Invoke(this, pos);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         public void ResetCard()
