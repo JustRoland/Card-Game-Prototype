@@ -146,10 +146,13 @@ namespace Cards
             });
             GameManager.Instance?.SlowTime(Hide ? Speed.Normal : Speed.Slow);
         }
+        
+        public bool CanAddCard => _cards.Count < maxCards;
 
         public void AddCard(CardView cardView)
         {
             if (!cardView) return;
+            if (_cards.Count >= maxCards) return;
 
             cardView.transform.parent = transform;
             _cards.Add(cardView);

@@ -67,9 +67,9 @@ namespace Characters.Player
 
         public void ToggleGodMode(bool state) => godMode = state;
 
-        public override void Damage(BodyPart bodyPart, int damage, float knockBack, CharacterBase origin, StatusEffect[] effects = null)
+        public override void Damage(BodyPart[] bParts, int damage, float knockBack, CharacterBase origin, StatusEffect[] effects = null)
         {
-            if (!godMode) base.Damage(bodyPart, damage, knockBack, origin, effects);
+            if (!godMode) base.Damage(bParts, damage, knockBack, origin, effects);
 
             _healthBar.SetProgressBar(Stats.Health);
             ToggleDamageIndicator(origin.transform.position, cancellationTokenSource.Token).Forget();

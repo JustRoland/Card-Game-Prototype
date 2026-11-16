@@ -104,10 +104,9 @@ namespace Characters.Player
 
         private void Update()
         {
-            if (_inputAction.Player.Reset.WasPressedThisFrame())
-            {
-                GameManager.Instance.RestartGame();
-            }
+            if (_inputAction.Player.Reset.WasPressedThisFrame()) GameManager.Instance.RestartGame();
+            
+            if (_inputAction.Player.Menu.WasPressedThisFrame()) GameManager.Instance.OpenMenu();
 
 
             else

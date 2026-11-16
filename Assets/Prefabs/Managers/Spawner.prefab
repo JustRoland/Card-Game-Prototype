@@ -51,7 +51,10 @@ MonoBehaviour:
   - enemyPrefab: {fileID: 6077540049571290851, guid: a315623f596d4244ba31305e6fbc98df, type: 3}
     amount: 4
     minRound: 0
-  - enemyPrefab: {fileID: 0}
+  - enemyPrefab: {fileID: 6077540049571290851, guid: b431605e920f8d248909dbcedd0cfb01, type: 3}
+    amount: 2
+    minRound: 3
+  - enemyPrefab: {fileID: 6077540049571290851, guid: 4d381912c24589a4d83fd3231ab67ba3, type: 3}
     amount: 1
     minRound: 5
   spawnRadius: 2

@@ -14,13 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Characters.Traits
   traits:
   - type: 1
-    unlocked: 0
+    unlocked: 1
   - type: 2
     unlocked: 0
   - type: 3
     unlocked: 0
   - type: 4
-    unlocked: 0
+    unlocked: 1
   - type: 5
     unlocked: 0
   - type: 6

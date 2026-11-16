@@ -35,7 +35,8 @@ namespace Characters
     public enum StatusEffectType
     {
         None,
-        Weakened
+        Weakened,
+        Burn
     }
     
 
@@ -338,6 +339,16 @@ namespace Characters
             get
             {
                 var q = new Query(StatusEffectType.Weakened, 1);
+                _mediator.PerformQuery(this, q);
+                return q.Value;
+            }
+        }
+        
+        public float Burn
+        {
+            get
+            {
+                var q = new Query(StatusEffectType.Burn, 0);
                 _mediator.PerformQuery(this, q);
                 return q.Value;
             }

@@ -12,9 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89ad1c89bf1c94c41b7c1501699899d7, type: 3}
   m_Name: Health
   m_EditorClassIdentifier: Assembly-CSharp::Cards.CardData
-  description: 'Passive: ---
-
-    Active: +20 HP, +10 Max HP for 15s'
+  description: +20 HP, +10 Max HP for 15s
   tier: 1
   sprite: {fileID: 2135297736, guid: e17211d03cdbdae49945303595f7f09c, type: 3}
   color: {r: 0.3962264, g: 0.14877176, b: 0.15029155, a: 1}
@@ -26,4 +24,5 @@ MonoBehaviour:
     color: {r: 0, g: 0, b: 0, a: 0}
     trait: 0
     duration: 15
+    weaponData: {fileID: 0}
   passiveEffects: []

@@ -248,7 +248,7 @@ MonoBehaviour:
   bodyParts:
   - {fileID: 4068692998094132781}
   - {fileID: 697446810327204837}
-  damageEffectColor: {r: 0.7283019, g: 0.586764, b: 0.59164464, a: 1}
+  damageEffectColor: {r: 0.8867924, g: 0.87508005, b: 0.87508005, a: 1}
   damageEffectDuration: 0.035
   onDeathEvent:
     m_PersistentCalls:

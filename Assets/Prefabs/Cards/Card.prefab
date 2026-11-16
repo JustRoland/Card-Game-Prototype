@@ -244,7 +244,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 4488392761016016424, guid: 518b2e40d2c7c8748a0dae586df52680, type: 2}
+  - {fileID: -1458997045149829812, guid: 88814962c08c3b64aad9522cab796838, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -292,8 +292,8 @@ MonoBehaviour:
 
     Active: description goes here'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 518b2e40d2c7c8748a0dae586df52680, type: 2}
-  m_sharedMaterial: {fileID: 4488392761016016424, guid: 518b2e40d2c7c8748a0dae586df52680, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 88814962c08c3b64aad9522cab796838, type: 2}
+  m_sharedMaterial: {fileID: -1458997045149829812, guid: 88814962c08c3b64aad9522cab796838, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -317,12 +317,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 1.8
+  m_fontSize: 2.1
   m_fontSizeBase: 3
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 0.8
-  m_fontSizeMax: 1.8
+  m_fontSizeMax: 2.1
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
@@ -606,10 +606,16 @@ MonoBehaviour:
   Dragging:
     m_PersistentCalls:
       m_Calls: []
-  EndDrag:
+  EndDragLeftClick:
     m_PersistentCalls:
       m_Calls: []
-  Click:
+  EndDragRightClick:
+    m_PersistentCalls:
+      m_Calls: []
+  LeftClick:
+    m_PersistentCalls:
+      m_Calls: []
+  RightClick:
     m_PersistentCalls:
       m_Calls: []
   HoverEnter:

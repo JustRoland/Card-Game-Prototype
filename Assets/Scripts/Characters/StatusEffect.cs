@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 using Utility;
 
 namespace Characters
@@ -7,10 +8,14 @@ namespace Characters
     public class SimpleEffect : StatusEffect
     {
         private readonly Func<float, float> _operation;
+        private readonly int _tickHealthChange;
+        // private readonly StatModifier[] _effectedStats;
         
-        public SimpleEffect(StatusEffectType type, float duration, Func<float, float> operation) : base(type, duration)
+        public SimpleEffect(StatusEffectType type, float duration, Func<float, float> operation, int tickHealthChange = 0) : base(type, duration)
         {
             _operation = operation;
+            _tickHealthChange = tickHealthChange;
+            // _effectedStats = effectedStats;
         }
 
         public override void Handle(object sender, Query query)
@@ -19,6 +24,12 @@ namespace Characters
             {
                 query.Value = _operation(query.Value);
             }
+        }
+
+        public override int TickEffect()
+        {
+            ApplyTickEffect = false;
+            return _tickHealthChange;
         }
     }
     
@@ -29,6 +40,7 @@ namespace Characters
         public int ID = _id++;
         public readonly StatusEffectType type;
         public bool MarkedForRemoval { get; private set;}
+        public bool ApplyTickEffect { get; protected set; }
         public Action<StatusEffect> OnDispose = delegate { };
         private readonly SimpleTimer timer;
         
@@ -40,14 +52,20 @@ namespace Characters
             timer = new SimpleTimer(TimerType.Countdown);
             timer.SetTimer(0, 0, duration);
             timer.CountdownFinishedEvent.AddListener(() => MarkedForRemoval = true);
+            timer.SecondEvent.AddListener(() =>
+            {
+                ApplyTickEffect = true;
+            });
             timer.StartTimer();
         }
         
         public void ResetTimer() => timer.ResetTimer();
-        
+
         public void Update(float deltaTime) => timer?.UpdateTimer(deltaTime);
 
         public abstract void Handle(object sender, Query query);
+
+        public abstract int TickEffect();
 
         public void Dispose()
         {

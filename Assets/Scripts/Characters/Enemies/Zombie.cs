@@ -35,8 +35,9 @@ namespace Characters.Enemies
             stateMachine.OnStateChanged -= StateChangeDebugMessage;
         }
 
-        protected void Update()
+        protected override void Update()
         {
+            base.Update();
             stateMachine.Update(Time.deltaTime);
         }
 
@@ -55,9 +56,9 @@ namespace Characters.Enemies
         }
 
 
-        public override void Damage(BodyPart bodyPart, int damage, float knockBack, CharacterBase origin, StatusEffect[] effects = null)
+        public override void Damage(BodyPart[] bParts, int damage, float knockBack, CharacterBase origin, StatusEffect[] effects = null)
         {
-            base.Damage(bodyPart, damage, knockBack, origin, effects);
+            base.Damage(bParts, damage, knockBack, origin, effects);
 
             if (Stats.Health > 0)
             {

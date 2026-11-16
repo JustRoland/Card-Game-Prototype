@@ -12,12 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89ad1c89bf1c94c41b7c1501699899d7, type: 3}
   m_Name: Substance
   m_EditorClassIdentifier: Assembly-CSharp::Cards.CardData
-  description: 'Passive: ---
-
-    Active: ---'
+  description: No effect
   tier: 1
   sprite: {fileID: 1900091230, guid: e17211d03cdbdae49945303595f7f09c, type: 3}
   color: {r: 0.37254903, g: 0.3019608, b: 0.38823533, a: 1}
-  type: 0
   activeEffects: []
   passiveEffects: []

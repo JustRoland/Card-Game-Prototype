@@ -130,6 +130,7 @@ namespace Characters
             else
             {
                 //TODO: Clean up; very brute force and not expandable.
+                // Perhaps a static class returning all the effects from one central script?  
                 List<StatusEffect> effects = new List<StatusEffect>();
                 //Using the reference to the variable when creating the status effect has the neat side effect of automatically updating the damage multiplier value on the host. Cache value first if this is unintended.
                 if (Character.Stats.HasTrait(TraitType.Weaken))
@@ -142,6 +143,7 @@ namespace Characters
 
                 if (Character.Stats.HasTrait(TraitType.ExplosiveShot))
                 {
+                    effects.Add(new SimpleEffect(StatusEffectType.Burn, 6f, null, 20 ));
                     ExplosiveDamage(impactPosition, effects.ToArray());
                     return;
                 }

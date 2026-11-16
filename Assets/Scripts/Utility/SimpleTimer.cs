@@ -23,17 +23,20 @@ namespace Utility
     {
         public int hours;
         public int minutes;
-        public float seconds;
+        public int seconds;
+        public float realTime;
 
         public TimerTime(int hours, int minutes, float seconds)
         {
             this.hours = hours;
             this.minutes = minutes;
-            this.seconds = seconds;
+            this.seconds = Mathf.FloorToInt(seconds);
+            realTime = hours * 3600 + minutes * 60 + seconds;
         }
 
-        public bool Equals(TimerTime other) => hours == other.hours && minutes == other.minutes && Mathf.Approximately(seconds, other.seconds);
-    
+        public bool Equals(TimerTime other) => hours == other.hours && minutes == other.minutes &&
+                                               Mathf.Approximately(seconds, other.seconds);
+
         public int CompareTo(TimerTime other)
         {
             var hoursComparison = hours.CompareTo(other.hours);
@@ -42,12 +45,13 @@ namespace Utility
             if (minutesComparison != 0) return minutesComparison;
             return seconds.CompareTo(other.seconds);
         }
+
         public static TimerTime operator +(TimerTime a, TimerTime b)
         {
             var hours = a.hours + b.hours;
             var minutes = a.minutes + b.minutes;
             var seconds = a.seconds + b.seconds;
-        
+
             if (seconds >= 60)
             {
                 minutes++;
@@ -59,20 +63,22 @@ namespace Utility
                 hours++;
                 minutes -= 60;
             }
-        
+
             return new TimerTime(hours, minutes, seconds);
         }
+
         public static TimerTime operator -(TimerTime a, TimerTime b)
         {
             var hours = a.hours - b.hours;
             var minutes = a.minutes - b.minutes;
             var seconds = a.seconds - b.seconds;
-        
+
             if (seconds < 0)
             {
                 minutes--;
                 seconds += 60;
             }
+
             if (minutes < 0)
             {
                 hours--;
@@ -80,27 +86,30 @@ namespace Utility
             }
 
             if (hours < 0) return new TimerTime(0, 0, 0);
-        
-        
+
+
             return new TimerTime(hours, minutes, seconds);
         }
+
         public static bool operator >(TimerTime a, TimerTime b)
         {
             return a.CompareTo(b) > 0;
         }
+
         public static bool operator <(TimerTime a, TimerTime b)
         {
             return a.CompareTo(b) < 0;
         }
+
         public static bool operator >=(TimerTime a, TimerTime b)
         {
             return a.CompareTo(b) >= 0;
         }
+
         public static bool operator <=(TimerTime a, TimerTime b)
         {
             return a.CompareTo(b) <= 0;
         }
-    
     }
 
     public class SimpleTimer
@@ -114,6 +123,7 @@ namespace Utility
         public UnityEvent CountdownFinishedEvent = new();
         public UnityEvent HourEvent = new();
         public UnityEvent MinuteEvent = new();
+        public UnityEvent SecondEvent = new();
 
 
         public SimpleTimer(TimerType type)
@@ -125,7 +135,7 @@ namespace Utility
         {
             SetTimer(timerTime.hours, timerTime.minutes, timerTime.seconds, countdownFinishedEvent);
         }
-    
+
         public void SetTimer(int hours, int minutes, float seconds, UnityEvent countdownFinishedEvent = null)
         {
             float sec = seconds % 60;
@@ -148,7 +158,7 @@ namespace Utility
 
         public void StopTimer() => timerStarted = false;
         public void StartTimer() => timerStarted = true;
-    
+
         public void ResetTimer()
         {
             _currentTime = _startTime;
@@ -158,7 +168,7 @@ namespace Utility
 
         public void ModifyTime(float seconds)
         {
-            _currentTime.seconds += seconds;
+            _currentTime.realTime += seconds;
 
             if (_currentTime.seconds >= 60)
             {
@@ -203,7 +213,13 @@ namespace Utility
             if (_type != TimerType.Stopwatch) return;
             if (!timerStarted) return;
 
-            _currentTime.seconds += deltaTime;
+            _currentTime.realTime += deltaTime;
+
+            if (Mathf.FloorToInt(_currentTime.realTime) > _currentTime.seconds)
+            {
+                _currentTime.seconds = Mathf.FloorToInt(_currentTime.realTime);
+                SecondEvent?.Invoke();
+            }
 
             if (_currentTime.seconds >= 60)
             {
@@ -228,16 +244,22 @@ namespace Utility
             if (!timerStarted) return;
             if (countdownFinished) return;
 
+
+
+            //TODO: Fix nesting
             if (_currentTime.seconds <= 0)
             {
                 if (_currentTime.minutes <= 0)
                 {
                     if (_currentTime.hours <= 0)
                     {
-                        countdownFinished = true;
-                        timerStarted = false;
-                        CountdownFinishedEvent?.Invoke();
-                        return;
+                        if (_currentTime.realTime <= 0)
+                        {
+                            countdownFinished = true;
+                            timerStarted = false;
+                            CountdownFinishedEvent?.Invoke();
+                            return;
+                        }
                     }
 
                     _currentTime.hours--;
@@ -250,7 +272,12 @@ namespace Utility
                 MinuteEvent?.Invoke();
             }
 
-            _currentTime.seconds -= deltaTime;
+            _currentTime.realTime -= deltaTime;
+            if (Mathf.FloorToInt(_currentTime.realTime) < _currentTime.seconds)
+            {
+                _currentTime.seconds = Mathf.FloorToInt(_currentTime.realTime);
+                SecondEvent?.Invoke();
+            }
         }
 
 
@@ -271,8 +298,10 @@ namespace Utility
                 TimerDisplaySetting.HourMinSec => string.Format("{0:00}:{1:00}:{2:00}", _currentTime.hours,
                     _currentTime.minutes, _currentTime.seconds),
                 TimerDisplaySetting.HourMin => string.Format("{0:00}:{1:00}", _currentTime.hours, _currentTime.minutes),
-                TimerDisplaySetting.MinSec => string.Format("{0:00}:{1:00}", _currentTime.minutes, _currentTime.seconds),
-                _ => string.Format("{0:00}:{1:00}:{2:00}", _currentTime.hours, _currentTime.minutes, _currentTime.seconds),
+                TimerDisplaySetting.MinSec => string.Format("{0:00}:{1:00}", _currentTime.minutes,
+                    _currentTime.seconds),
+                _ => string.Format("{0:00}:{1:00}:{2:00}", _currentTime.hours, _currentTime.minutes,
+                    _currentTime.seconds),
             };
         }
 
@@ -280,6 +309,5 @@ namespace Utility
         {
             _currentTime = _startTime;
         }
-        
     }
 }

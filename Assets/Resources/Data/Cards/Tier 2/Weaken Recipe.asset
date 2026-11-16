@@ -14,8 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Cards.CardRecipe
   description: Creates a Weaken card.
   input:
-  - {fileID: 11400000, guid: b163e17017ca73443962cba330f911df, type: 2}
   - {fileID: 11400000, guid: 45ca287ca55060d4cb4f8026a355a939, type: 2}
-  - {fileID: 11400000, guid: 45ca287ca55060d4cb4f8026a355a939, type: 2}
+  - {fileID: 11400000, guid: 3c50e92d500556445aea7963393ac5ff, type: 2}
   output: {fileID: 11400000, guid: 94bdba4140c34eb4a905f05738d5dd4c, type: 2}
   effects: []

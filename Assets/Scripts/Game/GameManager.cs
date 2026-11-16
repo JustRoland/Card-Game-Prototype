@@ -20,6 +20,7 @@ namespace Game
         [SerializeField] private TextMeshProUGUI nextRoundText;
         [SerializeField] private TextMeshProUGUI statsText;
         [SerializeField] private GameObject gameOverUI;
+        [SerializeField] private GameObject pauseMenu;
 
         [Header("Time")]
         [SerializeField] private float slowTime = 0.2f;
@@ -82,6 +83,8 @@ namespace Game
             _nextRoundTimer.CountdownFinishedEvent.AddListener(StartNextRound);
             nextRoundText.gameObject.SetActive(false);
             
+            SlowTime(Speed.Slow);
+            
             if (startRoundOnPlay) StartRound(round);
         }
 
@@ -134,6 +137,24 @@ namespace Game
         public void TrackDamageTaken(int damage) => DamageTaken += damage;
         public void TrackRevive() => Revives++;
         public void SetKiller(string killer) => Killer = killer;
+        public void OpenMenu() => PauseGame(!pauseMenu.activeSelf);
+
+        private void PauseGame(bool state)
+        {
+            if (state){
+                Cursor.lockState = CursorLockMode.Confined;
+                Cursor.visible = true;
+                Time.timeScale = 0;
+                _timer.StopTimer();
+            }
+            else{
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+                Time.timeScale = 1;
+                _timer.StartTimer();
+            }
+            pauseMenu.SetActive(state);
+        }
 
         public void EndGame()
         {

@@ -9,8 +9,7 @@ namespace Cards
 
         public void Interact(PlayerCharacter caller)
         {
-            CardManager.Instance.AddCard();
-            gameObject.SetActive(false);
+            if (CardManager.Instance.AddCard()) gameObject.SetActive(false);
         }
     
     }

@@ -154,10 +154,12 @@ namespace Cards
 
         #region Adding & Removig Cards
 
-        public void AddCard()
+        public bool AddCard()
         {
+            if (!hand.CanAddCard) return false;
             var cardView = GetCardView(hand.transform.localScale);
             hand.AddCard(cardView);
+            return true;
         }
 
         private void OnRequestNewCardView(Hand hnd)

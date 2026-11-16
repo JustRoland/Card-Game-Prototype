@@ -23,7 +23,7 @@ namespace Characters
         {
             int damageTaken = (int)(damage * data.multiplier);
             if (!_character) Debug.LogWarning($"Body part {name} took doesn't have an associated character.", this);
-            _character?.Damage(this, damageTaken, knockBack, origin, effects);
+            _character?.Damage(new [] {this}, damageTaken, knockBack, origin, effects);
         }
 
         public void SetColor(Color color) => _material.color = color;

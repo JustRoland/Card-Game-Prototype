@@ -61,33 +61,34 @@ namespace Characters
             onDeathEvent.RemoveAllListeners();
         }
 
-        private void Update()
+        protected virtual void Update()
         {
-            Stats.Mediator.Update(Time.deltaTime);
+            var tickDamage = Stats.Mediator.Update(Time.deltaTime);
+            if (tickDamage != 0) Damage(bodyParts, tickDamage, 0, this);
         }
 
-        public virtual void Damage(BodyPart bodyPart, int damage, float knockBack, CharacterBase origin,
+        public virtual void Damage(BodyPart[] bParts, int damage, float knockBack, CharacterBase origin,
             StatusEffect[] effects = null)
         {
-            if (debug) Debug.Log($"{damage * Stats.Weakened} damage (Weakened Multiplier: {Stats.Weakened}) taken to {bodyPart.name} from {origin} and {effects?.Length} effects applied. Health: {Stats.Health - damage * Stats.Weakened}",this);
+            if (debug) Debug.Log($"{damage * Stats.Weakened} damage (Weakened Multiplier: {Stats.Weakened}) taken from {origin} and {effects?.Length} effects applied. Health: {Stats.Health - damage * Stats.Weakened}",this);
             
             float weakenedMultiplier = Stats.Weakened;  //value has to be cached, else the reference updates the modifier even after it was applied.
             Stats.Health -= damage * weakenedMultiplier;
 
             effects?.ToList().ForEach(se => Stats.Mediator.AddEffect(se));
 
-            OnDamageEffect(bodyPart, damageEffectDuration, knockBack, origin.transform.position).Forget();
+            OnDamageEffect(bParts, damageEffectDuration, knockBack, origin.transform.position).Forget();
             
             
             if (Stats.Health <= 0) onDeathEvent.Invoke();
         }
 
-        protected virtual async UniTask OnDamageEffect(BodyPart bodyPart, float duration, float knockBack,
+        protected virtual async UniTask OnDamageEffect(BodyPart[] bParts, float duration, float knockBack,
             Vector3 origin, CancellationToken cancellationToken = default)
         {
             if (cancellationToken.IsCancellationRequested)
             {
-                bodyPart.ResetColor();
+                bParts.ToList().ForEach(b => b.ResetColor());
                 return;
             }
             
@@ -97,11 +98,11 @@ namespace Characters
                 RigidBody.AddForce(knockBackDirection * knockBack, ForceMode.Impulse);
             }
 
-            bodyPart.SetColor(damageEffectColor);
+            bParts.ToList().ForEach(b => b.SetColor(damageEffectColor));
 
             await UniTask.WaitForSeconds(duration, cancellationToken: cancellationToken);
 
-            bodyPart.ResetColor();
+            bParts.ToList().ForEach(b => b.ResetColor());
 
             await UniTask.Yield();
         }

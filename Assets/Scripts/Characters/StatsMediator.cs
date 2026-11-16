@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Characters
@@ -44,19 +45,27 @@ namespace Characters
         public void RemoveModifier(int id) => _modifiers.Find(m => m.ID == id)?.Dispose();
         public void RemoveEffect(StatusEffect sEffect) => _statusEffects.Find(se => se.type == sEffect.type)?.Dispose();
         
-        public void Update(float deltaTime)
+        public int Update(float deltaTime)
         {
             _modifiers.ForEach(modifier => modifier.Update(deltaTime));
             for (int i = _modifiers.Count - 1; i >= 0; i--)
             {
                 if (_modifiers[i].MarkedForRemoval) _modifiers[i].Dispose();
             }
+
+            int tickDamage = 0;
             
-            foreach (var effect in _statusEffects) effect.Update(deltaTime);
+            _statusEffects.ForEach(effect =>
+            {
+                effect.Update(deltaTime);
+                if (effect.ApplyTickEffect) tickDamage += effect.TickEffect();
+            });
             for (int i = _statusEffects.Count - 1; i >= 0; i--)
             {
                 if (_statusEffects[i].MarkedForRemoval) _statusEffects[i].Dispose();
             }
+            
+            return tickDamage;
         }
         
         
