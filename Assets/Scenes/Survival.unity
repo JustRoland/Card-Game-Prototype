@@ -6635,7 +6635,11 @@ MonoBehaviour:
   - prefab: {fileID: 2732587822657521532, guid: 9550379f28d6a2e47871bfca9ce7c065, type: 3}
     weight: 10
     value: 1
-    maxActive: 20
+    maxActive: 35
+  - prefab: {fileID: 0}
+    weight: 10
+    value: 1
+    maxActive: 0
 --- !u!43 &106152871
 Mesh:
   m_ObjectHideFlags: 0
@@ -122733,6 +122737,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5497454162118663694, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
+      propertyPath: testWeapon
+      value: 
+      objectReference: {fileID: 11400000, guid: 3e2457d8512307f438caec1c09af3820, type: 2}
     - target: {fileID: 5585234062658578643, guid: 46fc8993b4de9f742831b921ebdca29b, type: 3}
       propertyPath: m_Name
       value: Player
@@ -139637,13 +139645,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2094395535529401045, guid: fd509ceda48521d4aae29896283da018, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5255418634265960596, guid: fd509ceda48521d4aae29896283da018, type: 3}
       propertyPath: m_Name
       value: Game Manager
-      objectReference: {fileID: 0}
-    - target: {fileID: 7958351741832549378, guid: fd509ceda48521d4aae29896283da018, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

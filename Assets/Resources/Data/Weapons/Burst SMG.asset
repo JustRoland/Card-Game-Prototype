@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Burst SMG
   m_EditorClassIdentifier: Assembly-CSharp::WeaponData
   description: 
-  icon: {fileID: 0}
-  model: {fileID: 0}
+  icon: {fileID: 21300000, guid: c254ca8771025db42bae59a632bc2690, type: 3}
+  model: {fileID: 4264047917051244473, guid: 4bba65f04299e9a4ab3bd8481a619a9d, type: 3}
   projectile: {fileID: 0}
   bulletOrigin: {x: 0.37799996, y: -0.2079997, z: 1.6672}
   damage: 20
@@ -28,5 +28,5 @@ MonoBehaviour:
   burstFireRate: 750
   burstSize: 3
   magazineSize: 30
-  maxAmmo: 150
+  maxAmmo: 180
   reloadSpeed: 4

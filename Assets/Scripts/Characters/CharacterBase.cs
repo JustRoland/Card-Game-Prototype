@@ -70,12 +70,17 @@ namespace Characters
         public virtual void Damage(BodyPart[] bParts, int damage, float knockBack, CharacterBase origin,
             StatusEffect[] effects = null)
         {
-            if (debug) Debug.Log($"{damage * Stats.Weakened} damage (Weakened Multiplier: {Stats.Weakened}) taken from {origin} and {effects?.Length} effects applied. Health: {Stats.Health - damage * Stats.Weakened}",this);
-            
             float weakenedMultiplier = Stats.Weakened;  //value has to be cached, else the reference updates the modifier even after it was applied.
             Stats.Health -= damage * weakenedMultiplier;
+            if (debug) Debug.Log($"{damage * Stats.Weakened} damage (Weakened Multiplier: {Stats.Weakened}) taken from {origin} and {effects?.Length} effects applied. Health: {Stats.Health}",this);
 
-            effects?.ToList().ForEach(se => Stats.Mediator.AddEffect(se));
+            if (effects != null)
+                foreach (var statusEffect in effects)
+                {
+                    if (statusEffect.requirement is not StatusEffectType.None && !Stats.Mediator.HasStatusEffect(statusEffect.requirement)) continue;
+                    if (debug) Debug.Log($"Applying {statusEffect.Name} to {name}", this);
+                    Stats.Mediator.AddEffect(statusEffect);
+                }
 
             OnDamageEffect(bParts, damageEffectDuration, knockBack, origin.transform.position).Forget();
             

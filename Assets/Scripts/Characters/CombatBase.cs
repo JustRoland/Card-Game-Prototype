@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using Characters.Enemies;
 using Cysharp.Threading.Tasks;
 using Game;
 using UnityEngine;
@@ -143,7 +142,7 @@ namespace Characters
 
                 if (Character.Stats.HasTrait(TraitType.ExplosiveShot))
                 {
-                    effects.Add(new SimpleEffect(StatusEffectType.Burn, 6f, null, 20 ));
+                    effects.Add(new SimpleEffect(StatusEffectType.Burn, 6f, null, 20, StatusEffectType.Tar));
                     ExplosiveDamage(impactPosition, effects.ToArray());
                     return;
                 }

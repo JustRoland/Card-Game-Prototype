@@ -2,7 +2,6 @@ using System;
 using Characters;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Weapons;
 
 namespace Cards
@@ -57,14 +56,14 @@ namespace Cards
     [Serializable]
     public class Effect
     {
+        public bool targetOthers;
         [Header("Stat Changes")]
         public StatType statType;
         public float value;
         [Header("Health Changes")]
         public int healthChange;
-        [FormerlySerializedAs("effectType")] [Header("Effect Color")]
-        public Category category;
-        public Color color;
+        [Header("Status Effect")]
+        public StatusEffectType statusEffectType;
         [Header("Trait Unlocks")]
         public TraitType trait;
         [Header("Duration")]

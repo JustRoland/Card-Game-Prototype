@@ -62,7 +62,7 @@ namespace Characters.Enemies
 
             if (Stats.Health > 0)
             {
-                if (responsive) SetDestination(origin.transform.position, true);
+                // if (responsive) SetDestination(origin.transform.position, true);
             }
             else
             {

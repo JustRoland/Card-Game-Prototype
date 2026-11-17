@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using Characters.Enemies;
 using Cysharp.Threading.Tasks;
@@ -27,6 +26,7 @@ namespace Game
 
 
         public int TotalEnemies => _spawners?.Sum(s => s.activeEnemies) ?? 0;
+        public EnemyCharacter[] SpawnedEnemies => _spawners?.SelectMany(s => s.GetActiveEntities()).ToArray();
         
 
         private bool _reinforcementsCalled;

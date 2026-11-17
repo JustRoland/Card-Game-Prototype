@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using Characters;
-using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Utility;
+using Utility.UI_Message;
 
 namespace Cards
 {
@@ -82,7 +81,7 @@ namespace Cards
         #region Event Listeners & Registration
 
         private void OnLeftClick(CardView cardView, Vector3 position) => hand.HoverSystem.Show(cardView, position);
-        
+
         private void OnRightClick(CardView cardView, Vector3 position)
         {
             hand.RemoveCard(new[] { cardView });
@@ -117,7 +116,7 @@ namespace Cards
             if (cardView.Selected) SelectedCards.ForEach(c => c.ResetCard());
             else cardView.ResetCard();
         }
-        
+
         private void OnEndDragRightClick(CardView cardView, Vector3 position)
         {
             hand.RemoveCard(new[] { cardView });
@@ -156,9 +155,15 @@ namespace Cards
 
         public bool AddCard()
         {
-            if (!hand.CanAddCard) return false;
+            if (!hand.CanAddCard)
+            {
+                MessageManager.Instance?.NewMessage("Hand is full", color: new Color(1, 0, .2f, 1));
+                return false;
+            }
+
             var cardView = GetCardView(hand.transform.localScale);
             hand.AddCard(cardView);
+            MessageManager.Instance?.NewMessage($"+1 {cardView.Card.Name} card", color: cardView.Card.Color);
             return true;
         }
 
@@ -176,7 +181,7 @@ namespace Cards
 
         private CardView GetCardView(Vector3 scale)
         {
-            int rand = Random.Range(0, cardData.Length);
+            var rand = Random.Range(0, cardData.Length);
             return GetCardView(cardData[rand].GenerateCard(), scale);
         }
 
@@ -233,16 +238,39 @@ namespace Cards
             {
                 foreach (var effect in cardView.Card.ActiveEffect)
                 {
-                    var modifier = new BasicModifier(effect.statType, effect.duration, v => v + effect.value);
-                    statsHolder.Value.Stats.Mediator.AddModifiers(modifier);
-                    statsHolder.Value.Stats.Health += effect.healthChange;
-                    var colorModifier = new ColorModifier(effect.category, effect.color, effect.duration);
-                    statsHolder.Value.Stats.Mediator.AddModifiers(colorModifier);
-                    if (effect.trait is not TraitType.None) statsHolder.Value.Stats.UnlockTrait(effect.trait);
-                    if (effect.weaponData) weaponHolder.Value.ChangeWeapon(effect.weaponData);
+                    //TODO: Separate self-target effects from enemy target effects
+                    
+                    if (!effect.targetOthers)
+                    {
+                        if (effect.statType is not StatType.None)
+                            statsHolder.Value.Stats.Mediator.AddModifiers(new BasicModifier(effect.statType,
+                                effect.duration, v => v + effect.value));
+                        statsHolder.Value.Stats.Health += effect.healthChange;
+                        if (effect.statusEffectType is not StatusEffectType.None)
+                            statsHolder.Value.Stats.Mediator.AddEffect(new SimpleEffect(effect.statusEffectType,
+                                effect.duration, null));
+                        // TODO: Add the option for temporary trait unlocks.
+                        if (effect.trait is not TraitType.None) statsHolder.Value.Stats.UnlockTrait(effect.trait);
+                        if (effect.weaponData) weaponHolder.Value.ChangeWeapon(effect.weaponData);
+                        MessageManager.Instance?.NewImage(cardView.Card.Sprite, duration: effect.duration - 0.35f,
+                            fadeOutTime: 0.35f);
+                    }
+                    else
+                    {
+                        Spells.ApplyEffect.ToAllCharacters(effect.healthChange);
+                        if (effect.statType is not StatType.None)
+                            Spells.ApplyEffect.ToAllCharacters(new BasicModifier(effect.statType, effect.duration,
+                                v => v + effect.value));
+                        if (effect.statusEffectType is not StatusEffectType.None)
+                            Spells.ApplyEffect.ToAllCharacters(new SimpleEffect(effect.statusEffectType,
+                                effect.duration, null, (int)effect.value));
+                    }
                 }
             }
 
+
+            MessageManager.Instance?.NewMessage($"{cardView.Card.Name} card played",
+                color: cardView.Card.Color);
             hand.RemoveCard(new[] { cardView });
             UnloadExistingCardView(cardView);
             return false;
@@ -257,6 +285,8 @@ namespace Cards
             UnloadExistingCardViews(cards);
             hand.RemoveCard(cards);
             hand.AddCard(GetCardView(outputCard, hand.transform.localScale));
+            MessageManager.Instance?.NewMessage($"+1 {outputCard.Name} card", color: outputCard.Color);
+
 
             return true;
         }
@@ -275,8 +305,6 @@ namespace Cards
                     var modifier = new BasicModifier(effect.statType, effect.duration, v => v + effect.value);
                     statsHolder.Value.Stats.Mediator.AddModifiers(modifier);
                     statsHolder.Value.Stats.Health += effect.healthChange;
-                    var colorModifier = new ColorModifier(effect.category, effect.color, effect.duration);
-                    statsHolder.Value.Stats.Mediator.AddModifiers(colorModifier);
                     statsHolder.Value.Stats.UnlockTrait(effect.trait);
                 }
             }
@@ -309,24 +337,23 @@ namespace Cards
             if (aListA.Count == 0)
                 return true;
 
-            Dictionary<T, int> lookUp = new Dictionary<T, int>();
+            var lookUp = new Dictionary<T, int>();
+            
             // create index for the first list
-            for (int i = 0; i < aListA.Count; i++)
+            foreach (var t in aListA)
             {
-                int count = 0;
-                if (!lookUp.TryGetValue(aListA[i], out count))
+                if (!lookUp.TryGetValue(t, out var count))
                 {
-                    lookUp.Add(aListA[i], 1);
+                    lookUp.Add(t, 1);
                     continue;
                 }
 
-                lookUp[aListA[i]] = count + 1;
+                lookUp[t] = count + 1;
             }
 
-            for (int i = 0; i < aListB.Count; i++)
+            foreach (var t in aListB)
             {
-                int count = 0;
-                if (!lookUp.TryGetValue(aListB[i], out count))
+                if (!lookUp.TryGetValue(t, out var count))
                 {
                     // early exit as the current value in B doesn't exist in the lookUp (and not in ListA)
                     return false;
@@ -334,9 +361,9 @@ namespace Cards
 
                 count--;
                 if (count <= 0)
-                    lookUp.Remove(aListB[i]);
+                    lookUp.Remove(t);
                 else
-                    lookUp[aListB[i]] = count;
+                    lookUp[t] = count;
             }
 
             // if there are remaining elements in the lookUp, that means ListA contains elements that do not exist in ListB

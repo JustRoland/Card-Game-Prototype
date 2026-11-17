@@ -1,5 +1,4 @@
 using System;
-using UnityEngine;
 using Utility;
 
 namespace Characters
@@ -11,7 +10,7 @@ namespace Characters
         private readonly int _tickHealthChange;
         // private readonly StatModifier[] _effectedStats;
         
-        public SimpleEffect(StatusEffectType type, float duration, Func<float, float> operation, int tickHealthChange = 0) : base(type, duration)
+        public SimpleEffect(StatusEffectType type, float duration, Func<float, float> operation, int tickHealthChange = 0, StatusEffectType requirement = StatusEffectType.None) : base(type, duration, requirement)
         {
             _operation = operation;
             _tickHealthChange = tickHealthChange;
@@ -39,15 +38,18 @@ namespace Characters
         private static int _id;
         public int ID = _id++;
         public readonly StatusEffectType type;
+        public readonly StatusEffectType requirement;
+        public string Name => type.ToString();
         public bool MarkedForRemoval { get; private set;}
         public bool ApplyTickEffect { get; protected set; }
         public Action<StatusEffect> OnDispose = delegate { };
         private readonly SimpleTimer timer;
         
         
-        protected StatusEffect(StatusEffectType type, float duration)
+        protected StatusEffect(StatusEffectType type, float duration, StatusEffectType requirement = StatusEffectType.None)
         {
             this.type = type;
+            this.requirement = requirement;
             if (duration <= 0) return;
             timer = new SimpleTimer(TimerType.Countdown);
             timer.SetTimer(0, 0, duration);

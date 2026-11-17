@@ -20,7 +20,7 @@ MonoBehaviour:
   - type: 3
     unlocked: 0
   - type: 4
-    unlocked: 1
+    unlocked: 0
   - type: 5
     unlocked: 0
   - type: 6

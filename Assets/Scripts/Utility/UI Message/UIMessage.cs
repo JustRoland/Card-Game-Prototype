@@ -13,16 +13,13 @@ namespace Utility.UI_Message
         private float _duration;
         private float _fadeOutTime;
 
-        private void Update()
-        {
-            _timer.UpdateTimer(Time.deltaTime);
-        }
-
-        public void Initialize(string message, float duration, float fadeOutTime)
+        
+        public void Initialize(string message, float duration, float fadeOutTime, Color color = default)
         {
             _textComponent = GetComponent<TextMeshProUGUI>();
 
             _textComponent.text = message;
+            if (color != default) _textComponent.color = color;
             _duration = duration;
             _fadeOutTime = fadeOutTime;
 
@@ -32,21 +29,24 @@ namespace Utility.UI_Message
             _timer.CountdownFinishedEvent.AddListener(OnCountdownFinished);
 
         }
+        
+        private void Update()
+        {
+            _timer.UpdateTimer(Time.deltaTime);
+        }
 
-        void OnCountdownFinished()
+        private void OnCountdownFinished()
         {
             FadeOut().Forget();
         }
 
-        async UniTask FadeOut()
+        private async UniTask FadeOut()
         {
             float elapsedTime = 0;
 
-            float currentOpacity = 1;
-
             while (elapsedTime < _fadeOutTime)
             {
-                currentOpacity = 1 - elapsedTime / _fadeOutTime;
+                var currentOpacity = 1 - elapsedTime / _fadeOutTime;
                 _textComponent.alpha = currentOpacity;
 
                 elapsedTime += Time.deltaTime;

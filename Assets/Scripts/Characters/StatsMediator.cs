@@ -41,7 +41,7 @@ namespace Characters
                 Queries -= sEffect.Handle;
             };
         }
-        
+        public bool HasStatusEffect(StatusEffectType type) => _statusEffects.Any(se => se.type == type);
         public void RemoveModifier(int id) => _modifiers.Find(m => m.ID == id)?.Dispose();
         public void RemoveEffect(StatusEffect sEffect) => _statusEffects.Find(se => se.type == sEffect.type)?.Dispose();
         

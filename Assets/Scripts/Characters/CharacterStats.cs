@@ -36,7 +36,8 @@ namespace Characters
     {
         None,
         Weakened,
-        Burn
+        Burn,
+        Tar
     }
     
 
@@ -349,6 +350,16 @@ namespace Characters
             get
             {
                 var q = new Query(StatusEffectType.Burn, 0);
+                _mediator.PerformQuery(this, q);
+                return q.Value;
+            }
+        }
+        
+        public float Tar
+        {
+            get
+            {
+                var q = new Query(StatusEffectType.Tar, 0);
                 _mediator.PerformQuery(this, q);
                 return q.Value;
             }
