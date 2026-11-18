@@ -22,7 +22,7 @@ MonoBehaviour:
   activeEffects:
   - targetOthers: 0
     statType: 21
-    value: 1
+    value: 2
     healthChange: 0
     statusEffectType: 0
     trait: 4

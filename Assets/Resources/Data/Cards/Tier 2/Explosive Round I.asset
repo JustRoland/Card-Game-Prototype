@@ -12,17 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89ad1c89bf1c94c41b7c1501699899d7, type: 3}
   m_Name: Explosive Round I
   m_EditorClassIdentifier: Assembly-CSharp::Cards.CardData
-  description: 'Active: Rounds explode upon impact, damaging nearby enemies (and
-    you!)'
+  description: Rounds explode upon impact, damaging nearby enemies (and you!)
   tier: 2
   sprite: {fileID: 21300000, guid: 11297f04d8a1f8249b9a04de04cff772, type: 3}
   color: {r: 0.78867924, g: 0.43103057, b: 0.18898536, a: 1}
   activeEffects:
-  - statType: 21
-    value: 0.5
+  - targetOthers: 0
+    statType: 21
+    value: 1.2
     healthChange: 0
-    category: 0
-    color: {r: 0, g: 0, b: 0, a: 0}
+    statusEffectType: 0
     trait: 4
-    duration: 0
+    duration: 20
+    weaponData: {fileID: 0}
   passiveEffects: []

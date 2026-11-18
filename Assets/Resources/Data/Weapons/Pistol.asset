@@ -19,8 +19,8 @@ MonoBehaviour:
   bulletOrigin: {x: 0.37799996, y: -0.2079997, z: 1.6672}
   damage: 15
   knockBack: 0.4
-  range: 25
-  maxRange: 25
+  range: 80
+  maxRange: 80
   damageDropOffRange: 20
   damageDropOffRate: 0
   fireType: 0

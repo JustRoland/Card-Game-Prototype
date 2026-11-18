@@ -30,10 +30,15 @@ MonoBehaviour:
   dmgAddIncrease: 0
   damageMultiplier: 1
   dmgMultIncrease: 0
+  maxHealth: 100
+  revives: 0
   defense: 20
   maxRange: 100
   fireRateModifier: 1
   reloadTimeModifier: 1
   recoil: 0.5
   weakenedDamageMultiplier: 0
-  explosiveShotRadius: 1
+  explosiveShotRadius: 0
+  knockback: 10
+  ricochetCount: 0
+  pierceCount: 0

@@ -132,7 +132,8 @@ namespace Characters
                 // Perhaps a static class returning all the effects from one central script?  
                 List<StatusEffect> effects = new List<StatusEffect>();
                 //Using the reference to the variable when creating the status effect has the neat side effect of automatically updating the damage multiplier value on the host. Cache value first if this is unintended.
-                if (Character.Stats.HasTrait(TraitType.Weaken))
+                // if (Character.Stats.HasTrait(TraitType.Weaken)) TODO: Temporary until traits can be non-permanent
+                if (Character.Stats.WeakenedDamageMultiplier > 0)
                     effects.Add(new SimpleEffect(StatusEffectType.Weakened, 3f,
                         v => v + Character.Stats.WeakenedDamageMultiplier));
 
@@ -140,7 +141,8 @@ namespace Characters
                 Vector3 impactPosition = raycast.hit.Value.point;
                 List<Vector3> points = new List<Vector3> { bulletOrigin.position, impactPosition };
 
-                if (Character.Stats.HasTrait(TraitType.ExplosiveShot))
+                // if (Character.Stats.HasTrait(TraitType.ExplosiveShot))
+                if (Character.Stats.ExplosiveShotRadius > 0)
                 {
                     effects.Add(new SimpleEffect(StatusEffectType.Burn, 6f, null, 20, StatusEffectType.Tar));
                     ExplosiveDamage(impactPosition, effects.ToArray());

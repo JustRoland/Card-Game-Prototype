@@ -249,8 +249,8 @@ namespace Cards
                         if (effect.statusEffectType is not StatusEffectType.None)
                             statsHolder.Value.Stats.Mediator.AddEffect(new SimpleEffect(effect.statusEffectType,
                                 effect.duration, null));
-                        // TODO: Add the option for temporary trait unlocks.
-                        if (effect.trait is not TraitType.None) statsHolder.Value.Stats.UnlockTrait(effect.trait);
+                        // TODO: Add the option for temporary trait unlocks. This is now a temporary fix.
+                        // if (effect.trait is not TraitType.None) statsHolder.Value.Stats.UnlockTrait(effect.trait);
                         if (effect.weaponData) weaponHolder.Value.ChangeWeapon(effect.weaponData);
                         MessageManager.Instance?.NewImage(cardView.Card.Sprite, duration: effect.duration - 0.35f,
                             fadeOutTime: 0.35f);
